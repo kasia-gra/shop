@@ -14,6 +14,7 @@ public interface ProductDao {
 
     List<Product> getAll();
     List<Product> getBy(Supplier supplier);
+    List<Product> getBySupplierName(String supplierName);
     List<Product> getBy(ProductCategory productCategory);
 
 }
