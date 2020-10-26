@@ -45,10 +45,19 @@
                 <artifactId>jetty-maven-plugin</artifactId>
                 <version>${version.plugin.jetty}</version>
                 <configuration>
+                    <httpConnector>
+                        <port>8888</port>
+                    </httpConnector>
+                    <requestLog implementation="org.eclipse.jetty.server.NCSARequestLog">
+                        <filename>./request.log</filename>
+                        <append>true</append>
+                        <extended>true</extended>
+                        <logTimeZone>GMT+1</logTimeZone>
+                    </requestLog>
                     <!-- On some configs this causes shutdown of context on -->
                     <!-- a page load so disabled. -->
-                    <!-- <reload>automatic</reload> -->
-                    <!-- <scanIntervalSeconds>1</scanIntervalSeconds> -->
+                     <reload>automatic</reload>
+                     <scanIntervalSeconds>5</scanIntervalSeconds>
                 </configuration>
             </plugin>
         </plugins>
