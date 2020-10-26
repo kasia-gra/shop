@@ -45,6 +45,9 @@
                 <artifactId>jetty-maven-plugin</artifactId>
                 <version>${version.plugin.jetty}</version>
                 <configuration>
+                    <httpConnector>
+                        <port>8888</port>
+                    </httpConnector>
                     <!-- On some configs this causes shutdown of context on -->
                     <!-- a page load so disabled. -->
                     <!-- <reload>automatic</reload> -->
