@@ -54,8 +54,10 @@
                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Categories</a>
 
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">Category 1</a>
-                    <a class="dropdown-item" href="#">Category 2</a>
+                    <tr th:each="category: ${categories}">      <!--// category.getName().replace(' ', '_')-->
+                        <td><a class="dropdown-item" th:href="@{/(order=${category.id})}"
+                               th:text="${category.name}">Category name</a></td>
+                    </tr>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="/">Reset sorting</a>
                 </div>
@@ -107,7 +109,7 @@
 
 <div id="imageModal" class="modal">
     <span class="modal-close">&times;</span>
-    <img class="modal-content" id="img01">
+    <img class="modal-content" id="img01" alt="image">
     <div id="caption"></div>
 </div>
 
