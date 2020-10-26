@@ -32,6 +32,8 @@
 
     <!-- End of Bootstrap components -->
 
+    <script type="module" src="/static/js/main.js" defer></script>
+
     <link rel="stylesheet" type="text/css" href="/static/css/custom.css" />
 </head>
 
@@ -61,6 +63,10 @@
         </ul>
 
         <ul class="nav navbar-nav navbar-right">
+            <li><a class="nav-link" href="#" id="cart">
+                <i class="fa fa-shopping-cart"></i>Cart
+                <span class="text-success">0</span>
+            </a></li>
             <li><a class="nav-link" id="register" data-toggle="modal" data-target="#modalRegisterForm"
                    href="#"><span class="link fas fa-user-plus"></span> Sign in</a></li>
             <li><a class="nav-link" id="login" data-toggle="modal" data-target="#modalLoginForm"
@@ -76,14 +82,14 @@
     </div>
 
     <div id="products" class="row">
-        <div class="col col-sm-12 col-md-6 col-lg-4" th:each="prod,iterStat : ${products}">
-            <div class="card">
-                <img class="" src="http://placehold.it/400x250/000/fff" th:attr="src='/static/img/product_' + ${prod.id} + '.jpg'" alt="" />
-                <div class="card-header">
+        <div class="col col-sm-12 col-md-6 col-lg-4 mb-2" th:each="prod,iterStat : ${products}">
+            <div class="card h-100">
+                <span class="h-60"><img class="card-img-top" src="http://placehold.it/400x250/000/fff" th:attr="src='/static/img/product_' + ${prod.id} + '.jpg'" alt="" /></span>
+                <div class="card-header" style="height: 15vh;">
                     <h4 class="card-title" th:text="${prod.name}">Product name</h4>
                     <p class="card-text" th:text="${prod.description}">Product description... </p>
                 </div>
-                <div class="card-body">
+                <div class="card-body" style="height: 13vh;">
                     <div class="card-text">
                         <p class="lead" th:text="${prod.getPrice()}">100 USD</p>
                     </div>
@@ -98,6 +104,12 @@
 </div>
 
 <div th:replace="footer.html :: copy"></div>
+
+<div id="imageModal" class="modal">
+    <span class="modal-close">&times;</span>
+    <img class="modal-content" id="img01">
+    <div id="caption"></div>
+</div>
 
 </body>
 </html>
