@@ -23,16 +23,52 @@
     <!-- Latest compiled and minified CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+    <!-- Font awesome icons -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/solid.css"
+          integrity="sha384-rdyFrfAIC05c5ph7BKz3l5NG5yEottvO/DQ0dCrwD8gzeQDjYBHNr1ucUpQuljos" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/fontawesome.css"
+          integrity="sha384-u5J7JghGz0qUrmEsWzBQkfvc8nK3fUT7DCaQzNQ+q4oEXhGSx+P2OqjWsfIRB8QT" crossorigin="anonymous">
+
     <!-- End of Bootstrap components -->
 
     <link rel="stylesheet" type="text/css" href="/static/css/custom.css" />
 </head>
 
 <body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid d-flex justify-content-between">
 
-<div class="jumbotron text-center">
-    <h1>Codecool Shop</h1>
-</div>
+        <a class="navbar-brand" href="/"><img src="/static/img/KPD_logo.png" alt="logo" width="100"></a>
+
+        <form class="form-inline my-2">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+
+        <ul class="navbar-nav">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Categories</a>
+
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#">Category 1</a>
+                    <a class="dropdown-item" href="#">Category 2</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="/">Reset sorting</a>
+                </div>
+            </li>
+        </ul>
+
+        <ul class="nav navbar-nav navbar-right">
+            <li><a class="nav-link" id="register" data-toggle="modal" data-target="#modalRegisterForm"
+                   href="#"><span class="link fas fa-user-plus"></span> Sign in</a></li>
+            <li><a class="nav-link" id="login" data-toggle="modal" data-target="#modalLoginForm"
+                   href="#"><span class="link fas fa-sign-in-alt"></span> Log in</a></li>
+        </ul>
+    </div>
+</nav>
+
 
 <div class="container">
     <div class="card">
