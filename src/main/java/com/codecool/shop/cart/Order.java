@@ -3,13 +3,12 @@ package com.codecool.shop.cart;
 import com.codecool.shop.model.Product;
 
 public class Order {
-    private final int id;
-    private final Product lineItem;
+    private int id;
+    private Product lineItem;
     private int quantity;
     private float totalPrice;
 
-    public Order(Product lineItem, int id) {
-        this.id = id;
+    public Order(Product lineItem) {
         this.lineItem = lineItem;
         this.quantity = 1;
         this.totalPrice = lineItem.getDefaultPrice() * quantity;
@@ -37,6 +36,10 @@ public class Order {
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void increaseQuantity() {
