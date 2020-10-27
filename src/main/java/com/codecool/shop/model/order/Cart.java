@@ -1,4 +1,4 @@
-package com.codecool.shop.cart;
+package com.codecool.shop.model.order;
 
 import java.util.ArrayList;
 

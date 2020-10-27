@@ -1,8 +1,12 @@
-package com.codecool.shop.cart;
+package com.codecool.shop.model.order;
 
-import com.codecool.shop.model.Product;
+import com.codecool.shop.model.product.Product;
+import com.codecool.shop.model.User;
 
 public class Order {
+    private User user;
+    private Cart cart;
+
     private int id;
     private final Product lineItem;
     private int quantity;
@@ -48,5 +52,13 @@ public class Order {
 
     public void decreaseQuantity() {
         quantity--;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
