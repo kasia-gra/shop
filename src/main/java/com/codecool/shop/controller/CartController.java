@@ -97,7 +97,7 @@ public class CartController extends HttpServlet {
         return gson.fromJson(String.valueOf(stringBuilder), listType);
     }
 
-    private String getCookieValueBy(String name, HttpServletRequest req) {
+    public static String getCookieValueBy(String name, HttpServletRequest req) {
         Cookie[] cookies = req.getCookies();
         if (cookies != null && cookies.length != 0) {
             for (Cookie cookie : cookies) {
@@ -106,6 +106,6 @@ public class CartController extends HttpServlet {
                 }
             }
         }
-        return "";
+        return null;
     }
 }

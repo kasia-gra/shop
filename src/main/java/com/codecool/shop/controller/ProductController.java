@@ -1,11 +1,14 @@
 package com.codecool.shop.controller;
 
 import com.codecool.shop.config.TemplateEngineUtil;
+import com.codecool.shop.dao.OrderDao;
 import com.codecool.shop.dao.ProductCategoryDao;
 import com.codecool.shop.dao.ProductDao;
+import com.codecool.shop.dao.implementation.OrderDaoMem;
 import com.codecool.shop.dao.implementation.ProductCategoryDaoMem;
 import com.codecool.shop.dao.implementation.ProductDaoMem;
 import com.codecool.shop.dao.implementation.SupplierDaoMem;
+import com.codecool.shop.model.order.Order;
 import com.codecool.shop.model.product.Product;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
@@ -41,6 +44,14 @@ public class ProductController extends HttpServlet {
         }
         else {
             products = productDataStore.getAll();
+        }
+
+        context.setVariable("itemsNumber", 0);
+        if (CartController.getCookieValueBy("userId", req) != null) {
+            OrderDao orderDataStore = OrderDaoMem.getInstance();
+            Order order = orderDataStore.getActual(Integer.parseInt(CartController.getCookieValueBy("userId", req)));
+            int itemsNumber = order.getCart().getSize();
+            context.setVariable("itemsNumber", itemsNumber);
         }
 
         context.setVariable("products", products);
