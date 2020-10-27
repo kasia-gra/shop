@@ -51,21 +51,23 @@ public class ProductController extends HttpServlet {
 
         if (req.getParameter("supplier") != null) {
             products = productDataStore.getBySupplierName(req.getParameter("supplier"));
-            String json = gson.toJson(products, collectionType);
-            resp.setContentType("application/json");
-            resp.getWriter().write(json);
+//            String json = gson.toJson(products, collectionType);
+//            resp.setContentType("application/json");
+//            resp.getWriter().write(json);
         }
         else {
             products = productDataStore.getAll();
-            context.setVariable("products", products);
+        }
 
             // // Alternative setting of the template context
             // Map<String, Object> params = new HashMap<>();
             // params.put("category", productCategoryDataStore.find(1));
             // params.put("products", productDataStore.getBy(productCategoryDataStore.find(1)));
             // context.setVariables(params);
-            engine.process("product/index.html", context, resp.getWriter());
-        }
+
+        context.setVariable("products", products);
+        engine.process("product/index.html", context, resp.getWriter());
+
 
     }
 
