@@ -1,41 +1,29 @@
 package com.codecool.shop.model.order;
 
-import java.util.ArrayList;
+import com.codecool.shop.model.product.Product;
+
+import java.util.HashMap;
 
 public class Cart {
-    private int orderNumber = 1;
-    private final ArrayList<Order> orders = new ArrayList<>();
-    private static Cart instance = null;
+    private int id;
+    private HashMap<Product, Integer> products;
 
-    private Cart(){
+    public Cart() {
+        this.products = new HashMap<>();
+    }
+    public int getId() {
+        return id;
     }
 
-    public static Cart getInstance() {
-        if (instance == null) {
-            instance = new Cart();
-        }
-        return instance;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public void addOrder(Order order) {
-        order.setId(orderNumber);
-        orders.add(order);
-        orderNumber++;
+    public HashMap<Product, Integer> getProducts() {
+        return products;
     }
 
-    public ArrayList<Order> getOrders() {
-        return orders;
+    public void setProducts(HashMap<Product, Integer> products) {
+        this.products = products;
     }
-
-    public Order getOrder(int id) {
-        return orders.stream().
-                filter(order -> order.getId() == id).
-                findFirst().
-                orElse(null);
-    }
-
-    public void removeOrder(int id) {
-        orders.remove(getOrder(id));
-    }
-
 }

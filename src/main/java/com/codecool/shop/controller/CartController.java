@@ -1,11 +1,8 @@
 package com.codecool.shop.controller;
 
-import com.codecool.shop.cart.Cart;
-import com.codecool.shop.cart.Order;
 import com.codecool.shop.dao.ProductDao;
 import com.codecool.shop.dao.implementation.ProductDaoMem;
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
@@ -18,7 +15,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Type;
-import java.text.Format;
 
 @WebServlet(urlPatterns = {"/cart"}, loadOnStartup = 2)
 public class CartController extends HttpServlet {
@@ -30,14 +26,17 @@ public class CartController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        JsonObject jsonProductId = getJsonFromRequest(req);
+        JsonObject jsonProductId = getJsonObjectFromRequest(req);
         int productId = Integer.parseInt(jsonProductId.get("productId").getAsString());
 
         ProductDao productDataStore = ProductDaoMem.getInstance();
-        Cart cart  = Cart.getInstance();
-        cart.addOrder(new Order(productDataStore.find(productId)));
+//        Cart cart  = Cart.getInstance();
+//        cart.addOrder(new Order(productDataStore.find(productId)));
+//
+//
+//        int itemsNumber = cart.getOrders().stream().mapToInt(Order::getQuantity).sum();
 
-        int itemsNumber = cart.getOrders().stream().mapToInt(Order::getQuantity).sum();
+        int itemsNumber = 0;
         JsonObject jsonItemsNumber = new JsonObject();
         jsonItemsNumber.addProperty("itemsNumber", itemsNumber);
 
@@ -49,7 +48,7 @@ public class CartController extends HttpServlet {
         out.flush();
     }
 
-    private JsonObject getJsonFromRequest(HttpServletRequest request) throws IOException {
+    private JsonObject getJsonObjectFromRequest(HttpServletRequest request) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         String line = null;
 
