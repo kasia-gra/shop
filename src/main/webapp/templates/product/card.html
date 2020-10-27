@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="author" content="Codecool" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <title>Codecool Shop</title>
+
+    <!-- Bootstrap components -->
+    <!-- Latest compiled and minified Jquery -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+    <!--Latest compiled and minified Popper -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+            integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+            integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+    <!-- Latest compiled and minified CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+    <!-- Font awesome icons -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/solid.css"
+          integrity="sha384-rdyFrfAIC05c5ph7BKz3l5NG5yEottvO/DQ0dCrwD8gzeQDjYBHNr1ucUpQuljos" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/fontawesome.css"
+          integrity="sha384-u5J7JghGz0qUrmEsWzBQkfvc8nK3fUT7DCaQzNQ+q4oEXhGSx+P2OqjWsfIRB8QT" crossorigin="anonymous">
+
+    <!-- End of Bootstrap components -->
+
+    <script type="module" src="/static/js/main.js" defer></script>
+
+    <link rel="stylesheet" type="text/css" href="/static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/cart.css" />
+
+</head>
+
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid d-flex justify-content-between">
+
+        <a class="navbar-brand" href="/"><img src="/static/img/KPD_logo.png" alt="logo" width="100"></a>
+
+        <form class="form-inline my-2">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+
+        <ul class="navbar-nav">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Categories</a>
+
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#">Category 1</a>
+                    <a class="dropdown-item" href="#">Category 2</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="/">Reset sorting</a>
+                </div>
+            </li>
+
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="supplier-filter" role="button"
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Filter by Supplier</a>
+
+                <div class="dropdown-menu" aria-labelledby="supplier-filter" >
+                    <a class="dropdown-item chosen-supplier"  th:each="supplier : ${suppliers}" th:href="@{/(supplier=${supplier.name})}" th:text="${supplier.name}"></a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="/">Reset sorting</a>
+                </div>
+            </li>
+
+        </ul>
+
+        <ul class="nav navbar-nav navbar-right">
+            <li><a class="nav-link" href="#" id="cart">
+                <i class="fa fa-shopping-cart"></i>Cart
+                <span class="text-success">0</span>
+            </a></li>
+            <li><a class="nav-link" id="register" data-toggle="modal" data-target="#modalRegisterForm"
+                   href="#"><span class="link fas fa-user-plus"></span> Sign in</a></li>
+            <li><a class="nav-link" id="login" data-toggle="modal" data-target="#modalLoginForm"
+                   href="#"><span class="link fas fa-sign-in-alt"></span> Log in</a></li>
+        </ul>
+    </div>
+</nav>
+
+
+<div class="container">
+
+    <div class="card-header">
+        <div class="cart-summary">
+            <h4 th:text="${'Total to pay: ' + cartValue}"></h4>
+        </div>
+        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+            <div class="btn-group mr-2" role="group" aria-label="First group">
+                <button type="button" class="btn btn-secondary">Buy</button>
+            </div>
+            <div class="btn-group" role="group" aria-label="Second group">
+                <button type="button" class="btn btn-secondary">Continue shopping</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-line-item" th:each="product : ${ordered_products.entrySet()}">
+
+        <div class="card-product-img"><img class="fit_contain" src="http://placehold.it/400x250/000/fff"
+                                           th:attr="src='/static/img/product_' + ${product.getKey().id} + '.jpg'" alt="" /></div>
+        <div class="card-product-name">
+            <h3 th:text="${product.getKey().name}">Product name</h3>
+            <p th:text="${product.getKey().description}">Description</p>
+        </div>
+
+        <div class="card-product-summary">
+            <div class="total-price-wrapper"><h4 th:text="${'Total: ' + product.getKey().price}"></h4></div>
+            <div class="total-price-wrapper"><h5 th:text="${'Unit price: ' + product.getKey().price}"></h5></div>
+            <div class="card-product-actions">
+                <button class="line-item-summary-wrapper" id="increase-qty">+</button>
+                <input class="line-item-summary-wrapper" id="chosen-qty" th:value="${product.getValue()}"/>
+                <button class="line-item-summary-wrapper" id="decrease-qty">-</button>
+                <button class="fa fa-trash-alt line-item-summary-wrapper" id="remove-product"></button>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div th:replace="footer.html :: copy"></div>
+
+    <div id="imageModal" class="modal">
+        <span class="modal-close">&times;</span>
+        <img class="modal-content" id="img01">
+        <div id="caption"></div>
+    </div>
+
+</body>
+</html>
