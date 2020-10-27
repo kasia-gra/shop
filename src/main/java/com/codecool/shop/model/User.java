@@ -2,15 +2,18 @@ package com.codecool.shop.model;
 
 public class User {
     private int id;
+    private String login;
+    private String email;
 
-    public User(int id, String login, String email) {
-        this.id = id;
+
+    public User(){
+
+    }
+
+    public User(String login, String email) {
         this.login = login;
         this.email = email;
     }
-
-    private String login;
-    private String email;
 
 
     public int getId() {

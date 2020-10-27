@@ -20,5 +20,18 @@ export let dataHandler = {
             .then(response => response.json())
             .then(json_response => callback(json_response))
 
+    },
+    _api_put: function(url, data, callback) {
+        fetch(url, {
+            method: "PUT",
+            credentials: "same-origin" ,
+            body: JSON.stringify(data),
+            cache: "no-cache",
+            headers: new Headers({
+                "content-type": "application/json"
+            })
+        })
+            .then(response => response.json())
+            .then(json_response => callback(json_response))
     }
 }
