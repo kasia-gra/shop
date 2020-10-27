@@ -4,7 +4,7 @@ import com.codecool.shop.model.Product;
 
 public class Order {
     private int id;
-    private Product lineItem;
+    private final Product lineItem;
     private int quantity;
     private float totalPrice;
 
