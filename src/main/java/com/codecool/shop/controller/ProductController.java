@@ -1,16 +1,15 @@
 package com.codecool.shop.controller;
 
+import com.codecool.shop.config.TemplateEngineUtil;
+import com.codecool.shop.dao.OrderDao;
 import com.codecool.shop.dao.ProductCategoryDao;
 import com.codecool.shop.dao.ProductDao;
-import com.codecool.shop.dao.SupplierDao;
+import com.codecool.shop.dao.implementation.OrderDaoMem;
 import com.codecool.shop.dao.implementation.ProductCategoryDaoMem;
 import com.codecool.shop.dao.implementation.ProductDaoMem;
-import com.codecool.shop.config.TemplateEngineUtil;
 import com.codecool.shop.dao.implementation.SupplierDaoMem;
-import com.codecool.shop.model.Product;
-import com.codecool.shop.model.ProductCategory;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.codecool.shop.model.order.Order;
+import com.codecool.shop.model.product.Product;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
@@ -20,55 +19,51 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-
-@WebServlet(urlPatterns = {"/"})
+@WebServlet(urlPatterns = {"/"}, loadOnStartup = 1)
 public class ProductController extends HttpServlet {
-
     List<Product> products;
-    private Gson gson = new Gson();
-    private Type collectionType = new TypeToken<List<Product>>() {}.getType();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ProductDao productDataStore = ProductDaoMem.getInstance();
         ProductCategoryDao productCategoryDataStore = ProductCategoryDaoMem.getInstance();
-        SupplierDao supplierDataStore = SupplierDaoMem.getInstance();
-
+        SupplierDaoMem supplierDataStore = SupplierDaoMem.getInstance();
         TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(req.getServletContext());
         WebContext context = new WebContext(req, resp, req.getServletContext());
 
+        String category = (req.getParameter("category"));
+        String supplier = (req.getParameter("supplier"));
 
-//        context.setVariable("category", productCategoryDataStore.find(1));;
-        context.setVariable("suppliers", supplierDataStore.getAll());
-
-
-        if (req.getParameter("supplier") != null) {
-            products = productDataStore.getBySupplierName(req.getParameter("supplier"));
-//            String json = gson.toJson(products, collectionType);
-//            resp.setContentType("application/json");
-//            resp.getWriter().write(json);
+        if (category != null && supplier == null) {
+            products = productDataStore.getBy(productCategoryDataStore.getCategoryByName(category));
+        }
+        else if (category == null && supplier != null) {
+            products = productDataStore.getBy(supplierDataStore.getSipplierByName(supplier));
         }
         else {
             products = productDataStore.getAll();
         }
 
-            // // Alternative setting of the template context
-            // Map<String, Object> params = new HashMap<>();
-            // params.put("category", productCategoryDataStore.find(1));
-            // params.put("products", productDataStore.getBy(productCategoryDataStore.find(1)));
-            // context.setVariables(params);
+        context.setVariable("itemsNumber", 0);
+        if (CartController.getCookieValueBy("userId", req) != null) {
+            OrderDao orderDataStore = OrderDaoMem.getInstance();
+            Order order = orderDataStore.getActual(Integer.parseInt(CartController.getCookieValueBy("userId", req)));
+            int itemsNumber = order.getCart().getSize();
+            context.setVariable("itemsNumber", itemsNumber);
+        }
 
         context.setVariable("products", products);
+        context.setVariable("categories", productCategoryDataStore.getAll());
+        context.setVariable("suppliers", supplierDataStore.getAll());
         engine.process("product/index.html", context, resp.getWriter());
-
-
     }
-
 }
+
+
+// // Alternative setting of the template context
+// Map<String, Object> params = new HashMap<>();
+// params.put("category", productCategoryDataStore.find(1));
+// params.put("products", productDataStore.getBy(productCategoryDataStore.find(1)));
+// context.setVariables(params);

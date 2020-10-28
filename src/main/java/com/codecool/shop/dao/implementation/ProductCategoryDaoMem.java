@@ -2,7 +2,7 @@ package com.codecool.shop.dao.implementation;
 
 
 import com.codecool.shop.dao.ProductCategoryDao;
-import com.codecool.shop.model.ProductCategory;
+import com.codecool.shop.model.product.ProductCategory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +33,11 @@ public class ProductCategoryDaoMem implements ProductCategoryDao {
     @Override
     public ProductCategory find(int id) {
         return data.stream().filter(t -> t.getId() == id).findFirst().orElse(null);
+    }
+
+    @Override
+    public ProductCategory getCategoryByName(String categoryName) {
+       return data.stream().filter(t -> t.getName().equals(categoryName)).findFirst().orElse(null);
     }
 
     @Override
