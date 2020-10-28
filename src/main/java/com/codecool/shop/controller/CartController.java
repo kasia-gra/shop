@@ -1,5 +1,6 @@
 package com.codecool.shop.controller;
 
+import com.codecool.shop.config.TemplateEngineUtil;
 import com.codecool.shop.dao.OrderDao;
 import com.codecool.shop.dao.ProductDao;
 import com.codecool.shop.dao.UserDao;
@@ -12,6 +13,8 @@ import com.codecool.shop.model.product.Product;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.WebContext;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,14 +26,34 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Type;
+import java.util.HashMap;
 
 @WebServlet(urlPatterns = {"/cart"}, loadOnStartup = 2)
 public class CartController extends HttpServlet {
     private Gson gson = new Gson();
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println("Doing get from CartController");
+        ProductDao productDataStore = ProductDaoMem.getInstance();
+        HashMap<Product, Integer> orderedProducts = new HashMap<>();
+        float totalPrice = 0;
+        for (Product product : productDataStore.getAll()) {
+            int qty = orderedProducts.containsKey(product) ? orderedProducts.get(product) : 0;
+            orderedProducts.put(product, qty + 1);
+            totalPrice = totalPrice + (product.getDefaultPrice() * (qty+1));
+        }
+        HashMap.Entry<Product, Integer> entry = orderedProducts.entrySet().iterator().next();
+        String currency = entry.getKey().getDefaultCurrency().getCurrencyCode();
+        String cartValue = String.format("%.2f %s", totalPrice, currency);
+
+
+        TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(req.getServletContext());
+        WebContext context = new WebContext(req, resp, req.getServletContext());
+
+        context.setVariable("ordered_products", orderedProducts);
+        context.setVariable("cartValue", cartValue);
+        engine.process("product/card.html", context, resp.getWriter());
     }
+
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

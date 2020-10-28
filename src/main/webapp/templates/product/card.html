@@ -18,7 +18,7 @@
 
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
-    integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+            integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
 
     <!-- Latest compiled and minified CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet"
@@ -35,6 +35,8 @@
     <script type="module" src="/static/js/main.js" defer></script>
 
     <link rel="stylesheet" type="text/css" href="/static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/cart.css" />
+
 </head>
 
 <body>
@@ -51,13 +53,11 @@
         <ul class="navbar-nav">
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Filter by Categories</a>
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Categories</a>
 
-                <div class="dropdown-menu" aria-labelledby="category-filter">
-                    <a class="dropdown-item chosen-category"
-                       th:each="category: ${categories}"
-                       th:href="@{/(category=${category.getName()})}"
-                       th:text="${category.name}">Category name</a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#">Category 1</a>
+                    <a class="dropdown-item" href="#">Category 2</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="/">Reset sorting</a>
                 </div>
@@ -68,10 +68,7 @@
                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Filter by Supplier</a>
 
                 <div class="dropdown-menu" aria-labelledby="supplier-filter" >
-                    <a class="dropdown-item chosen-supplier"
-                       th:each="supplier : ${suppliers}"
-                       th:href="@{/(supplier=${supplier.name})}"
-                       th:text="${supplier.name}"></a>
+                    <a class="dropdown-item chosen-supplier"  th:each="supplier : ${suppliers}" th:href="@{/(supplier=${supplier.name})}" th:text="${supplier.name}"></a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="/">Reset sorting</a>
                 </div>
@@ -80,9 +77,9 @@
         </ul>
 
         <ul class="nav navbar-nav navbar-right">
-            <li><a class="nav-link" href="/cart" id="cart">
+            <li><a class="nav-link" href="#" id="cart">
                 <i class="fa fa-shopping-cart"></i>Cart
-                <span class="text-success" th:text="${itemsNumber}">0</span>
+                <span class="text-success">0</span>
             </a></li>
             <li><a class="nav-link" id="register" data-toggle="modal" data-target="#modalRegisterForm"
                    href="#"><span class="link fas fa-user-plus"></span> Sign in</a></li>
@@ -94,39 +91,51 @@
 
 
 <div class="container">
-    <div class="card m-2">
-<!--        <strong th:text="${category.name}">Category Title</strong>-->
-    </div>
 
-    <div id="products" class="row m-2">
-        <div class="col col-sm-12 col-md-6 col-lg-4 mb-2" th:each="prod,iterStat : ${products}">
-            <div class="card h-100" th:attr="data-product-id=${prod.id}">
-                <span class="h-60"><img class="card-img-top" src="http://placehold.it/400x250/000/fff" th:attr="src='/static/img/product_' + ${prod.id} + '.jpg'" alt="" /></span>
-                <div class="card-header" style="height: 15vh;">
-                    <h4 class="card-title" th:text="${prod.name}">Product name</h4>
-                    <p class="card-text" th:text="${prod.description}">Product description... </p>
-                </div>
-                <div class="card-body" style="height: 13vh;">
-                    <div class="card-text">
-                        <p class="lead" th:text="${prod.getPrice()}">100 USD</p>
-                    </div>
-                    <div class="card-text cart-button">
-                        <a class="btn btn-success" href="#">Add to cart</a>
-                    </div>
-                </div>
+    <div class="card-header">
+        <div class="cart-summary">
+            <h4 th:text="${'Total to pay: ' + cartValue}"></h4>
+        </div>
+        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+            <div class="btn-group mr-2" role="group" aria-label="First group">
+                <button type="button" class="btn btn-secondary">Buy</button>
+            </div>
+            <div class="btn-group" role="group" aria-label="Second group">
+                <button type="button" class="btn btn-secondary">Continue shopping</button>
             </div>
         </div>
     </div>
 
-</div>
+    <div class="card-line-item" th:each="product : ${ordered_products.entrySet()}">
 
-<div th:replace="footer.html :: copy"></div>
+        <div class="card-product-img"><img class="fit_contain" src="http://placehold.it/400x250/000/fff"
+                                           th:attr="src='/static/img/product_' + ${product.getKey().id} + '.jpg'" alt="" /></div>
+        <div class="card-product-name">
+            <h3 th:text="${product.getKey().name}">Product name</h3>
+            <p th:text="${product.getKey().description}">Description</p>
+        </div>
 
-<div id="imageModal" class="modal">
-    <span class="modal-close">&times;</span>
-    <img class="modal-content" id="img01" alt="image">
-    <div id="caption"></div>
-</div>
+        <div class="card-product-summary">
+            <div class="total-price-wrapper"><h4 th:text="${'Total: ' + product.getKey().price}"></h4></div>
+            <div class="total-price-wrapper"><h5 th:text="${'Unit price: ' + product.getKey().price}"></h5></div>
+            <div class="card-product-actions">
+                <button class="line-item-summary-wrapper" id="increase-qty">+</button>
+                <input class="line-item-summary-wrapper" id="chosen-qty" th:value="${product.getValue()}"/>
+                <button class="line-item-summary-wrapper" id="decrease-qty">-</button>
+                <button class="fa fa-trash-alt line-item-summary-wrapper" id="remove-product"></button>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div th:replace="footer.html :: copy"></div>
+
+    <div id="imageModal" class="modal">
+        <span class="modal-close">&times;</span>
+        <img class="modal-content" id="img01">
+        <div id="caption"></div>
+    </div>
 
 </body>
 </html>
