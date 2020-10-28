@@ -1,9 +1,13 @@
-package com.codecool.shop.dao;
+package com.codecool.shop.dao.manager;
 
+import com.codecool.shop.dao.dao.ProductDao;
+import com.codecool.shop.dao.ProductDaoJdbc;
 import org.postgresql.ds.PGSimpleDataSource;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
+
+//TODO NOT WORKING YET
 
 public class DatabaseManager {
 	public ProductDao productDao;
@@ -19,6 +23,7 @@ public class DatabaseManager {
 	public void setup() throws SQLException {
 		DataSource dataSource = connect();
 		productDao = new ProductDaoJdbc(dataSource);
+
 	}
 
 

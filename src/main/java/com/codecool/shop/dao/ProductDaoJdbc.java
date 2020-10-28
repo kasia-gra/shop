@@ -1,19 +1,21 @@
 package com.codecool.shop.dao;
 
-import com.codecool.shop.dao.implementation.ProductCategoryDaoMem;
-import com.codecool.shop.model.Product;
-import com.codecool.shop.model.ProductCategory;
-import com.codecool.shop.model.Supplier;
+import com.codecool.shop.dao.dao.ProductDao;
+import com.codecool.shop.model.product.Product;
+import com.codecool.shop.model.product.ProductCategory;
+import com.codecool.shop.model.product.Supplier;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductDaoJdbc implements ProductDao{
+
+//TODO NOT WORKING YET
+
+public class ProductDaoJdbc implements ProductDao {
 	private DataSource dataSource;
 	private List<Product> data = new ArrayList<>();
 

@@ -1,7 +1,7 @@
-package com.codecool.shop.dao.implementation;
+package com.codecool.shop.dao.jdbc;
 
 
-import com.codecool.shop.dao.ProductDao;
+import com.codecool.shop.dao.dao.ProductDao;
 import com.codecool.shop.model.product.Product;
 import com.codecool.shop.model.product.ProductCategory;
 import com.codecool.shop.model.product.Supplier;
@@ -51,10 +51,6 @@ public class ProductDaoMem implements ProductDao {
     @Override
     public List<Product> getBy(Supplier supplier) {
         return data.stream().filter(t -> t.getSupplier().equals(supplier)).collect(Collectors.toList());
-    }
-
-    public List<Product> getBySupplierName(String supplierName)  {
-        return data.stream().filter(t -> t.getSupplier().getName().equals(supplierName)).collect(Collectors.toList());
     }
 
     @Override

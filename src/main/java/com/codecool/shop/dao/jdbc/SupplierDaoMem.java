@@ -1,6 +1,6 @@
-package com.codecool.shop.dao.implementation;
+package com.codecool.shop.dao.jdbc;
 
-import com.codecool.shop.dao.SupplierDao;
+import com.codecool.shop.dao.dao.SupplierDao;
 import com.codecool.shop.model.product.Supplier;
 
 import java.util.ArrayList;
