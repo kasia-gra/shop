@@ -1,13 +1,14 @@
 package com.codecool.shop.controller;
 
+import com.codecool.shop.dao.jdbc.ProductDaoMem;
+import com.codecool.shop.dao.manager.DatabaseManager;
 import com.codecool.shop.config.TemplateEngineUtil;
-import com.codecool.shop.dao.OrderDao;
-import com.codecool.shop.dao.ProductCategoryDao;
-import com.codecool.shop.dao.ProductDao;
-import com.codecool.shop.dao.implementation.OrderDaoMem;
-import com.codecool.shop.dao.implementation.ProductCategoryDaoMem;
-import com.codecool.shop.dao.implementation.ProductDaoMem;
-import com.codecool.shop.dao.implementation.SupplierDaoMem;
+import com.codecool.shop.dao.dao.OrderDao;
+import com.codecool.shop.dao.dao.ProductCategoryDao;
+import com.codecool.shop.dao.dao.ProductDao;
+import com.codecool.shop.dao.jdbc.OrderDaoMem;
+import com.codecool.shop.dao.jdbc.ProductCategoryDaoMem;
+import com.codecool.shop.dao.jdbc.SupplierDaoMem;
 import com.codecool.shop.model.order.Order;
 import com.codecool.shop.model.product.Product;
 import org.thymeleaf.TemplateEngine;
@@ -24,10 +25,14 @@ import java.util.List;
 @WebServlet(urlPatterns = {"/"}, loadOnStartup = 1)
 public class ProductController extends HttpServlet {
     List<Product> products;
+//    DatabaseManager dbManager = new DatabaseManager();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ProductDao productDataStore = ProductDaoMem.getInstance();
+//        dbManager.run();
+//        ProductDao productDataStore = dbManager.productDao; //todo change data source to db instead od Mem objects
+
         ProductCategoryDao productCategoryDataStore = ProductCategoryDaoMem.getInstance();
         SupplierDaoMem supplierDataStore = SupplierDaoMem.getInstance();
         TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(req.getServletContext());
@@ -60,10 +65,3 @@ public class ProductController extends HttpServlet {
         engine.process("product/index.html", context, resp.getWriter());
     }
 }
-
-
-// // Alternative setting of the template context
-// Map<String, Object> params = new HashMap<>();
-// params.put("category", productCategoryDataStore.find(1));
-// params.put("products", productDataStore.getBy(productCategoryDataStore.find(1)));
-// context.setVariables(params);

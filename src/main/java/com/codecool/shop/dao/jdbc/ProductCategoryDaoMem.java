@@ -1,7 +1,7 @@
-package com.codecool.shop.dao.implementation;
+package com.codecool.shop.dao.jdbc;
 
 
-import com.codecool.shop.dao.ProductCategoryDao;
+import com.codecool.shop.dao.dao.ProductCategoryDao;
 import com.codecool.shop.model.product.ProductCategory;
 
 import java.util.ArrayList;
