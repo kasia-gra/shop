@@ -1,12 +1,12 @@
 package com.codecool.shop.controller;
 
 import com.codecool.shop.config.TemplateEngineUtil;
-import com.codecool.shop.dao.OrderDao;
-import com.codecool.shop.dao.ProductDao;
-import com.codecool.shop.dao.UserDao;
-import com.codecool.shop.dao.implementation.OrderDaoMem;
-import com.codecool.shop.dao.implementation.ProductDaoMem;
-import com.codecool.shop.dao.implementation.UserDaoMem;
+import com.codecool.shop.dao.dao.OrderDao;
+import com.codecool.shop.dao.dao.ProductDao;
+import com.codecool.shop.dao.dao.UserDao;
+import com.codecool.shop.dao.jdbc.OrderDaoMem;
+import com.codecool.shop.dao.jdbc.ProductDaoMem;
+import com.codecool.shop.dao.jdbc.UserDaoMem;
 import com.codecool.shop.model.User;
 import com.codecool.shop.model.order.Cart;
 import com.codecool.shop.model.order.LineItem;

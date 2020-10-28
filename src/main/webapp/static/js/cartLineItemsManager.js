@@ -10,6 +10,9 @@ export let cartLineItemsManager = {
     init: function () {
         increaseQtyButtons.forEach(button => button.addEventListener("click", this.increaseQty));
         decreaseQtyButtons.forEach(button => button.addEventListener("click", this.decreaseQty));
+        chooseQtyInputs.forEach(button => button.addEventListener("change", function (event) {
+            updateQty(event.target);
+        }));
     },
 
     increaseQty: function (event) {
@@ -31,6 +34,25 @@ export let cartLineItemsManager = {
         else {
             changeLineItemQty(lineItemId, currentQtyField, currentQty - 1, lineItemContainer);
         }
+    },
+
+}
+
+const updateQty =  function (currentQtyField) {
+    const currentQty = parseInt(currentQtyField.value);
+    let lineItemId = currentQtyField.parentElement.id;
+    let lineItemContainer = currentQtyField.parentElement.parentElement.parentElement;
+    if (currentQty < 0 || !Number.isInteger(currentQty)) {
+        alert("Please enter an integer");
+        currentQtyField.value = currentQtyField.dataset.qty;
+    }
+    else if (currentQty == 0) {
+        currentQtyField.dataset.qty = currentQty;
+        deleteLineItem(lineItemId, lineItemContainer);
+    }
+    else {
+        currentQtyField.dataset.qty = currentQty;
+        changeLineItemQty(lineItemId, currentQtyField, currentQty, lineItemContainer);
     }
 }
 
@@ -70,7 +92,6 @@ const updateLineItemPrice = function (json_response, lineItemContainer) {
 }
 
 const updateCart = function(json_response, lineItemContainer) {
-
     document.getElementById("total-to-pay").innerText = (parseInt(json_response.totalCartValue)).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
     document.querySelector(".text-success").innerHTML = json_response.numberOfProductsInCart;}
 

@@ -1,15 +1,13 @@
 package com.codecool.shop.controller;
 
-import com.codecool.shop.dao.jdbc.ProductDaoMem;
-import com.codecool.shop.dao.manager.DatabaseManager;
 import com.codecool.shop.config.TemplateEngineUtil;
-import com.codecool.shop.dao.OrderDao;
-import com.codecool.shop.dao.ProductCategoryDao;
-import com.codecool.shop.dao.ProductDao;
-import com.codecool.shop.dao.implementation.OrderDaoMem;
-import com.codecool.shop.dao.implementation.ProductCategoryDaoMem;
-import com.codecool.shop.dao.implementation.ProductDaoMem;
-import com.codecool.shop.dao.implementation.SupplierDaoMem;
+import com.codecool.shop.dao.dao.OrderDao;
+import com.codecool.shop.dao.dao.ProductCategoryDao;
+import com.codecool.shop.dao.dao.ProductDao;
+import com.codecool.shop.dao.jdbc.OrderDaoMem;
+import com.codecool.shop.dao.jdbc.ProductCategoryDaoMem;
+import com.codecool.shop.dao.jdbc.ProductDaoMem;
+import com.codecool.shop.dao.jdbc.SupplierDaoMem;
 import com.codecool.shop.model.order.Order;
 import com.codecool.shop.model.product.Product;
 import org.thymeleaf.TemplateEngine;

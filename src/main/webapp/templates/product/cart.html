@@ -98,10 +98,10 @@
                 <h5 class="line-unit-price" th:text="${#numbers.formatDecimal(lineItem.getProduct().getDefaultPrice(),1,'COMMA',2,'POINT')}"></h5>
             </div>
             <div class="card-product-actions" th:id="${lineItem.getLineId()}">
-                <button class="line-item-summary-wrapper increase-qty" id="increase-qty">+</button>
-                <input class="line-item-summary-wrapper choose-qty" id="choose-qty" type="number" min="1" th:value="${lineItem.getQty()}"/>
-                <button class="line-item-summary-wrapper decrease-qty" id="decrease-qty">-</button>
-                <button class="fa fa-trash-alt line-item-summary-wrapper" id="remove-product"></button>
+                <button class="line-item-summary-wrapper increase-qty">+</button>
+                <input class="line-item-summary-wrapper choose-qty" th:attr="data-qty=${lineItem.getQty()}" th:value="${lineItem.getQty()}"/>
+                <button class="line-item-summary-wrapper decrease-qty">-</button>
+                <button class="fa fa-trash-alt line-item-summary-wrapper"></button>
             </div>
         </div>
     </div>
