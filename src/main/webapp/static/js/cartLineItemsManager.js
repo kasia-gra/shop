@@ -83,7 +83,7 @@ const deleteLineItem = function(lineItemId, lineItemContainer) {
 }
 
 const removeLineItemFromCart = function (lineItemDOMElement) {
-    lineItemDOMElement.innerHTML = "";
+    lineItemDOMElement.remove();
 
 }
 
