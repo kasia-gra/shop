@@ -1,6 +1,6 @@
 package com.codecool.shop.model.order;
 
-import com.codecool.shop.model.User;
+import com.codecool.shop.model.user.User;
 
 public class Order {
     private int id;

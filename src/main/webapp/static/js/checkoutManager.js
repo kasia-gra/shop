@@ -6,7 +6,7 @@ let checkoutManager = {
   initValidation: function() {
     window.addEventListener('load', function () {
       // Fetch all the forms we want to apply custom Bootstrap validation styles to
-      let forms = document.querySelectorAll(".needs-validation:not(.hidden)")
+      let forms = document.querySelectorAll(".needs-validation");
       // Loop over them and prevent submission
       Array.prototype.filter.call(forms, function (form) {
         form.addEventListener('submit', function (event) {
@@ -15,18 +15,9 @@ let checkoutManager = {
             event.stopPropagation();
           }
           form.classList.add('was-validated');
-
         }, false);
       })
     }, false);
-    let submitButton = document.querySelector("#submitButton");
-    // submitButton.addEventListener("submit", () => {
-    //   document.querySelector("#billingAddressForm").submit(event => {
-    //     event.preventDefault();
-    //     event.stopPropagation()
-    //     alert("submitted")
-    //     console.log("submitted");
-    //   });
   },
   toggleShippingAddressVisibility: function() {
     let sameAddressCheckbox = document.querySelector("#same-address");
@@ -36,7 +27,6 @@ let checkoutManager = {
     let shippingAddressContainer = document.querySelector("#shippingAddressContainer");
     shippingAddressContainer.classList.toggle("hidden");
     shippingAddressContainer.disabled = !shippingAddressContainer.disabled;
-
   }
 }
 

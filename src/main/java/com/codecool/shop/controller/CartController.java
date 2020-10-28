@@ -7,7 +7,7 @@ import com.codecool.shop.dao.UserDao;
 import com.codecool.shop.dao.implementation.OrderDaoMem;
 import com.codecool.shop.dao.implementation.ProductDaoMem;
 import com.codecool.shop.dao.implementation.UserDaoMem;
-import com.codecool.shop.model.User;
+import com.codecool.shop.model.user.User;
 import com.codecool.shop.model.order.Order;
 import com.codecool.shop.model.product.Product;
 import com.google.gson.Gson;
