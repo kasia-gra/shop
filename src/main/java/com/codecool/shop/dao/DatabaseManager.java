@@ -6,9 +6,19 @@ import javax.sql.DataSource;
 import java.sql.SQLException;
 
 public class DatabaseManager {
+	public ProductDao productDao;
+
+	public void run() {
+		try {
+			setup();
+		} catch (SQLException throwables) {
+			System.err.println("Could not connect to the database.");
+		}
+	}
 
 	public void setup() throws SQLException {
 		DataSource dataSource = connect();
+		productDao = new ProductDaoJdbc(dataSource);
 	}
 
 
