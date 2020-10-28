@@ -1,4 +1,4 @@
-package com.codecool.shop.dao;
+package com.codecool.shop.dao.dao;
 
 import com.codecool.shop.model.product.Supplier;
 import com.codecool.shop.model.product.Product;
@@ -14,7 +14,6 @@ public interface ProductDao {
 
     List<Product> getAll();
     List<Product> getBy(Supplier supplier);
-    List<Product> getBySupplierName(String supplierName);
     List<Product> getBy(ProductCategory productCategory);
 
 }

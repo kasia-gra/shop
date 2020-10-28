@@ -1,11 +1,11 @@
 package com.codecool.shop.config;
 
-import com.codecool.shop.dao.ProductCategoryDao;
-import com.codecool.shop.dao.ProductDao;
-import com.codecool.shop.dao.SupplierDao;
-import com.codecool.shop.dao.implementation.ProductCategoryDaoMem;
-import com.codecool.shop.dao.implementation.ProductDaoMem;
-import com.codecool.shop.dao.implementation.SupplierDaoMem;
+import com.codecool.shop.dao.dao.ProductCategoryDao;
+import com.codecool.shop.dao.dao.ProductDao;
+import com.codecool.shop.dao.dao.SupplierDao;
+import com.codecool.shop.dao.jdbc.ProductCategoryDaoMem;
+import com.codecool.shop.dao.jdbc.ProductDaoMem;
+import com.codecool.shop.dao.jdbc.SupplierDaoMem;
 import com.codecool.shop.model.product.Product;
 import com.codecool.shop.model.product.ProductCategory;
 import com.codecool.shop.model.product.Supplier;
