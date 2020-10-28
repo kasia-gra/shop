@@ -2,7 +2,8 @@ DROP TABLE IF EXISTS public.products;
 CREATE TABLE public.products (
     id serial NOT NULL PRIMARY KEY,
     name text NOT NULL,
-    price integer NOT NULL,
+    price float NOT NULL,
+    currency text NOT NULL,
     description text NOT NULL,
     picture_name text NOT NULL,
     category_id int NOT NULL,
