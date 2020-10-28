@@ -93,7 +93,7 @@
         </div>
 
         <div class="card-product-summary">
-            <div class="total-price-wrapper"><h4 th:text="${'Total: ' + product.getKey().price}"></h4></div>
+            <div class="total-price-wrapper"><h4 th:text="${'Total: ' + product.getKey().defaultPrice * product.getValue()}"></h4></div>
             <div class="total-price-wrapper"><h5 th:text="${'Unit price: ' + product.getKey().price}"></h5></div>
             <div class="card-product-actions">
                 <button class="line-item-summary-wrapper" id="increase-qty">+</button>

@@ -50,8 +50,8 @@ public class Cart {
     }
 
     public float getTotalPrice() {
-        return products.keySet().stream().
-                map(Product::getDefaultPrice).
+        return products.entrySet().stream().
+                map(entry -> entry.getKey().getDefaultPrice() * entry.getValue()).
                 reduce(0.0f, Float::sum);
     }
 }
