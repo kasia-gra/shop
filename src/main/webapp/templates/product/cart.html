@@ -52,37 +52,10 @@
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
 
-        <ul class="navbar-nav">
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Categories</a>
-
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">Category 1</a>
-                    <a class="dropdown-item" href="#">Category 2</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="/">Reset sorting</a>
-                </div>
-            </li>
-
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="supplier-filter" role="button"
-                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Filter by Supplier</a>
-
-                <div class="dropdown-menu" aria-labelledby="supplier-filter">
-                    <a class="dropdown-item chosen-supplier" th:each="supplier : ${suppliers}"
-                       th:href="@{/(supplier=${supplier.name})}" th:text="${supplier.name}"></a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="/">Reset sorting</a>
-                </div>
-            </li>
-
-        </ul>
-
         <ul class="nav navbar-nav navbar-right">
             <li><a class="nav-link" href="#" id="cart">
                 <i class="fa fa-shopping-cart"></i>Cart
-                <span class="text-success">0</span>
+                <span class="text-success" th:text="${itemsNumber}">0</span>
             </a></li>
             <li><a class="nav-link" id="register" data-toggle="modal" data-target="#modalRegisterForm"
                    href="#"><span class="link fas fa-user-plus"></span> Sign in</a></li>
@@ -109,7 +82,7 @@
         </div>
     </div>
 
-    <div class="card-line-item" th:each="product : ${ordered_products.entrySet()}">
+    <div class="card-line-item" th:each="product : ${orderedProducts.entrySet()}">
 
         <div class="card-product-img"><img class="fit_contain" src="http://placehold.it/400x250/000/fff"
                                            th:attr="src='/static/img/product_' + ${product.getKey().id} + '.jpg'"

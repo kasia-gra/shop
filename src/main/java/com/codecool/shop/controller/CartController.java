@@ -36,24 +36,27 @@ public class CartController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Map<Product, Integer> orderedProducts = new HashMap<>();
         float totalPrice = 0;
+        String cartValue = "0";
+        int itemsNumber = 0;
 
         if (CartController.getCookieValueBy("userId", req) != null) {
             OrderDao orderDataStore = OrderDaoMem.getInstance();
             Order order = orderDataStore.getActual(Integer.parseInt(CartController.getCookieValueBy("userId", req)));
             orderedProducts = order.getCart().getProducts();
             totalPrice = order.getCart().getTotalPrice();
+            HashMap.Entry<Product, Integer> entry = orderedProducts.entrySet().iterator().next();
+            String currency = entry.getKey().getDefaultCurrency().getCurrencyCode();
+            cartValue = String.format("%.2f %s", totalPrice, currency);
+            itemsNumber = order.getCart().getSize();
         }
-
-        HashMap.Entry<Product, Integer> entry = orderedProducts.entrySet().iterator().next();
-        String currency = entry.getKey().getDefaultCurrency().getCurrencyCode();
-        String cartValue = String.format("%.2f %s", totalPrice, currency);
 
         TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(req.getServletContext());
         WebContext context = new WebContext(req, resp, req.getServletContext());
 
-        context.setVariable("ordered_products", orderedProducts);
+        context.setVariable("itemsNumber", itemsNumber);
+        context.setVariable("orderedProducts", orderedProducts);
         context.setVariable("cartValue", cartValue);
-        engine.process("product/card.html", context, resp.getWriter());
+        engine.process("product/cart.html", context, resp.getWriter());
     }
 
 
