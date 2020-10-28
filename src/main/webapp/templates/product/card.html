@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8" />
-    <meta name="author" content="Codecool" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta charset="utf-8"/>
+    <meta name="author" content="Codecool"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
 
     <title>Codecool Shop</title>
 
@@ -14,11 +14,13 @@
 
     <!--Latest compiled and minified Popper -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
-            integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+            integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+            crossorigin="anonymous"></script>
 
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
-            integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+            integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+            crossorigin="anonymous"></script>
 
     <!-- Latest compiled and minified CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet"
@@ -34,8 +36,8 @@
 
     <script type="module" src="/static/js/main.js" defer></script>
 
-    <link rel="stylesheet" type="text/css" href="/static/css/custom.css" />
-    <link rel="stylesheet" type="text/css" href="/static/css/cart.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/custom.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/cart.css"/>
 
 </head>
 
@@ -67,8 +69,9 @@
                 <a class="nav-link dropdown-toggle" href="#" id="supplier-filter" role="button"
                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Filter by Supplier</a>
 
-                <div class="dropdown-menu" aria-labelledby="supplier-filter" >
-                    <a class="dropdown-item chosen-supplier"  th:each="supplier : ${suppliers}" th:href="@{/(supplier=${supplier.name})}" th:text="${supplier.name}"></a>
+                <div class="dropdown-menu" aria-labelledby="supplier-filter">
+                    <a class="dropdown-item chosen-supplier" th:each="supplier : ${suppliers}"
+                       th:href="@{/(supplier=${supplier.name})}" th:text="${supplier.name}"></a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="/">Reset sorting</a>
                 </div>
@@ -109,7 +112,8 @@
     <div class="card-line-item" th:each="product : ${ordered_products.entrySet()}">
 
         <div class="card-product-img"><img class="fit_contain" src="http://placehold.it/400x250/000/fff"
-                                           th:attr="src='/static/img/product_' + ${product.getKey().id} + '.jpg'" alt="" /></div>
+                                           th:attr="src='/static/img/product_' + ${product.getKey().id} + '.jpg'"
+                                           alt=""/></div>
         <div class="card-product-name">
             <h3 th:text="${product.getKey().name}">Product name</h3>
             <p th:text="${product.getKey().description}">Description</p>
@@ -128,14 +132,15 @@
         </div>
 
     </div>
+</div>
 
-    <div th:replace="footer.html :: copy"></div>
+<div th:replace="footer.html :: copy"></div>
 
-    <div id="imageModal" class="modal">
-        <span class="modal-close">&times;</span>
-        <img class="modal-content" id="img01">
-        <div id="caption"></div>
-    </div>
+<div id="imageModal" class="modal">
+    <span class="modal-close">&times;</span>
+    <img class="modal-content" id="img01">
+    <div id="caption"></div>
+</div>
 
 </body>
 </html>
