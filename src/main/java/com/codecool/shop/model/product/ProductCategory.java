@@ -1,14 +1,14 @@
-package com.codecool.shop.model;
+package com.codecool.shop.model.product;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProductCategory extends BaseModel {
     private String department;
-    private List<Product> products;
+    private transient List<Product> products;
 
     public ProductCategory(String name, String department, String description) {
-        super(name);
+        super(name, description);
         this.department = department;
         this.products = new ArrayList<>();
     }

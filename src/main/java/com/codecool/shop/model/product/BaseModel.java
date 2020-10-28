@@ -1,6 +1,7 @@
-package com.codecool.shop.model;
+package com.codecool.shop.model.product;
 
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 
 public class BaseModel {
