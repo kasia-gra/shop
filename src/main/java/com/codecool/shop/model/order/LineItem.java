@@ -7,11 +7,12 @@ public class LineItem {
     Product product;
     int qty;
     float linePrice;
+    int lineId;
 
-
-    LineItem(Product product, int qty) {
+    LineItem(Product product, int qty, int id) {
         this.product = product;
         this.qty = qty;
+        this.lineId = id;
     }
 
     public Product getProduct() {
@@ -33,9 +34,12 @@ public class LineItem {
     public float getLinePrice() {
         return product.getDefaultPrice() * qty;
     }
-
     public void setLinePrice(float linePrice) {
         this.linePrice = linePrice;
+    }
+
+    public int getLineId () {
+        return this.lineId;
     }
 }
 

@@ -36,13 +36,16 @@ import java.util.Map;
 @WebServlet(urlPatterns = {"/cart"}, loadOnStartup = 2)
 public class CartController extends HttpServlet {
     private Gson gson = new Gson();
+    private Util util = new Util();
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Cart cart = new Cart();
-        if (CartController.getCookieValueBy("userId", req) != null) {
+        if (util.getCookieValueBy("userId", req) != null) {
             OrderDao orderDataStore = OrderDaoMem.getInstance();
-            Order order = orderDataStore.getActual(Integer.parseInt(CartController.getCookieValueBy("userId", req)));
+            Order order = orderDataStore.getActual(Integer.parseInt(util.getCookieValueBy("userId", req)));
             cart = order.getCart();
+            cart.setOrderId(order.getId());
         }
         TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(req.getServletContext());
         WebContext context = new WebContext(req, resp, req.getServletContext());
@@ -56,7 +59,7 @@ public class CartController extends HttpServlet {
         ProductDao productDataStore = ProductDaoMem.getInstance();
         OrderDao orderDataStore = OrderDaoMem.getInstance();
 
-        JsonObject jsonRequest = getJsonObjectFromRequest(req);
+        JsonObject jsonRequest = util.getJsonObjectFromRequest(req);
         int productId = Integer.parseInt(jsonRequest.get("productId").getAsString());
         int userId = Integer.parseInt(jsonRequest.get("userId").getAsString());
         Product product = productDataStore.find(productId);
@@ -67,12 +70,7 @@ public class CartController extends HttpServlet {
         JsonObject jsonResponse = new JsonObject();
         jsonResponse.addProperty("itemsNumber", itemsNumber);
 
-        resp.setContentType("application/json");
-        resp.setCharacterEncoding("UTF-8");
-        PrintWriter out = resp.getWriter();
-
-        out.println(jsonResponse);
-        out.flush();
+        util.setResponse(resp, jsonResponse);
     }
 
     @Override
@@ -81,7 +79,7 @@ public class CartController extends HttpServlet {
         OrderDao orderDataStore = OrderDaoMem.getInstance();
         UserDao userDataStore = UserDaoMem.getInstance();
 
-        JsonObject jsonRequest = getJsonObjectFromRequest(req);
+        JsonObject jsonRequest = util.getJsonObjectFromRequest(req);
         int productId = Integer.parseInt(jsonRequest.get("productId").getAsString());
         Product product = productDataStore.find(productId);
 
@@ -98,32 +96,6 @@ public class CartController extends HttpServlet {
         jsonResponse.addProperty("itemsNumber", itemsNumber);
         jsonResponse.addProperty("userId", userId);
 
-        resp.setContentType("application/json");
-        resp.setCharacterEncoding("UTF-8");
-        PrintWriter out = resp.getWriter();
-        out.println(jsonResponse);
-        out.flush();
-    }
-
-    private JsonObject getJsonObjectFromRequest(HttpServletRequest request) throws IOException {
-        StringBuilder stringBuilder = new StringBuilder();
-        String line = null;
-        BufferedReader reader = request.getReader();
-        while ((line = reader.readLine()) != null)
-            stringBuilder.append(line);
-        Type listType = new TypeToken<JsonObject>(){}.getType();
-        return gson.fromJson(String.valueOf(stringBuilder), listType);
-    }
-
-    public static String getCookieValueBy(String name, HttpServletRequest req) {
-        Cookie[] cookies = req.getCookies();
-        if (cookies != null && cookies.length != 0) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals(name)) {
-                    return cookie.getValue();
-                }
-            }
-        }
-        return null;
+        util.setResponse(resp, jsonResponse);
     }
 }

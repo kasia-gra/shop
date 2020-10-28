@@ -69,10 +69,8 @@
 <div class="container">
 
     <div class="card-header">
-        <div class="cart-summary">
-            <h4 th:text="${'Total to pay: '
-            + #numbers.formatDecimal(cart.getLineItemsTotalPrice(),1,'COMMA',2,'POINT')
-            + ' ' + cart.getCartCurrency()}"></h4>
+        <div class="order-summary" th:id="${cart.getOrderId()}">
+            <h4 id="total-to-pay" th:text="${#numbers.formatDecimal(cart.getLineItemsTotalPrice(),1,'COMMA',2,'POINT')}"></h4>
         </div>
         <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
             <div class="btn-group mr-2" role="group" aria-label="First group">
@@ -85,7 +83,6 @@
     </div>
 
     <div class="card-line-item" th:each="lineItem : ${cart.getLineItems()}">
-
         <div class="card-product-img"><img class="fit_contain" src="http://placehold.it/400x250/000/fff"
                                            th:attr="src='/static/img/product_' + ${lineItem.getProduct().id} + '.jpg'"
                                            alt=""/></div>
@@ -93,28 +90,22 @@
             <h3 th:text="${lineItem.getProduct().name}">Product name</h3>
             <p th:text="${lineItem.getProduct().description}">Description</p>
         </div>
-
         <div class="card-product-summary">
             <div class="total-price-wrapper">
-                <h4 th:text="${'Total: '
-                + #numbers.formatDecimal(lineItem.getLinePrice(),1,'COMMA',2,'POINT')
-                +  ' ' + cart.getCartCurrency()}"></h4>
+                <h4 class="total-line-price" th:text="${#numbers.formatDecimal(lineItem.getLinePrice(),1,'COMMA',2,'POINT')}"></h4>
             </div>
             <div class="total-price-wrapper">
-                <h5 th:text="${'Unit price: '
-                + #numbers.formatDecimal(lineItem.getProduct().getDefaultPrice(),1,'COMMA',2,'POINT')
-                +  ' ' + cart.getCartCurrency()}"></h5>
+                <h5 class="line-unit-price" th:text="${#numbers.formatDecimal(lineItem.getProduct().getDefaultPrice(),1,'COMMA',2,'POINT')}"></h5>
             </div>
-            <div class="card-product-actions">
-                <button class="line-item-summary-wrapper" id="increase-qty">+</button>
-                <input class="line-item-summary-wrapper" id="chosen-qty" th:value="${lineItem.getQty()}"/>
-                <button class="line-item-summary-wrapper" id="decrease-qty">-</button>
+            <div class="card-product-actions" th:id="${lineItem.getLineId()}">
+                <button class="line-item-summary-wrapper increase-qty" id="increase-qty">+</button>
+                <input class="line-item-summary-wrapper choose-qty" id="choose-qty" type="number" min="1" th:value="${lineItem.getQty()}"/>
+                <button class="line-item-summary-wrapper decrease-qty" id="decrease-qty">-</button>
                 <button class="fa fa-trash-alt line-item-summary-wrapper" id="remove-product"></button>
             </div>
-
         </div>
-
     </div>
+
 </div>
 
 <div th:replace="footer.html :: copy"></div>

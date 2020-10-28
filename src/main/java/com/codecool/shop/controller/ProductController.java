@@ -24,6 +24,7 @@ import java.util.List;
 @WebServlet(urlPatterns = {"/"}, loadOnStartup = 1)
 public class ProductController extends HttpServlet {
     List<Product> products;
+    private Util util = new Util();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -47,9 +48,9 @@ public class ProductController extends HttpServlet {
         }
 
         context.setVariable("itemsNumber", 0);
-        if (CartController.getCookieValueBy("userId", req) != null) {
+        if (util.getCookieValueBy("userId", req) != null) {
             OrderDao orderDataStore = OrderDaoMem.getInstance();
-            Order order = orderDataStore.getActual(Integer.parseInt(CartController.getCookieValueBy("userId", req)));
+            Order order = orderDataStore.getActual(Integer.parseInt(util.getCookieValueBy("userId", req)));
             int itemsNumber = order.getCart().getSize();
             context.setVariable("itemsNumber", itemsNumber);
         }
