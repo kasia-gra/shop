@@ -55,7 +55,7 @@
         <ul class="nav navbar-nav navbar-right">
             <li><a class="nav-link" href="#" id="cart">
                 <i class="fa fa-shopping-cart"></i>Cart
-                <span class="text-success" th:text="${itemsNumber}">0</span>
+                <span class="text-success" th:text="${cart.getCartSize()}">0</span>
             </a></li>
             <li><a class="nav-link" id="register" data-toggle="modal" data-target="#modalRegisterForm"
                    href="#"><span class="link fas fa-user-plus"></span> Sign in</a></li>
@@ -70,7 +70,9 @@
 
     <div class="card-header">
         <div class="cart-summary">
-            <h4 th:text="${'Total to pay: ' + cartValue}"></h4>
+            <h4 th:text="${'Total to pay: '
+            + #numbers.formatDecimal(cart.getLineItemsTotalPrice(),1,'COMMA',2,'POINT')
+            + ' ' + cart.getCartCurrency()}"></h4>
         </div>
         <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
             <div class="btn-group mr-2" role="group" aria-label="First group">
@@ -82,24 +84,30 @@
         </div>
     </div>
 
-    <div class="card-line-item" th:each="product : ${orderedProducts.entrySet()}">
+    <div class="card-line-item" th:each="lineItem : ${cart.getLineItems()}">
 
         <div class="card-product-img"><img class="fit_contain" src="http://placehold.it/400x250/000/fff"
-                                           th:attr="src='/static/img/product_' + ${product.getKey().id} + '.jpg'"
+                                           th:attr="src='/static/img/product_' + ${lineItem.getProduct().id} + '.jpg'"
                                            alt=""/></div>
         <div class="card-product-name">
-            <h3 th:text="${product.getKey().name}">Product name</h3>
-            <p th:text="${product.getKey().description}">Description</p>
+            <h3 th:text="${lineItem.getProduct().name}">Product name</h3>
+            <p th:text="${lineItem.getProduct().description}">Description</p>
         </div>
 
         <div class="card-product-summary">
             <div class="total-price-wrapper">
-                <h4 th:text="${'Total: ' + #numbers.formatDecimal(product.getKey().defaultPrice * product.getValue(),1,'COMMA',2,'POINT')}"></h4>
+                <h4 th:text="${'Total: '
+                + #numbers.formatDecimal(lineItem.getLinePrice(),1,'COMMA',2,'POINT')
+                +  ' ' + cart.getCartCurrency()}"></h4>
             </div>
-            <div class="total-price-wrapper"><h5 th:text="${'Unit price: ' + product.getKey().price}"></h5></div>
+            <div class="total-price-wrapper">
+                <h5 th:text="${'Unit price: '
+                + #numbers.formatDecimal(lineItem.getProduct().getDefaultPrice(),1,'COMMA',2,'POINT')
+                +  ' ' + cart.getCartCurrency()}"></h5>
+            </div>
             <div class="card-product-actions">
                 <button class="line-item-summary-wrapper" id="increase-qty">+</button>
-                <input class="line-item-summary-wrapper" id="chosen-qty" th:value="${product.getValue()}"/>
+                <input class="line-item-summary-wrapper" id="chosen-qty" th:value="${lineItem.getQty()}"/>
                 <button class="line-item-summary-wrapper" id="decrease-qty">-</button>
                 <button class="fa fa-trash-alt line-item-summary-wrapper" id="remove-product"></button>
             </div>

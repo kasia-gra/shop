@@ -8,6 +8,8 @@ import com.codecool.shop.dao.implementation.OrderDaoMem;
 import com.codecool.shop.dao.implementation.ProductDaoMem;
 import com.codecool.shop.dao.implementation.UserDaoMem;
 import com.codecool.shop.model.User;
+import com.codecool.shop.model.order.Cart;
+import com.codecool.shop.model.order.LineItem;
 import com.codecool.shop.model.order.Order;
 import com.codecool.shop.model.product.Product;
 import com.google.gson.Gson;
@@ -26,7 +28,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @WebServlet(urlPatterns = {"/cart"}, loadOnStartup = 2)
@@ -34,28 +38,15 @@ public class CartController extends HttpServlet {
     private Gson gson = new Gson();
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Map<Product, Integer> orderedProducts = new HashMap<>();
-        float totalPrice = 0;
-        String cartValue = "0";
-        int itemsNumber = 0;
-
+        Cart cart = new Cart();
         if (CartController.getCookieValueBy("userId", req) != null) {
             OrderDao orderDataStore = OrderDaoMem.getInstance();
             Order order = orderDataStore.getActual(Integer.parseInt(CartController.getCookieValueBy("userId", req)));
-            orderedProducts = order.getCart().getProducts();
-            totalPrice = order.getCart().getTotalPrice();
-            HashMap.Entry<Product, Integer> entry = orderedProducts.entrySet().iterator().next();
-            String currency = entry.getKey().getDefaultCurrency().getCurrencyCode();
-            cartValue = String.format("%.2f %s", totalPrice, currency);
-            itemsNumber = order.getCart().getSize();
+            cart = order.getCart();
         }
-
         TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(req.getServletContext());
         WebContext context = new WebContext(req, resp, req.getServletContext());
-
-        context.setVariable("itemsNumber", itemsNumber);
-        context.setVariable("orderedProducts", orderedProducts);
-        context.setVariable("cartValue", cartValue);
+        context.setVariable("cart", cart);
         engine.process("product/cart.html", context, resp.getWriter());
     }
 
@@ -71,9 +62,8 @@ public class CartController extends HttpServlet {
         Product product = productDataStore.find(productId);
 
         Order order = orderDataStore.getActual(userId);
-        order.getCart().addProduct(product);
-
-        int itemsNumber = order.getCart().getSize();
+        order.getCart().addLineItem(product);
+        int itemsNumber = order.getCart().getCartSize();
         JsonObject jsonResponse = new JsonObject();
         jsonResponse.addProperty("itemsNumber", itemsNumber);
 
@@ -99,7 +89,8 @@ public class CartController extends HttpServlet {
         int userId = userDataStore.add(user);
 
         Order order = new Order(user);
-        order.getCart().addProduct(product);
+        order.getCart().addLineItem(product);
+
         orderDataStore.add(order);
 
         int itemsNumber = 1;
@@ -117,7 +108,6 @@ public class CartController extends HttpServlet {
     private JsonObject getJsonObjectFromRequest(HttpServletRequest request) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         String line = null;
-
         BufferedReader reader = request.getReader();
         while ((line = reader.readLine()) != null)
             stringBuilder.append(line);
