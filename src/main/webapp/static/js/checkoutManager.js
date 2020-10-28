@@ -21,12 +21,19 @@ let checkoutManager = {
   },
   toggleShippingAddressVisibility: function() {
     let sameAddressCheckbox = document.querySelector("#same-address");
-    sameAddressCheckbox.addEventListener("change", checkoutManager.toggleShippingAddressVisibilityHandler);
+    sameAddressCheckbox.checked = false;
+    sameAddressCheckbox.addEventListener("change", event => checkoutManager.toggleShippingAddressVisibilityHandler(event));
   },
-  toggleShippingAddressVisibilityHandler: function() {
+  toggleShippingAddressVisibilityHandler: function(event) {
     let shippingAddressContainer = document.querySelector("#shippingAddressContainer");
-    shippingAddressContainer.classList.toggle("hidden");
-    shippingAddressContainer.disabled = !shippingAddressContainer.disabled;
+    console.log(event.currentTarget.checked)
+    if (event.currentTarget.checked === true) {
+      shippingAddressContainer.classList.add("hidden");
+      shippingAddressContainer.disabled = true;
+    } else {
+      shippingAddressContainer.classList.remove("hidden");
+      shippingAddressContainer.disabled = false;
+    }
   }
 }
 
