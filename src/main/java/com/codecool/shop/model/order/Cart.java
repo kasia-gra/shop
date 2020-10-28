@@ -48,4 +48,10 @@ public class Cart {
         return products.values().stream().
                 reduce(0, Integer::sum);
     }
+
+    public float getTotalPrice() {
+        return products.keySet().stream().
+                map(Product::getDefaultPrice).
+                reduce(0.0f, Float::sum);
+    }
 }
