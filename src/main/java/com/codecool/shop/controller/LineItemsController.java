@@ -74,6 +74,13 @@ public class LineItemsController extends HttpServlet {
         Order order = orderDataStore.getActual(Integer.parseInt(util.getCookieValueBy("userId", req)));
         order.getCart().removeLineItemById(lineItemId);
 
+        if (order.getCart().getCartSize() == 0) {
+            orderDataStore.remove(order.getId());
+            Cookie cookie = new Cookie("userId", "");
+            cookie.setMaxAge(0);
+            resp.addCookie(cookie);
+        }
+
         JsonObject jsonResponse = new JsonObject();
         jsonResponse.addProperty("totalCartValue", order.getCart().getLineItemsTotalPrice());
         jsonResponse.addProperty("numberOfProductsInCart", order.getCart().getCartSize());
