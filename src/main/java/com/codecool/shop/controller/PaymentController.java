@@ -24,15 +24,22 @@ public class PaymentController extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(req.getServletContext());
 		WebContext context = new WebContext(req, resp, req.getServletContext());
-		float totalPrice;
+		float totalPrice = 0;
+		int itemsNumber = 0;
 
 		if (util.getCookieValueBy("userId", req) != null) {
 			OrderDao orderDataStore = OrderDaoMem.getInstance();
 			Order order = orderDataStore.getActual(Integer.parseInt(Objects.requireNonNull(
 					util.getCookieValueBy("userId", req))));
 			totalPrice = order.getCart().getLineItemsTotalPrice();
-		} else { totalPrice = 0; }
+			itemsNumber = order.getCart().getCartSize();
+		} else {
+			resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+			engine.process("product/error.html", context, resp.getWriter());
+			return;
+		}
 
+		context.setVariable("itemsNumber", itemsNumber);
 		context.setVariable("totalPrice", totalPrice);
 		engine.process("product/payment.html", context, resp.getWriter());
 	}
