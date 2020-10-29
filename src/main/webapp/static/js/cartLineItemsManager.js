@@ -79,6 +79,7 @@ const deleteLineItem = function(lineItemId, lineItemContainer) {
     dataHandler._api_delete(`/line_item`, dataDict, json_response => {
         removeLineItemFromCart(lineItemContainer)
         updateCart(json_response, lineItemContainer);
+        disableCheckoutIfAllItemsRemoved(cookiesHandler.checkCookie("userId"));
     });
 }
 
@@ -97,6 +98,13 @@ const updateCart = function(json_response, lineItemContainer) {
 
 const formatPrice = function(price) {
     price.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+}
+
+const disableCheckoutIfAllItemsRemoved = function (isCookiePresent){
+    console.log("COOKIE NAME " + cookiesHandler.getCookie());
+    if (!isCookiePresent) {
+        document.getElementById("checkout-button").disabled = true;
+    }
 }
 
 

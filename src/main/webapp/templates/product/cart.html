@@ -36,8 +36,11 @@
             <h4 id="total-to-pay" th:text="${#numbers.formatDecimal(cart.getLineItemsTotalPrice(),1,'COMMA',2,'POINT')}"></h4>
         </div>
         <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-            <div class="btn-group mr-2" role="group" aria-label="First group">
-                <button type="button" class="btn btn-secondary" onclick="location.href='/checkout'" th:disabled="${cart.getCartSize()==0}">Checkout</button>
+            <div class="btn-group mr-2" role="group" aria-label="First group" th:switch="${cart.getCartSize()==0}">
+                <button th:case="true" type="button" class="btn btn-secondary" id="checkout-button"
+                        onclick="location.href='/checkout'" disabled>Checkout</button>
+                <button th:case="false" type="button" class="btn btn-secondary" id="checkout-button"
+                        onclick="location.href='/checkout'">Checkout</button>
             </div>
             <div class="btn-group" role="group" aria-label="Second group">
                 <button type="button" class="btn btn-secondary" onclick="location.href='/'">Continue shopping</button>
