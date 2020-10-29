@@ -58,7 +58,9 @@ public class CheckoutController extends HttpServlet {
         UserDao userDataStorage = UserDaoMem.getInstance();
         User user = userDataStorage.find(Integer.parseInt(userId));
         setUserParameters(user, req);
-        resp.sendRedirect("/");
+//        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/payment");
+//        dispatcher.forward(req, resp);
+        resp.sendRedirect("/payment");
     }
 
     private void setUserParameters(User user, HttpServletRequest request) {
