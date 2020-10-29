@@ -3,15 +3,12 @@ package com.codecool.shop.model.order;
 import com.codecool.shop.model.product.Product;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Cart {
     private int id;
     private List<LineItem> lineItems;
-    private int orderId;
 
     public Cart() {
 
@@ -59,14 +56,6 @@ public class Cart {
     public String getCartCurrency() {
         String currency = (lineItems.size() > 0) ? lineItems.get(0).getProduct().getDefaultCurrency().getCurrencyCode() : "-";
         return currency;
-    }
-
-    public void setOrderId(int orderId) {
-        this.orderId = orderId;
-    }
-
-    public int getOrderId() {
-        return orderId;
     }
 
     public void removeLineItemById(int searchedId) throws IllegalStateException {

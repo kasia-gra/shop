@@ -32,7 +32,7 @@
 <div class="container">
 
     <div class="card-header">
-        <div class="order-summary" th:id="${cart.getOrderId()}">
+        <div class="order-summary">
             <h4 id="total-to-pay" th:text="${#numbers.formatDecimal(cart.getLineItemsTotalPrice(),1,'COMMA',2,'POINT')}"></h4>
         </div>
         <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">

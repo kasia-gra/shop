@@ -35,7 +35,6 @@ public class CartController extends HttpServlet {
             OrderDao orderDataStore = OrderDaoMem.getInstance();
             Order order = orderDataStore.getActual(Integer.parseInt(util.getCookieValueBy("userId", req)));
             cart = order.getCart();
-            cart.setOrderId(order.getId());
         }
         TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(req.getServletContext());
         WebContext context = new WebContext(req, resp, req.getServletContext());
