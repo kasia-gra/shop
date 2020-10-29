@@ -18,17 +18,19 @@ import java.util.Objects;
 @WebServlet(urlPatterns = {"/payment"}, loadOnStartup = 3)
 public class PaymentController extends HttpServlet {
 
+	Util util = new Util();
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(req.getServletContext());
 		WebContext context = new WebContext(req, resp, req.getServletContext());
 		float totalPrice;
 
-		if (CartController.getCookieValueBy("userId", req) != null) {
+		if (util.getCookieValueBy("userId", req) != null) {
 			OrderDao orderDataStore = OrderDaoMem.getInstance();
 			Order order = orderDataStore.getActual(Integer.parseInt(Objects.requireNonNull(
-					CartController.getCookieValueBy("userId", req))));
-			totalPrice = order.getCart().getTotalPrice();
+					util.getCookieValueBy("userId", req))));
+			totalPrice = order.getCart().getLineItemsTotalPrice();
 		} else { totalPrice = 0; }
 
 		context.setVariable("totalPrice", totalPrice);

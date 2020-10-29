@@ -1,13 +1,12 @@
 package com.codecool.shop.controller;
 
-import com.codecool.shop.dao.jdbc.ProductDaoMem;
-import com.codecool.shop.dao.manager.DatabaseManager;
 import com.codecool.shop.config.TemplateEngineUtil;
 import com.codecool.shop.dao.dao.OrderDao;
 import com.codecool.shop.dao.dao.ProductCategoryDao;
 import com.codecool.shop.dao.dao.ProductDao;
 import com.codecool.shop.dao.jdbc.OrderDaoMem;
 import com.codecool.shop.dao.jdbc.ProductCategoryDaoMem;
+import com.codecool.shop.dao.jdbc.ProductDaoMem;
 import com.codecool.shop.dao.jdbc.SupplierDaoMem;
 import com.codecool.shop.model.order.Order;
 import com.codecool.shop.model.product.Product;
@@ -25,6 +24,7 @@ import java.util.List;
 @WebServlet(urlPatterns = {"/"}, loadOnStartup = 1)
 public class ProductController extends HttpServlet {
     List<Product> products;
+    private Util util = new Util();
 //    DatabaseManager dbManager = new DatabaseManager();
 
     @Override
@@ -52,10 +52,10 @@ public class ProductController extends HttpServlet {
         }
 
         context.setVariable("itemsNumber", 0);
-        if (CartController.getCookieValueBy("userId", req) != null) {
+        if (util.getCookieValueBy("userId", req) != null) {
             OrderDao orderDataStore = OrderDaoMem.getInstance();
-            Order order = orderDataStore.getActual(Integer.parseInt(CartController.getCookieValueBy("userId", req)));
-            int itemsNumber = order.getCart().getSize();
+            Order order = orderDataStore.getActual(Integer.parseInt(util.getCookieValueBy("userId", req)));
+            int itemsNumber = order.getCart().getCartSize();
             context.setVariable("itemsNumber", itemsNumber);
         }
 
@@ -65,3 +65,10 @@ public class ProductController extends HttpServlet {
         engine.process("product/index.html", context, resp.getWriter());
     }
 }
+
+
+// // Alternative setting of the template context
+// Map<String, Object> params = new HashMap<>();
+// params.put("category", productCategoryDataStore.find(1));
+// params.put("products", productDataStore.getBy(productCategoryDataStore.find(1)));
+// context.setVariables(params);

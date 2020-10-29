@@ -31,7 +31,28 @@ export let dataHandler = {
                 "content-type": "application/json"
             })
         })
-            .then(response => response.json())
+            .then(response => {
+                if (response.ok) {
+                    return response.json()}
+                else {
+                    throw new Error('Ooops something went wrong');
+                }
+            })
             .then(json_response => callback(json_response))
+            .catch((error) => {
+                alert(error);
+            });
+        },
+
+    _api_delete: function (url, dataDict, callback) {
+        fetch(url, {
+            method: 'DELETE',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(dataDict)
+        })
+            .then(response => response.json(), error => alert(error))
+            .then(data => {
+                callback(data)
+            })
     }
 }

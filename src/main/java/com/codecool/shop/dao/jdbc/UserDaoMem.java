@@ -1,7 +1,7 @@
 package com.codecool.shop.dao.jdbc;
 
 import com.codecool.shop.dao.dao.UserDao;
-import com.codecool.shop.model.User;
+import com.codecool.shop.model.user.User;
 
 import java.util.ArrayList;
 import java.util.List;
