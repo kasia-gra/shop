@@ -41,8 +41,6 @@ public class CartDaoMem implements CartDao {
 
     @Override
     public void update(Cart newCart) {
-        Cart cart = this.find(newCart.getId());
-        cart.setProducts(newCart.getProducts());
     }
 
     @Override

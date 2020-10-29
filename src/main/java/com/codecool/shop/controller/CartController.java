@@ -7,31 +7,21 @@ import com.codecool.shop.dao.dao.UserDao;
 import com.codecool.shop.dao.jdbc.OrderDaoMem;
 import com.codecool.shop.dao.jdbc.ProductDaoMem;
 import com.codecool.shop.dao.jdbc.UserDaoMem;
-import com.codecool.shop.model.User;
 import com.codecool.shop.model.order.Cart;
-import com.codecool.shop.model.order.LineItem;
 import com.codecool.shop.model.order.Order;
 import com.codecool.shop.model.product.Product;
+import com.codecool.shop.model.user.User;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @WebServlet(urlPatterns = {"/cart"}, loadOnStartup = 2)
 public class CartController extends HttpServlet {

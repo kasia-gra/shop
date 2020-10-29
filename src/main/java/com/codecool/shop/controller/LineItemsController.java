@@ -7,7 +7,7 @@ import com.codecool.shop.dao.dao.UserDao;
 import com.codecool.shop.dao.jdbc.OrderDaoMem;
 import com.codecool.shop.dao.jdbc.ProductDaoMem;
 import com.codecool.shop.dao.jdbc.UserDaoMem;
-import com.codecool.shop.model.User;
+import com.codecool.shop.model.user.User;
 import com.codecool.shop.model.order.Cart;
 import com.codecool.shop.model.order.LineItem;
 import com.codecool.shop.model.order.Order;

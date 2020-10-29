@@ -55,7 +55,7 @@ public class ProductController extends HttpServlet {
         if (util.getCookieValueBy("userId", req) != null) {
             OrderDao orderDataStore = OrderDaoMem.getInstance();
             Order order = orderDataStore.getActual(Integer.parseInt(util.getCookieValueBy("userId", req)));
-            int itemsNumber = order.getCart().getSize();
+            int itemsNumber = order.getCart().getCartSize();
             context.setVariable("itemsNumber", itemsNumber);
         }
 

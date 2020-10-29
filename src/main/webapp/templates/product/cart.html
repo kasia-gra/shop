@@ -37,7 +37,7 @@
         </div>
         <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
             <div class="btn-group mr-2" role="group" aria-label="First group">
-                <button type="button" class="btn btn-secondary" onclick="location.href='/checkout'" th:disabled="${itemsNumber == 0}">Checkout</button>
+                <button type="button" class="btn btn-secondary" onclick="location.href='/checkout'" th:disabled="${cart.getCartSize()==0}">Checkout</button>
             </div>
             <div class="btn-group" role="group" aria-label="Second group">
                 <button type="button" class="btn btn-secondary">Continue shopping</button>
