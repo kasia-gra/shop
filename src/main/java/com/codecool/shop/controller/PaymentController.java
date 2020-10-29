@@ -22,13 +22,13 @@ public class PaymentController extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(req.getServletContext());
 		WebContext context = new WebContext(req, resp, req.getServletContext());
-		int totalPrice;
+		float totalPrice;
 
 		if (CartController.getCookieValueBy("userId", req) != null) {
 			OrderDao orderDataStore = OrderDaoMem.getInstance();
 			Order order = orderDataStore.getActual(Integer.parseInt(Objects.requireNonNull(
 					CartController.getCookieValueBy("userId", req))));
-			totalPrice = (int) order.getCart().getTotalPrice();
+			totalPrice = order.getCart().getTotalPrice();
 		} else { totalPrice = 0; }
 
 		context.setVariable("totalPrice", totalPrice);
