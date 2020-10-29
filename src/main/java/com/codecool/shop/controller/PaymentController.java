@@ -18,27 +18,20 @@ import java.io.IOException;
 
 @WebServlet(urlPatterns = {"/payment"}, loadOnStartup = 4)
 public class PaymentController extends HttpServlet {
-	Util util = new Util();
-	OrderDao orderDataStore = OrderDaoMem.getInstance();
+	private final Util util = new Util();
+	private final OrderDao orderDataStore = OrderDaoMem.getInstance();
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(req.getServletContext());
 		WebContext context = new WebContext(req, resp, req.getServletContext());
 
-		if (isNoExistingOrder(req)) {
-			resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-			engine.process("product/error.html", context, resp.getWriter());
+		if (!isExistingOrder(req)) {
+			showErrorPage(resp, engine, context);
 			return;
 		}
 
-		Order order = orderDataStore.getActual(Integer.parseInt(util.getCookieValueBy("userId", req)));
-		float totalPrice = order.getCart().getLineItemsTotalPrice();
-		int itemsNumber = order.getCart().getCartSize();
-
-		context.setVariable("itemsNumber", itemsNumber);
-		context.setVariable("totalPrice", totalPrice);
-		engine.process("product/payment.html", context, resp.getWriter());
+		showPaymentPage(req, resp, engine, context);
 	}
 
 	@Override
@@ -48,15 +41,34 @@ public class PaymentController extends HttpServlet {
 		resp.sendRedirect("/paymentConfirmation");
 	}
 
+	private boolean isExistingOrder(HttpServletRequest request) {
+		return util.getCookieValueBy("userId", request) != null;
+	}
+
+	private void showErrorPage(HttpServletResponse resp, TemplateEngine engine, WebContext context) throws IOException {
+		resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+		engine.process("product/error.html", context, resp.getWriter());
+	}
+
+	private void setContextParameters(HttpServletRequest req, WebContext context) {
+		Order order = orderDataStore.getActual(Integer.parseInt(util.getCookieValueBy("userId", req)));
+		float totalPrice = order.getCart().getLineItemsTotalPrice();
+		int itemsNumber = order.getCart().getCartSize();
+
+		context.setVariable("itemsNumber", itemsNumber);
+		context.setVariable("totalPrice", totalPrice);
+	}
+
+	private void showPaymentPage(HttpServletRequest req, HttpServletResponse resp, TemplateEngine engine, WebContext context) throws IOException {
+		setContextParameters(req, context);
+		engine.process("product/payment.html", context, resp.getWriter());
+	}
+
 	private void saveOrderToFile(HttpServletRequest request, ServletContext context) throws IOException {
 		Order order = orderDataStore.getActual(Integer.parseInt(util.getCookieValueBy("userId", request)));
 		String relativeDirectoryPath = "/orders";
 		String filename = "order" + order.getId();
 		File file = util.prepareFile(relativeDirectoryPath, filename, context);
 		util.saveObjectToFile(order, file);
-	}
-
-	private boolean isNoExistingOrder(HttpServletRequest request) {
-		return util.getCookieValueBy("userId", request) == null;
 	}
 }
