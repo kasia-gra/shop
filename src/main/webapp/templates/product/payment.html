@@ -2,8 +2,6 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <div th:replace="headComponents.html :: components"></div>
-    <link rel="stylesheet" type="text/css" href="/static/css/payment.css"/>
-    <script type="module" src="/static/js/payment.js" defer></script>
 </head>
 
 <body>
@@ -11,11 +9,6 @@
     <div class="container-fluid d-flex justify-content-between">
 
         <a class="navbar-brand" href="/"><img src="/static/img/KPD_logo.png" alt="logo" width="100"></a>
-
-        <form class="form-inline my-2">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
 
         <ul class="nav navbar-nav navbar-right">
             <li><a class="nav-link" href="/cart" id="cart">
@@ -29,7 +22,6 @@
         </ul>
     </div>
 </nav>
-
 
 <div class="container">
     <div class="card-body p-5">
@@ -147,11 +139,6 @@
 
     <div th:replace="footer.html :: copy"></div>
 
-    <div id="imageModal" class="modal">
-        <span class="modal-close">&times;</span>
-        <img class="modal-content" id="img01">
-        <div id="caption"></div>
-    </div>
 </div>
 </body>
 </html>

@@ -33,21 +33,20 @@ public class CheckoutController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(req.getServletContext());
         WebContext context = new WebContext(req, resp, req.getServletContext());
-        List<LineItem> orderedProducts = new ArrayList<LineItem> ();
-        float totalPrice = 0;
-        String cartValue = "0";
-        int itemsNumber = 0;
-        String currency = "";
 
-        if (util.getCookieValueBy("userId", req) != null) {
-            OrderDao orderDataStore = OrderDaoMem.getInstance();
-            Order order = orderDataStore.getActual(Integer.parseInt(util.getCookieValueBy("userId", req)));
-            orderedProducts = order.getCart().getLineItems();
-            totalPrice = order.getCart().getLineItemsTotalPrice();
-            currency = order.getCart().getCartCurrency();
-            cartValue = String.format("%.2f", totalPrice);
-            itemsNumber = order.getCart().getCartSize();
+        if (util.getCookieValueBy("userId", req) == null) {
+            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            engine.process("product/error.html", context, resp.getWriter());
+            return;
         }
+
+        OrderDao orderDataStore = OrderDaoMem.getInstance();
+        Order order = orderDataStore.getActual(Integer.parseInt(util.getCookieValueBy("userId", req)));
+        List<LineItem> orderedProducts = order.getCart().getLineItems();
+        float totalPrice = order.getCart().getLineItemsTotalPrice();
+        String currency = order.getCart().getCartCurrency();
+        String cartValue = String.format("%.2f", totalPrice);
+        int itemsNumber = order.getCart().getCartSize();
 
         context.setVariable("currency", currency);
         context.setVariable("itemsNumber", itemsNumber);

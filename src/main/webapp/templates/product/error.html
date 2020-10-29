@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="headComponents.html :: components"></div>
+</head>
+
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid d-flex justify-content-between">
+
+        <a class="navbar-brand" href="/"><img src="/static/img/KPD_logo.png" alt="logo" width="100"></a>
+
+        <ul class="nav navbar-nav navbar-right">
+            <li><a class="nav-link" href="/cart" id="cart">
+                <i class="fa fa-shopping-cart"></i>Cart
+                <span class="text-success" th:text="${itemsNumber}">0</span>
+            </a></li>
+            <li><a class="nav-link" id="register" data-toggle="modal" data-target="#modalRegisterForm"
+                   href="#"><span class="link fas fa-user-plus"></span> Sign in</a></li>
+            <li><a class="nav-link" id="login" data-toggle="modal" data-target="#modalLoginForm"
+                   href="#"><span class="link fas fa-sign-in-alt"></span> Log in</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+    <div class ="d-flex justify-content-center pb-5">
+        <img class="img-fluid pb-5" src="/static/img/error_401.jpg" alt="error 401">
+    </div>
+</div>
+
+    <div th:replace="footer.html :: copy"></div>
+
+</div>
+</body>
+</html>
