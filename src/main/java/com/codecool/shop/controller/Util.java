@@ -4,17 +4,16 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.lang.reflect.Type;
 
 public class Util {
 
-    private Gson gson = new Gson();
+    private final Gson gson = new Gson();
 
 
     public void setResponse(HttpServletResponse resp, JsonObject jsonResponse) throws IOException {
@@ -45,6 +44,23 @@ public class Util {
             }
         }
         return null;
+    }
+
+    public File prepareFile(String relativeDirectoryPath, String filename, ServletContext context) {
+        filename += ".json";
+        String absoluteDirectoryPath = context.getRealPath(relativeDirectoryPath);
+        return new File(absoluteDirectoryPath, filename);
+    }
+
+    public <T> void saveObjectToFile(T object, File file) throws IOException {
+        String jsonObject = gson.toJson(object);
+        saveFile(jsonObject, file);
+    }
+
+    public void saveFile(String jsonObject, File file) throws IOException {
+        FileWriter fileWriter = new FileWriter(file);
+        fileWriter.write(jsonObject);
+        fileWriter.flush();
     }
 
 }
