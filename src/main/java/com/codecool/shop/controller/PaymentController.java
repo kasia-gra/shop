@@ -26,7 +26,7 @@ public class PaymentController extends HttpServlet {
 		TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(req.getServletContext());
 		WebContext context = new WebContext(req, resp, req.getServletContext());
 
-		if (!isExistingOrder(req)) {
+		if (!util.isExistingOrder(req)) {
 			showErrorPage(resp, engine, context);
 			return;
 		}
@@ -39,10 +39,6 @@ public class PaymentController extends HttpServlet {
 		//TODO confirm payment
 		saveOrderToFile(req, getServletContext());
 		resp.sendRedirect("/paymentConfirmation");
-	}
-
-	private boolean isExistingOrder(HttpServletRequest request) {
-		return util.getCookieValueBy("userId", request) != null;
 	}
 
 	private void showErrorPage(HttpServletResponse resp, TemplateEngine engine, WebContext context) throws IOException {

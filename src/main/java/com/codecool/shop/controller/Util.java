@@ -62,5 +62,7 @@ public class Util {
         fileWriter.write(jsonObject);
         fileWriter.flush();
     }
-
+    public boolean isExistingOrder(HttpServletRequest request) {
+        return getCookieValueBy("userId", request) != null;
+    }
 }

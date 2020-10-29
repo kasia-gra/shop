@@ -103,7 +103,9 @@ const formatPrice = function(price) {
 const disableCheckoutIfAllItemsRemoved = function (isCookiePresent){
     console.log("COOKIE NAME " + cookiesHandler.getCookie());
     if (!isCookiePresent) {
-        document.getElementById("checkout-button").disabled = true;
+        document.querySelector("#emptyCard").classList.remove("hidden");
+        document.querySelector("#notEmptyCard").classList.add("hidden");
+        // document.getElementById("checkout-button").disabled = true;
     }
 }
 
