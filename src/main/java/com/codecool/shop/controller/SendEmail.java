@@ -65,7 +65,7 @@ public class SendEmail {
             content.addBodyPart(wrap);
 
             // Set Subject: header field
-            message.setSubject("This is the Subject Line!");
+            message.setSubject("Order confirmation!");
 
             // Now set the actual message
 //            message.setText("This is actual message");
