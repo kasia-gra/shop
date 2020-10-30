@@ -19,7 +19,7 @@
         <ul class="nav navbar-nav navbar-right">
             <li><a class="nav-link" href="/cart" id="cart">
                 <i class="fa fa-shopping-cart"></i>Cart
-                <span class="text-success" th:text="${cart.getCartSize()}">0</span>
+                <span class="text-success" th:text="(${cart} != null) ? (${cart.getCartSize()}) : 0 "></span>
             </a></li>
             <li><a class="nav-link" id="register" data-toggle="modal" data-target="#modalRegisterForm"
                    href="#"><span class="link fas fa-user-plus"></span> Sign in</a></li>
@@ -30,48 +30,58 @@
 </nav>
 
 <div class="container">
-
-    <div class="card-header">
-        <div class="order-summary">
-            <h4 id="total-to-pay" th:text="${#numbers.formatDecimal(cart.getLineItemsTotalPrice(),1,'COMMA',2,'POINT')}"></h4>
-        </div>
-        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-            <div class="btn-group mr-2" role="group" aria-label="First group" th:switch="${cart.getCartSize()==0}">
-                <button th:case="true" type="button" class="btn btn-secondary" id="checkout-button"
-                        onclick="location.href='/checkout'" disabled>Checkout</button>
-                <button th:case="false" type="button" class="btn btn-secondary" id="checkout-button"
-                        onclick="location.href='/checkout'">Checkout</button>
-            </div>
-            <div class="btn-group" role="group" aria-label="Second group">
-                <button type="button" class="btn btn-secondary" onclick="location.href='/'">Continue shopping</button>
-            </div>
-        </div>
+    <div th:if="${cart == null}">
+        <h1 class="text-secondary text-center mt-5" id="emptyCard">Your cart is empty</h1>
     </div>
+    <div th:unless="${cart == null}">
+        <h1 class="text-secondary text-center mt-5 hidden" id="emptyCard">Your cart is empty</h1>
+        <span id="notEmptyCard">
+            <div class="card-header">
+                <div class="order-summary">
+                    <h4 id="total-to-pay"
+                        th:text="${#numbers.formatDecimal(cart.getLineItemsTotalPrice(),1,'COMMA',2,'POINT')}"></h4>
+                </div>
+                <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                    <div class="btn-group mr-2" role="group" aria-label="First group">
+                        <button type="button" class="btn btn-secondary" id="checkout-button"
+                                onclick="location.href='/checkout'">Checkout
+                        </button>
+                    </div>
+                    <div class="btn-group" role="group" aria-label="Second group">
+                        <button type="button" class="btn btn-secondary" onclick="location.href='/'">Continue shopping
+                        </button>
+                    </div>
+                </div>
+            </div>
 
-    <div class="card-line-item" th:each="lineItem : ${cart.getLineItems()}">
-        <div class="card-product-img"><img class="fit_contain" src="http://placehold.it/400x250/000/fff"
-                                           th:attr="src='/static/img/product_' + ${lineItem.getProduct().id} + '.jpg'"
-                                           alt=""/></div>
-        <div class="card-product-name">
-            <h3 th:text="${lineItem.getProduct().name}">Product name</h3>
-            <p th:text="${lineItem.getProduct().description}">Description</p>
-        </div>
-        <div class="card-product-summary">
-            <div class="total-price-wrapper">
-                <h4 class="total-line-price" th:text="${#numbers.formatDecimal(lineItem.getLinePrice(),1,'COMMA',2,'POINT')}"></h4>
+            <div class="card-line-item" th:each="lineItem : ${cart.getLineItems()}">
+                <div class="card-product-img"><img class="fit_contain" src="http://placehold.it/400x250/000/fff"
+                                                   th:attr="src='/static/img/product_' + ${lineItem.getProduct().id} + '.jpg'"
+                                                   alt=""/></div>
+                <div class="card-product-name">
+                    <h3 th:text="${lineItem.getProduct().name}">Product name</h3>
+                    <p th:text="${lineItem.getProduct().description}">Description</p>
+                </div>
+                <div class="card-product-summary">
+                    <div class="total-price-wrapper">
+                        <h4 class="total-line-price"
+                            th:text="${#numbers.formatDecimal(lineItem.getLinePrice(),1,'COMMA',2,'POINT')}"></h4>
+                    </div>
+                    <div class="total-price-wrapper">
+                        <h5 class="line-unit-price"
+                            th:text="${#numbers.formatDecimal(lineItem.getProduct().getDefaultPrice(),1,'COMMA',2,'POINT')}"></h5>
+                    </div>
+                    <div class="card-product-actions" th:id="${lineItem.getLineId()}">
+                        <button class="line-item-summary-wrapper increase-qty">+</button>
+                        <input class="line-item-summary-wrapper choose-qty" th:attr="data-qty=${lineItem.getQty()}"
+                               th:value="${lineItem.getQty()}"/>
+                        <button class="line-item-summary-wrapper decrease-qty">-</button>
+                        <button class="fa fa-trash-alt line-item-summary-wrapper"></button>
+                    </div>
+                </div>
             </div>
-            <div class="total-price-wrapper">
-                <h5 class="line-unit-price" th:text="${#numbers.formatDecimal(lineItem.getProduct().getDefaultPrice(),1,'COMMA',2,'POINT')}"></h5>
-            </div>
-            <div class="card-product-actions" th:id="${lineItem.getLineId()}">
-                <button class="line-item-summary-wrapper increase-qty">+</button>
-                <input class="line-item-summary-wrapper choose-qty" th:attr="data-qty=${lineItem.getQty()}" th:value="${lineItem.getQty()}"/>
-                <button class="line-item-summary-wrapper decrease-qty">-</button>
-                <button class="fa fa-trash-alt line-item-summary-wrapper"></button>
-            </div>
-        </div>
+        </span>
     </div>
-
 </div>
 
 <div th:replace="footer.html :: copy"></div>

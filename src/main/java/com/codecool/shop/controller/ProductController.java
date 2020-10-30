@@ -27,15 +27,14 @@ import java.util.Locale;
 @WebServlet(urlPatterns = {"/"}, loadOnStartup = 1)
 public class ProductController extends HttpServlet {
     List<Product> products;
-    private Util util = new Util();
+    private final Util util = new Util();
 //    DatabaseManager dbManager = new DatabaseManager();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        ProductDao productDataStore = ProductDaoMem.getInstance();
 //        dbManager.run();
 //        ProductDao productDataStore = dbManager.productDao; //todo change data source to db instead od Mem objects
-
+        ProductDao productDataStore = ProductDaoMem.getInstance();
         ProductCategoryDao productCategoryDataStore = ProductCategoryDaoMem.getInstance();
         SupplierDaoMem supplierDataStore = SupplierDaoMem.getInstance();
         TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(req.getServletContext());
@@ -55,17 +54,25 @@ public class ProductController extends HttpServlet {
         }
 
         context.setVariable("itemsNumber", 0);
-        if (util.getCookieValueBy("userId", req) != null) {
-            OrderDao orderDataStore = OrderDaoMem.getInstance();
-            Order order = orderDataStore.getActual(Integer.parseInt(util.getCookieValueBy("userId", req)));
-            int itemsNumber = order.getCart().getCartSize();
-            context.setVariable("itemsNumber", itemsNumber);
+        if (util.isExistingOrder(req)) {
+            addItemsNumberToContext(req, context);
         }
 
+        setContextParameters(productCategoryDataStore, supplierDataStore, context);
+        engine.process("product/index.html", context, resp.getWriter());
+    }
+
+    private void addItemsNumberToContext(HttpServletRequest req, WebContext context) {
+        OrderDao orderDataStore = OrderDaoMem.getInstance();
+        Order order = orderDataStore.getActual(Integer.parseInt(util.getCookieValueBy("userId", req)));
+        int itemsNumber = order.getCart().getCartSize();
+        context.setVariable("itemsNumber", itemsNumber);
+    }
+
+    private void setContextParameters(ProductCategoryDao productCategoryDataStore, SupplierDaoMem supplierDataStore, WebContext context) {
         context.setVariable("products", products);
         context.setVariable("categories", productCategoryDataStore.getAll());
         context.setVariable("suppliers", supplierDataStore.getAll());
-        engine.process("product/index.html", context, resp.getWriter());
     }
 }
 

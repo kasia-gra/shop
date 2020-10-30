@@ -5,7 +5,6 @@ import com.codecool.shop.dao.dao.OrderDao;
 import com.codecool.shop.dao.jdbc.OrderDaoMem;
 import com.codecool.shop.model.order.Order;
 import com.codecool.shop.model.order.Payment;
-import com.google.gson.Gson;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
@@ -16,76 +15,54 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.util.Objects;
 
 @WebServlet(urlPatterns = {"/payment"}, loadOnStartup = 4)
 public class PaymentController extends HttpServlet {
-
-	Util util = new Util();
-	Gson gson = new Gson();
-
-	private String host;
-	private String port;
-	private String user;
-	private String pass;
-
-	public void init() {
-		// reads SMTP server setting from web.xml file
-		ServletContext context = getServletContext();
-		host = context.getInitParameter("host");
-		port = context.getInitParameter("port");
-		user = context.getInitParameter("user");
-		pass = context.getInitParameter("pass");
-	}
-
+	private final Util util = new Util();
+	private final OrderDao orderDataStore = OrderDaoMem.getInstance();
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(req.getServletContext());
 		WebContext context = new WebContext(req, resp, req.getServletContext());
 
-		if (util.getCookieValueBy("userId", req) == null) {
-			resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-			engine.process("product/error.html", context, resp.getWriter());
+		if (!util.isExistingOrder(req)) {
+			util.showErrorPage(resp, engine, context);
 			return;
 		}
 
-		OrderDao orderDataStore = OrderDaoMem.getInstance();
-		Order order = orderDataStore.getActual(Integer.parseInt(Objects.requireNonNull(
-				util.getCookieValueBy("userId", req))));
-
-		float totalPrice = order.getCart().getLineItemsTotalPrice();
-		int itemsNumber = order.getCart().getCartSize();
-		context.setVariable("itemsNumber", itemsNumber);
-		context.setVariable("totalPrice", totalPrice);
-		engine.process("product/payment.html", context, resp.getWriter());
+		showPaymentPage(req, resp, engine, context);
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		//TODO confirm payment
-		OrderDao orderDataStore = OrderDaoMem.getInstance();
-		Order order = orderDataStore.getActual(Integer.parseInt(Objects.requireNonNull(util.getCookieValueBy("userId", req))));
-		saveOrderToFile(order);
+		Order order = orderDataStore.getActual(Integer.parseInt(util.getCookieValueBy("userId", req)));
+		saveOrderToFile(order, getServletContext());
 		setPaymentParameters(order, req);
 		resp.sendRedirect("/paymentConfirmation");
 	}
 
-	private void saveOrderToFile(Order order) throws IOException {
-		String jsonOrder = gson.toJson(order);
-		String relativeWebPath = "/orders";
-		String absoluteDiskPath = getServletContext().getRealPath(relativeWebPath);
-		String filename = "order" + order.getId() + ".json";
-		File file = new File(absoluteDiskPath, filename);
-		saveFileToDisk(jsonOrder, file);
+	private void setContextParameters(HttpServletRequest req, WebContext context) {
+		Order order = orderDataStore.getActual(Integer.parseInt(util.getCookieValueBy("userId", req)));
+		float totalPrice = order.getCart().getLineItemsTotalPrice();
+		int itemsNumber = order.getCart().getCartSize();
+
+		context.setVariable("itemsNumber", itemsNumber);
+		context.setVariable("totalPrice", totalPrice);
 	}
 
-	private void saveFileToDisk(String jsonOrder, File file) throws IOException {
-		FileWriter fileWriter = new FileWriter(file);
-		fileWriter.write(jsonOrder);
-		fileWriter.flush();
+	private void showPaymentPage(HttpServletRequest req, HttpServletResponse resp, TemplateEngine engine, WebContext context) throws IOException {
+		setContextParameters(req, context);
+		engine.process("product/payment.html", context, resp.getWriter());
 	}
 
+	private void saveOrderToFile(Order order, ServletContext context) throws IOException {
+		String relativeDirectoryPath = "/orders";
+		String filename = "order" + order.getId();
+		File file = util.prepareFile(relativeDirectoryPath, filename, context);
+		util.saveObjectToFile(order, file);
+	}
 	private void setPaymentParameters(Order order, HttpServletRequest req) {
 		Payment payment = new Payment(req.getParameter("userName"));
 		order.setPayment(payment);

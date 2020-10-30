@@ -11,7 +11,6 @@ import com.codecool.shop.model.order.Cart;
 import com.codecool.shop.model.order.Order;
 import com.codecool.shop.model.product.Product;
 import com.codecool.shop.model.user.User;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
@@ -25,66 +24,83 @@ import java.io.IOException;
 
 @WebServlet(urlPatterns = {"/cart"}, loadOnStartup = 2)
 public class CartController extends HttpServlet {
-    private Gson gson = new Gson();
-    private Util util = new Util();
+    private final Util util = new Util();
+    private final OrderDao orderDataStore = OrderDaoMem.getInstance();
+    private final ProductDao productDataStore = ProductDaoMem.getInstance();
+    private final UserDao userDataStore = UserDaoMem.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Cart cart = new Cart();
-        if (util.getCookieValueBy("userId", req) != null) {
-            OrderDao orderDataStore = OrderDaoMem.getInstance();
-            Order order = orderDataStore.getActual(Integer.parseInt(util.getCookieValueBy("userId", req)));
-            cart = order.getCart();
-        }
         TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(req.getServletContext());
         WebContext context = new WebContext(req, resp, req.getServletContext());
-        context.setVariable("cart", cart);
+
+        if (util.isExistingOrder(req)) {
+            setContextParameter(req, context);
+        }
+
         engine.process("product/cart.html", context, resp.getWriter());
     }
 
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        ProductDao productDataStore = ProductDaoMem.getInstance();
-        OrderDao orderDataStore = OrderDaoMem.getInstance();
-
         JsonObject jsonRequest = util.getJsonObjectFromRequest(req);
-        int productId = Integer.parseInt(jsonRequest.get("productId").getAsString());
-        int userId = Integer.parseInt(jsonRequest.get("userId").getAsString());
-        Product product = productDataStore.find(productId);
 
-        Order order = orderDataStore.getActual(userId);
-        order.getCart().addLineItem(product);
-        int itemsNumber = order.getCart().getCartSize();
-        JsonObject jsonResponse = new JsonObject();
-        jsonResponse.addProperty("itemsNumber", itemsNumber);
+        Order order = getOrder(jsonRequest);
+        addProductToCart(jsonRequest, order);
+
+        JsonObject jsonResponse = prepareJsonResponse(order);
 
         util.setResponse(resp, jsonResponse);
     }
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        ProductDao productDataStore = ProductDaoMem.getInstance();
-        OrderDao orderDataStore = OrderDaoMem.getInstance();
-        UserDao userDataStore = UserDaoMem.getInstance();
-
         JsonObject jsonRequest = util.getJsonObjectFromRequest(req);
-        int productId = Integer.parseInt(jsonRequest.get("productId").getAsString());
-        Product product = productDataStore.find(productId);
+        Product product = getProduct(jsonRequest);
 
         User user = new User();
         int userId = userDataStore.add(user);
 
         Order order = new Order(user);
-        order.getCart().addLineItem(product);
+        addOrderToDataStorage(product, order);
 
-        orderDataStore.add(order);
-
-        int itemsNumber = 1;
-        JsonObject jsonResponse = new JsonObject();
-        jsonResponse.addProperty("itemsNumber", itemsNumber);
+        JsonObject jsonResponse = prepareJsonResponse(order);
         jsonResponse.addProperty("userId", userId);
 
         util.setResponse(resp, jsonResponse);
+    }
+
+    private void addOrderToDataStorage(Product product, Order order) {
+        order.getCart().addLineItem(product);
+        orderDataStore.add(order);
+    }
+
+    private JsonObject prepareJsonResponse(Order order) {
+        int itemsNumber = order.getCart().getCartSize();
+        JsonObject jsonResponse = new JsonObject();
+        jsonResponse.addProperty("itemsNumber", itemsNumber);
+        return jsonResponse;
+    }
+
+    private void addProductToCart(JsonObject jsonRequest, Order order) {
+        Product product = getProduct(jsonRequest);
+        order.getCart().addLineItem(product);
+    }
+
+    private Order getOrder(JsonObject jsonRequest) {
+        int userId = jsonRequest.get("userId").getAsInt();
+        return orderDataStore.getActual(userId);
+    }
+
+    private void setContextParameter(HttpServletRequest req, WebContext context) {
+        Order order = orderDataStore.getActual(Integer.parseInt(util.getCookieValueBy("userId", req)));
+        Cart cart = order.getCart();
+        context.setVariable("cart", cart);
+    }
+
+    private Product getProduct(JsonObject jsonRequest) {
+        int productId = jsonRequest.get("productId").getAsInt();
+        return productDataStore.find(productId);
     }
 }

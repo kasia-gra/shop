@@ -1,41 +1,22 @@
 package com.codecool.shop.controller;
 
-import com.codecool.shop.config.TemplateEngineUtil;
 import com.codecool.shop.dao.dao.OrderDao;
-import com.codecool.shop.dao.dao.ProductDao;
-import com.codecool.shop.dao.dao.UserDao;
 import com.codecool.shop.dao.jdbc.OrderDaoMem;
-import com.codecool.shop.dao.jdbc.ProductDaoMem;
-import com.codecool.shop.dao.jdbc.UserDaoMem;
-import com.codecool.shop.model.user.User;
-import com.codecool.shop.model.order.Cart;
 import com.codecool.shop.model.order.LineItem;
 import com.codecool.shop.model.order.Order;
-import com.codecool.shop.model.product.Product;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.reflect.TypeToken;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.WebContext;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.sound.sampled.Line;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.lang.reflect.Type;
-import java.util.*;
 
 @WebServlet(urlPatterns = {"/line_item"}, loadOnStartup = 3)
 public class LineItemsController extends HttpServlet {
-
     Util util = new Util();
+    OrderDao orderDataStore = OrderDaoMem.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -49,18 +30,12 @@ public class LineItemsController extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         JsonObject jsonRequest = util.getJsonObjectFromRequest(req);
-        int qty = jsonRequest.get("qty").getAsInt();
-        int lineItemId = jsonRequest.get("lineItemId").getAsInt();
-
-        OrderDao orderDataStore = OrderDaoMem.getInstance();
         Order order = orderDataStore.getActual(Integer.parseInt(util.getCookieValueBy("userId", req)));
-        LineItem editedLineItem = order.getCart().getLineItemById(lineItemId);
-        editedLineItem.setQty(qty);
 
-        JsonObject jsonResponse = new JsonObject();
-        jsonResponse.addProperty("linePrice", editedLineItem.getLinePrice());
-        jsonResponse.addProperty("totalCartValue", order.getCart().getLineItemsTotalPrice());
-        jsonResponse.addProperty("numberOfProductsInCart", order.getCart().getCartSize() );
+        LineItem lineItem = addLineItem(jsonRequest, order);
+        JsonObject jsonResponse = prepareJsonResponse(order);
+        jsonResponse.addProperty("linePrice", lineItem.getLinePrice());
+
         util.setResponse(resp, jsonResponse);
     }
 
@@ -70,21 +45,37 @@ public class LineItemsController extends HttpServlet {
         JsonObject jsonRequest = util.getJsonObjectFromRequest(req);
         int lineItemId = jsonRequest.get("lineItemId").getAsInt();
 
-        OrderDao orderDataStore = OrderDaoMem.getInstance();
         Order order = orderDataStore.getActual(Integer.parseInt(util.getCookieValueBy("userId", req)));
         order.getCart().removeLineItemById(lineItemId);
 
-        if (order.getCart().getCartSize() == 0) {
+        if (isEmptyCart(order)) {
             orderDataStore.remove(order.getId());
-            Cookie cookie = new Cookie("userId", "");
-            cookie.setMaxAge(0);
-            resp.addCookie(cookie);
+            util.removeCookie(resp);
         }
 
+        JsonObject jsonResponse = prepareJsonResponse(order);
+        util.setResponse(resp, jsonResponse);
+    }
+
+    private LineItem addLineItem(JsonObject jsonRequest, Order order) {
+        int qty = jsonRequest.get("qty").getAsInt();
+        int lineItemId = jsonRequest.get("lineItemId").getAsInt();
+        LineItem editedLineItem = order.getCart().getLineItemById(lineItemId);
+        editedLineItem.setQty(qty);
+        return editedLineItem;
+    }
+
+    private JsonObject prepareJsonResponse(Order order) {
         JsonObject jsonResponse = new JsonObject();
         jsonResponse.addProperty("totalCartValue", order.getCart().getLineItemsTotalPrice());
         jsonResponse.addProperty("numberOfProductsInCart", order.getCart().getCartSize());
-        util.setResponse(resp, jsonResponse);
+        return jsonResponse;
+    }
+
+
+
+    private boolean isEmptyCart(Order order) {
+        return order.getCart().getCartSize() == 0;
     }
 
 }
