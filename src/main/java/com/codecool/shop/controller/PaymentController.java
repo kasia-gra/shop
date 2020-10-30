@@ -4,6 +4,7 @@ import com.codecool.shop.config.TemplateEngineUtil;
 import com.codecool.shop.dao.dao.OrderDao;
 import com.codecool.shop.dao.jdbc.OrderDaoMem;
 import com.codecool.shop.model.order.Order;
+import com.codecool.shop.model.order.Payment;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
@@ -13,13 +14,27 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 @WebServlet(urlPatterns = {"/payment"}, loadOnStartup = 4)
 public class PaymentController extends HttpServlet {
 	private final Util util = new Util();
 	private final OrderDao orderDataStore = OrderDaoMem.getInstance();
+
+	private String host;
+	private String port;
+	private String user;
+	private String pass;
+
+	public void init() {
+		// reads SMTP server setting from web.xml file
+		ServletContext context = getServletContext();
+		host = context.getInitParameter("host");
+		port = context.getInitParameter("port");
+		user = context.getInitParameter("user");
+		pass = context.getInitParameter("pass");
+	}
+
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -37,11 +52,11 @@ public class PaymentController extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		//TODO confirm payment
-		saveOrderToFile(req, getServletContext());
+		Order order = orderDataStore.getActual(Integer.parseInt(util.getCookieValueBy("userId", req)));
+		saveOrderToFile(order, getServletContext());
+		setPaymentParameters(order, req);
 		resp.sendRedirect("/paymentConfirmation");
 	}
-
-
 
 	private void setContextParameters(HttpServletRequest req, WebContext context) {
 		Order order = orderDataStore.getActual(Integer.parseInt(util.getCookieValueBy("userId", req)));
@@ -57,11 +72,14 @@ public class PaymentController extends HttpServlet {
 		engine.process("product/payment.html", context, resp.getWriter());
 	}
 
-	private void saveOrderToFile(HttpServletRequest request, ServletContext context) throws IOException {
-		Order order = orderDataStore.getActual(Integer.parseInt(util.getCookieValueBy("userId", request)));
+	private void saveOrderToFile(Order order, ServletContext context) throws IOException {
 		String relativeDirectoryPath = "/orders";
 		String filename = "order" + order.getId();
 		File file = util.prepareFile(relativeDirectoryPath, filename, context);
 		util.saveObjectToFile(order, file);
+	}
+	private void setPaymentParameters(Order order, HttpServletRequest req) {
+		Payment payment = new Payment(req.getParameter("userName"));
+		order.setPayment(payment);
 	}
 }

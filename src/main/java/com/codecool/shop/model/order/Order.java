@@ -7,6 +7,7 @@ public class Order {
     private User user;
     private Cart cart;
     private boolean isArchival = false;
+    private Payment payment;
 
     public Order(User user) {
         this.user = user;
@@ -43,5 +44,13 @@ public class Order {
 
     public void setArchival(boolean isArchival) {
         this.isArchival = isArchival;
+    }
+
+    public Payment getPayment() {
+        return payment;
+    }
+
+    public void setPayment(Payment payment) {
+        this.payment = payment;
     }
 }
