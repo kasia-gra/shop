@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="headComponents.html :: components"></div>
+    <link rel="stylesheet" type="text/css" href="/static/css/cart.css"/>
+</head>
+
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid d-flex justify-content-between">
+
+        <a class="navbar-brand" href="/"><img src="/static/img/KPD_logo.png" alt="logo" width="100"></a>
+
+        <ul class="nav navbar-nav navbar-right">
+            <li><a class="nav-link" href="/cart" id="cart">
+                <i class="fa fa-shopping-cart"></i>Cart
+                <span class="text-success" th:text="${order.getCart().getCartSize()}">0</span>
+            </a></li>
+            <li><a class="nav-link" id="register" data-toggle="modal" data-target="#modalRegisterForm"
+                   href="#"><span class="link fas fa-user-plus"></span> Sign in</a></li>
+            <li><a class="nav-link" id="login" data-toggle="modal" data-target="#modalLoginForm"
+                   href="#"><span class="link fas fa-sign-in-alt"></span> Log in</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="alert alert-success mt-5" role="alert">
+        <h3 class="d-flex justify-content-center">
+            Thank you for your purchase! You can see details of your order below.
+        </h3>
+    </div>
+
+    <div class="card-body p-5">
+        <h4 th:text="'Order identification number: ' + ${order.getId()}"></h4>
+        <hr class="dotted m-3">
+            <div class="row m-2">
+                <div class="col-md-4 mb-4">
+                    <h5>Billing address</h5>
+                    <div th:text="'Country: ' + ${order.getUser().getBillingAddress().getCountry()}"></div>
+                    <div th:text="'Zip code: ' + ${order.getUser().getBillingAddress().getZipCode()}"></div>
+                    <div th:text="'City: ' + ${order.getUser().getBillingAddress().getCity()}"></div>
+                    <div th:text="'Address: ' + ${order.getUser().getBillingAddress().getAddress()}"></div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5>Shipping address</h5>
+                    <div th:text="'Country: ' + ${order.getUser().getShippingAddress().getCountry()}"></div>
+                    <div th:text="'Zip code: ' + ${order.getUser().getShippingAddress().getZipCode()}"></div>
+                    <div th:text="'City: ' + ${order.getUser().getShippingAddress().getCity()}"></div>
+                    <div th:text="'Address: ' + ${order.getUser().getShippingAddress().getAddress()}"></div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5>Other information</h5>
+                    <span th:text="'Name: ' + ${order.getUser().getFirstName()}"></span>
+                    <span th:text="${order.getUser().getLastName()}"></span>
+                    <div th:text="'Email: ' + ${order.getUser().getEmail()}">email</div>
+                    <div th:text="'Phone number: ' + ${order.getUser().getPhone()}">number</div>
+                    <div>Payment method: Credit Card</div>
+                </div>
+            </div>
+
+        <h4>Ordered products</h4>
+        <hr class="dotted m-3">
+        <div class="row m-3 d-flex justify-content-end">
+            <h4 th:text="'Total: ' +
+            ${#numbers.formatDecimal(order.getCart().getLineItemsTotalPrice(),1,'COMMA',2,'POINT')}"></h4>
+        </div>
+
+        <div class="card-line-item" th:each="lineItem : ${order.getCart().getLineItems()}">
+            <div class="col-md-10 d-flex align-content-start">
+                <div class="card-product-img">
+                    <img class="fit_contain" src="http://placehold.it/400x250/000/fff"
+                                           th:attr="src='/static/img/product_' + ${lineItem.getProduct().id} + '.jpg'"
+                                           alt=""/></div>
+                <div class="card-product-name">
+                    <h3 th:text="${lineItem.getProduct().name}">Product name</h3>
+                </div>
+            </div>
+            <div class="col-md-2 mb-4">
+                <div class="card-product-summary">
+                    <div class="total-price-wrapper">
+                        <h4 class="total-line-price" th:text="${#numbers.formatDecimal(lineItem.getLinePrice(),1,'COMMA',2,'POINT')}"></h4>
+                    </div>
+                    <div class="total-price-wrapper">
+                        <h5 class="line-unit-price" th:text="${lineItem.getQty()} +' x '+ ${#numbers.formatDecimal(lineItem.getProduct().getDefaultPrice(),1,'COMMA',2,'POINT')}"></h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row m-2">
+            <button class="btn btn-secondary btn-block" onclick="location.href='/'">Back to main page</button>
+        </div>
+
+    </div>
+
+</div>
+</body>
+</html>

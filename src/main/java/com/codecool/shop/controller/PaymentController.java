@@ -4,6 +4,7 @@ import com.codecool.shop.config.TemplateEngineUtil;
 import com.codecool.shop.dao.dao.OrderDao;
 import com.codecool.shop.dao.jdbc.OrderDaoMem;
 import com.codecool.shop.model.order.Order;
+import com.codecool.shop.model.order.Payment;
 import com.google.gson.Gson;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
@@ -42,21 +43,19 @@ public class PaymentController extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(req.getServletContext());
 		WebContext context = new WebContext(req, resp, req.getServletContext());
-		float totalPrice = 0;
-		int itemsNumber = 0;
 
-		if (util.getCookieValueBy("userId", req) != null) {
-			OrderDao orderDataStore = OrderDaoMem.getInstance();
-			Order order = orderDataStore.getActual(Integer.parseInt(Objects.requireNonNull(
-					util.getCookieValueBy("userId", req))));
-			totalPrice = order.getCart().getLineItemsTotalPrice();
-			itemsNumber = order.getCart().getCartSize();
-		} else {
+		if (util.getCookieValueBy("userId", req) == null) {
 			resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 			engine.process("product/error.html", context, resp.getWriter());
 			return;
 		}
 
+		OrderDao orderDataStore = OrderDaoMem.getInstance();
+		Order order = orderDataStore.getActual(Integer.parseInt(Objects.requireNonNull(
+				util.getCookieValueBy("userId", req))));
+
+		float totalPrice = order.getCart().getLineItemsTotalPrice();
+		int itemsNumber = order.getCart().getCartSize();
 		context.setVariable("itemsNumber", itemsNumber);
 		context.setVariable("totalPrice", totalPrice);
 		engine.process("product/payment.html", context, resp.getWriter());
@@ -68,6 +67,7 @@ public class PaymentController extends HttpServlet {
 		OrderDao orderDataStore = OrderDaoMem.getInstance();
 		Order order = orderDataStore.getActual(Integer.parseInt(Objects.requireNonNull(util.getCookieValueBy("userId", req))));
 		saveOrderToFile(order);
+		setPaymentParameters(order, req);
 		resp.sendRedirect("/paymentConfirmation");
 	}
 
@@ -86,4 +86,8 @@ public class PaymentController extends HttpServlet {
 		fileWriter.flush();
 	}
 
+	private void setPaymentParameters(Order order, HttpServletRequest req) {
+		Payment payment = new Payment(req.getParameter("userName"));
+		order.setPayment(payment);
+	}
 }

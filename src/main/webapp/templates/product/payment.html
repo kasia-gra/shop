@@ -47,9 +47,9 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fa fa-user"></i></span>
                             </div>
-                            <input type="text" class="form-control" id="username">
-<!--                            <input type="text" class="form-control" id="username" autocomplete="off"-->
-<!--                                   pattern="\w+ \w+.*" title="First and Last name" required="required">-->
+<!--                            <input type="text" class="form-control" id="userName" name="userName"   | for tests>-->
+                            <input type="text" class="form-control" id="userName" autocomplete="off" name="userName"
+                                   pattern="\w+ \w+.*" title="First and Last name" required="required">
                         </div>
 
                     </div>
@@ -60,10 +60,10 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fa fa-credit-card"></i></span>
                             </div>
-                            <input type="text" class="form-control" id="cardNumber"
-                                   maxlength="20" title="Credit card number">
-<!--                            <input type="text" class="form-control" id="cardNumber" autocomplete="off"-->
-<!--                                   maxlength="20" pattern="\d{16}" title="Credit card number" required="required">-->
+<!--                            <input type="text" class="form-control" id="cardNumber"-->
+<!--                                   maxlength="20" title="Credit card number">-->
+                            <input type="text" class="form-control" id="cardNumber" autocomplete="off" name="cardNumber"
+                                   maxlength="20" pattern="\d{16}" title="Credit card number" required="required">
                         </div>
                     </div>
 
@@ -72,8 +72,8 @@
                             <div class="form-group">
                                 <label><span class="hidden-xs">Expiration</span> </label>
                                 <div class="input-group">
-                                    <input type="number" class="form-control" placeholder="MM" name="">
-                                    <input type="number" class="form-control" placeholder="YY" name="">
+                                    <input type="number" class="form-control" placeholder="MM" name="expMonth">
+                                    <input type="number" class="form-control" placeholder="YY" name="expYear">
                                 </div>
                             </div>
                         </div>
@@ -81,11 +81,11 @@
                         <div class="col-sm-4">
                             <div class="form-group">
                                 <label for="ccvNumber">CVV </label>
-                                <input type="number" class="form-control" id="ccvNumber"title="Three digits at back of your card"
-                                       placeholder="CVC">
-<!--                                <input type="number" class="form-control" id="ccvNumber" autocomplete="off"-->
-<!--                                       maxlength="3" pattern="\d{3}" title="Three digits at back of your card"-->
-<!--                                       placeholder="CVC" required="required">-->
+<!--                                <input type="number" class="form-control" id="ccvNumber"title="Three digits at back of your card"-->
+<!--                                       placeholder="CVC">-->
+                                <input type="number" class="form-control" id="ccvNumber" autocomplete="off"
+                                       maxlength="3" pattern="\d{3}" title="Three digits at back of your card"
+                                       name="ccvNumber" placeholder="CVC" required="required">
                             </div>
                         </div>
                     </div>

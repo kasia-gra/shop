@@ -1,11 +1,13 @@
 package com.codecool.shop.controller;
 
+import com.codecool.shop.config.TemplateEngineUtil;
 import com.codecool.shop.dao.dao.OrderDao;
 import com.codecool.shop.dao.jdbc.OrderDaoMem;
-import com.codecool.shop.model.order.LineItem;
 import com.codecool.shop.model.order.Order;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.WebContext;
+import com.codecool.shop.model.order.LineItem;
 import com.google.gson.Gson;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -19,19 +21,34 @@ import java.util.Objects;
 
 @WebServlet(urlPatterns = {"/paymentConfirmation"}, loadOnStartup = 5)
 public class PaymentConfirmationController extends HttpServlet {
+    OrderDao orderDataStore = OrderDaoMem.getInstance();
     private  SendEmail sendEmail = new SendEmail();
-
-    Util util = new Util();
-    Gson gson = new Gson();
+    private final Util util = new Util();
+    private final Gson gson = new Gson();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        OrderDao orderDataStore = OrderDaoMem.getInstance();
-        Order order = orderDataStore.getActual(Integer.parseInt(Objects.requireNonNull(util.getCookieValueBy("userId", req))));
+        TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(req.getServletContext());
+        WebContext context = new WebContext(req, resp, req.getServletContext()); //TODO think about refactor duplicated code
+
+        if (util.getCookieValueBy("userId", req) == null) {
+            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            engine.process("product/error.html", context, resp.getWriter());
+            return;
+        }
+
+        Order order = orderDataStore.getActual(Integer.parseInt(Objects.requireNonNull(
+                util.getCookieValueBy("userId", req))));
+
         String htmlMessage =  createEmailHtmlMessage(order).toString();
         sendEmail.sendEmail(order.getUser().getEmail(), htmlMessage);
-    }
-
+      
+        if (order.getPayment().getCardOwner().equals("Daniel Rzeszutko")) { // draft version of payment validation
+            context.setVariable("order", order);
+            engine.process("product/paymentConfirmation.html", context, resp.getWriter());
+        } else {
+            engine.process("product/paymentFail.html", context, resp.getWriter());
+        }
 
     private StringBuffer createEmailHtmlMessage(Order order) {
         StringBuffer output = new StringBuffer();
@@ -50,10 +67,11 @@ public class PaymentConfirmationController extends HttpServlet {
                     + " " + order.getCart().getCartCurrency() + "</p>");
         }
         return output;
+
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+        System.out.println("post");
     }
 }
