@@ -21,21 +21,6 @@ public class PaymentController extends HttpServlet {
 	private final Util util = new Util();
 	private final OrderDao orderDataStore = OrderDaoMem.getInstance();
 
-	private String host;
-	private String port;
-	private String user;
-	private String pass;
-
-	public void init() {
-		// reads SMTP server setting from web.xml file
-		ServletContext context = getServletContext();
-		host = context.getInitParameter("host");
-		port = context.getInitParameter("port");
-		user = context.getInitParameter("user");
-		pass = context.getInitParameter("pass");
-	}
-
-
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(req.getServletContext());

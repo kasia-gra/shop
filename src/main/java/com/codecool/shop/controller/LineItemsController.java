@@ -8,7 +8,6 @@ import com.google.gson.JsonObject;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -51,7 +50,7 @@ public class LineItemsController extends HttpServlet {
 
         if (isEmptyCart(order)) {
             orderDataStore.remove(order.getId());
-            removeCookie(resp);
+            util.removeCookie(resp);
         }
 
         JsonObject jsonResponse = prepareJsonResponse(order);
@@ -73,11 +72,7 @@ public class LineItemsController extends HttpServlet {
         return jsonResponse;
     }
 
-    private void removeCookie(HttpServletResponse resp) {
-        Cookie cookie = new Cookie("userId", "");
-        cookie.setMaxAge(0);
-        resp.addCookie(cookie);
-    }
+
 
     private boolean isEmptyCart(Order order) {
         return order.getCart().getCartSize() == 0;

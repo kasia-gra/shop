@@ -68,7 +68,7 @@ public class CheckoutController extends HttpServlet {
     private void setUserParameters(User user, HttpServletRequest request) {
         user.setFirstName(request.getParameter("firstName"));
         user.setLastName(request.getParameter("lastName"));
-        user.setEmail(request.getParameter("billingEmail"));
+        user.setEmail(request.getParameter("email"));
         user.setPhone(request.getParameter("phone"));
         user.setBillingAddress(getBillingAddress(request));
         if (request.getParameter("sameAddress").equals("on")) {

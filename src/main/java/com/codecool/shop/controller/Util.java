@@ -74,4 +74,10 @@ public class Util {
         resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         engine.process("product/error.html", context, resp.getWriter());
     }
+
+    public void removeCookie(HttpServletResponse resp) {
+        Cookie cookie = new Cookie("userId", "");
+        cookie.setMaxAge(0);
+        resp.addCookie(cookie);
+    }
 }
