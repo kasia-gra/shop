@@ -4,11 +4,11 @@ import com.codecool.shop.config.TemplateEngineUtil;
 import com.codecool.shop.dao.dao.OrderDao;
 import com.codecool.shop.dao.jdbc.OrderDaoMem;
 import com.codecool.shop.model.order.Order;
+import com.codecool.shop.model.order.Payment;
 import com.google.gson.Gson;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -51,8 +51,7 @@ public class PaymentController extends HttpServlet {
 		OrderDao orderDataStore = OrderDaoMem.getInstance();
 		Order order = orderDataStore.getActual(Integer.parseInt(Objects.requireNonNull(util.getCookieValueBy("userId", req))));
 		saveOrderToFile(order);
-//		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/paymentConfirmation");
-//        dispatcher.forward(req, resp);
+		setPaymentParameters(order, req);
 		resp.sendRedirect("/paymentConfirmation");
 	}
 
@@ -71,4 +70,8 @@ public class PaymentController extends HttpServlet {
 		fileWriter.flush();
 	}
 
+	private void setPaymentParameters(Order order, HttpServletRequest req) {
+		Payment payment = new Payment(req.getParameter("userName"));
+		order.setPayment(payment);
+	}
 }
