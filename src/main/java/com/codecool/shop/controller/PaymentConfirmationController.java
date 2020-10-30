@@ -34,7 +34,6 @@ public class PaymentConfirmationController extends HttpServlet {
         OrderDao orderDataStore = OrderDaoMem.getInstance();
         Order order = orderDataStore.getActual(Integer.parseInt(Objects.requireNonNull(
                 util.getCookieValueBy("userId", req))));
-        System.out.println(order.getPayment().getCardOwner());
 
         if (order.getPayment().getCardOwner().equals("Daniel Rzeszutko")) { // draft version of payment validation
             context.setVariable("order", order);
