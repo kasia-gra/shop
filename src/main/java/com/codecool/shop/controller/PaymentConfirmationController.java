@@ -34,16 +34,24 @@ public class PaymentConfirmationController extends HttpServlet {
 
         Order order = orderDataStore.getActual(Integer.parseInt(util.getCookieValueBy("userId", req)));
 
-        String htmlMessage = createEmailHtmlMessage(order).toString();
-        SendEmail.sendEmail(order.getUser().getEmail(), htmlMessage);
-
         if (order.getPayment().getCardOwner().equals("Daniel Rzeszutko")) { // draft version of payment validation
-            context.setVariable("order", order);
-            util.removeCookie(resp);
+            finalizeSuccessfulPayment(resp, context, order);
             engine.process("product/paymentConfirmation.html", context, resp.getWriter());
         } else {
             engine.process("product/paymentFail.html", context, resp.getWriter());
         }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        System.out.println("post");
+    }
+
+    private void finalizeSuccessfulPayment(HttpServletResponse resp, WebContext context, Order order) {
+        String htmlMessage = createEmailHtmlMessage(order).toString();
+        SendEmail.sendEmail(order.getUser().getEmail(), htmlMessage);
+        context.setVariable("order", order);
+        util.removeCookie(resp);
     }
 
     private StringBuffer createEmailHtmlMessage(Order order) {
@@ -63,11 +71,5 @@ public class PaymentConfirmationController extends HttpServlet {
                     + " " + order.getCart().getCartCurrency() + "</p>");
         }
         return output;
-
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println("post");
     }
 }
