@@ -27,7 +27,7 @@ public class PaymentController extends HttpServlet {
 		WebContext context = new WebContext(req, resp, req.getServletContext());
 
 		if (!util.isExistingOrder(req)) {
-			showErrorPage(resp, engine, context);
+			util.showErrorPage(resp, engine, context);
 			return;
 		}
 
@@ -41,10 +41,7 @@ public class PaymentController extends HttpServlet {
 		resp.sendRedirect("/paymentConfirmation");
 	}
 
-	private void showErrorPage(HttpServletResponse resp, TemplateEngine engine, WebContext context) throws IOException {
-		resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-		engine.process("product/error.html", context, resp.getWriter());
-	}
+
 
 	private void setContextParameters(HttpServletRequest req, WebContext context) {
 		Order order = orderDataStore.getActual(Integer.parseInt(util.getCookieValueBy("userId", req)));

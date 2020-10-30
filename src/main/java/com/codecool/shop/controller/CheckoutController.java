@@ -7,7 +7,6 @@ import com.codecool.shop.dao.jdbc.OrderDaoMem;
 import com.codecool.shop.dao.jdbc.UserDaoMem;
 import com.codecool.shop.model.order.LineItem;
 import com.codecool.shop.model.order.Order;
-import com.codecool.shop.model.product.Product;
 import com.codecool.shop.model.user.Address;
 import com.codecool.shop.model.user.User;
 import org.thymeleaf.TemplateEngine;
@@ -19,28 +18,24 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @WebServlet(urlPatterns = {"/checkout"}, loadOnStartup = 3)
 public class CheckoutController extends HttpServlet {
-
     Util util = new Util();
+    OrderDao orderDataStore = OrderDaoMem.getInstance();
+    UserDao userDataStorage = UserDaoMem.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(req.getServletContext());
         WebContext context = new WebContext(req, resp, req.getServletContext());
 
-        if (util.getCookieValueBy("userId", req) == null) {
-            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            engine.process("product/error.html", context, resp.getWriter());
+        if (!util.isExistingOrder(req)) {
+            util.showErrorPage(resp, engine, context);
             return;
         }
 
-        OrderDao orderDataStore = OrderDaoMem.getInstance();
         Order order = orderDataStore.getActual(Integer.parseInt(util.getCookieValueBy("userId", req)));
         List<LineItem> orderedProducts = order.getCart().getLineItems();
         float totalPrice = order.getCart().getLineItemsTotalPrice();
@@ -48,22 +43,26 @@ public class CheckoutController extends HttpServlet {
         String cartValue = String.format("%.2f", totalPrice);
         int itemsNumber = order.getCart().getCartSize();
 
-        context.setVariable("currency", currency);
-        context.setVariable("itemsNumber", itemsNumber);
-        context.setVariable("orderedProducts", orderedProducts);
-        context.setVariable("cartValue", cartValue);
+        setContextParameters(context, orderedProducts, currency, cartValue, itemsNumber);
         engine.process("product/checkout.html", context, resp.getWriter());
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String userId = util.getCookieValueBy("userId", req);
-        UserDao userDataStorage = UserDaoMem.getInstance();
+
         User user = userDataStorage.find(Integer.parseInt(userId));
         setUserParameters(user, req);
 //        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/payment");
 //        dispatcher.forward(req, resp);
         resp.sendRedirect("/payment");
+    }
+
+    private void setContextParameters(WebContext context, List<LineItem> orderedProducts, String currency, String cartValue, int itemsNumber) {
+        context.setVariable("currency", currency);
+        context.setVariable("itemsNumber", itemsNumber);
+        context.setVariable("orderedProducts", orderedProducts);
+        context.setVariable("cartValue", cartValue);
     }
 
     private void setUserParameters(User user, HttpServletRequest request) {

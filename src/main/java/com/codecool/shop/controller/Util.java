@@ -3,6 +3,8 @@ package com.codecool.shop.controller;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.WebContext;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
@@ -62,7 +64,13 @@ public class Util {
         fileWriter.write(jsonObject);
         fileWriter.flush();
     }
+
     public boolean isExistingOrder(HttpServletRequest request) {
         return getCookieValueBy("userId", request) != null;
+    }
+
+    public void showErrorPage(HttpServletResponse resp, TemplateEngine engine, WebContext context) throws IOException {
+        resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        engine.process("product/error.html", context, resp.getWriter());
     }
 }
