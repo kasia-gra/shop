@@ -38,8 +38,11 @@
         <span id="notEmptyCard">
             <div class="card-header">
                 <div class="order-summary">
-                    <h4 id="total-to-pay"
-                        th:text="${#numbers.formatDecimal(cart.getLineItemsTotalPrice(),1,'COMMA',2,'POINT')}"></h4>
+                    <h4 id="total-to-pay">
+                        <span>Total: </span>
+                        <span th:text="${#numbers.formatDecimal(cart.getLineItemsTotalPrice(),1,'COMMA',2,'POINT')}"></span>
+                        <span th:text="${cart.getCartCurrency()}"></span>
+                    </h4>
                 </div>
                 <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                     <div class="btn-group mr-2" role="group" aria-label="First group">
@@ -64,12 +67,16 @@
                 </div>
                 <div class="card-product-summary">
                     <div class="total-price-wrapper">
-                        <h4 class="total-line-price"
-                            th:text="${#numbers.formatDecimal(lineItem.getLinePrice(),1,'COMMA',2,'POINT')}"></h4>
+                        <h4 class="total-line-price">
+                            <span th:text="${#numbers.formatDecimal(lineItem.getLinePrice(),1,'COMMA',2,'POINT')}"></span>
+                            <span th:text="${cart.getCartCurrency()}"></span>
+                        </h4>
                     </div>
                     <div class="total-price-wrapper">
-                        <h5 class="line-unit-price"
-                            th:text="${#numbers.formatDecimal(lineItem.getProduct().getDefaultPrice(),1,'COMMA',2,'POINT')}"></h5>
+                        <h5 class="line-unit-price">
+                            <span th:text="${#numbers.formatDecimal(lineItem.getProduct().getDefaultPrice(),1,'COMMA',2,'POINT')}"></span>
+                            <span th:text="${cart.getCartCurrency()}"></span>
+                        </h5>
                     </div>
                     <div class="card-product-actions" th:id="${lineItem.getLineId()}">
                         <button class="line-item-summary-wrapper increase-qty">+</button>
