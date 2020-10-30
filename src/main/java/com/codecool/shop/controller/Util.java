@@ -66,6 +66,13 @@ public class Util {
         fileWriter.flush();
     }
 
+    public String readFile(File file) throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+        String currentLine = reader.readLine();
+        reader.close();
+        return currentLine;
+    }
+
     public boolean isExistingOrder(HttpServletRequest request) {
         return getCookieValueBy("userId", request) != null;
     }

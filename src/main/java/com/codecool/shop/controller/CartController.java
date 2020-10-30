@@ -1,5 +1,6 @@
 package com.codecool.shop.controller;
 
+import com.codecool.shop.AdminLogger;
 import com.codecool.shop.config.TemplateEngineUtil;
 import com.codecool.shop.dao.dao.OrderDao;
 import com.codecool.shop.dao.dao.ProductDao;
@@ -64,6 +65,8 @@ public class CartController extends HttpServlet {
 
         Order order = new Order(user);
         addOrderToDataStorage(product, order);
+
+        AdminLogger.createLogFile(order.getId(), getServletContext());
 
         JsonObject jsonResponse = prepareJsonResponse(order);
         jsonResponse.addProperty("userId", userId);

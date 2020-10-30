@@ -1,3 +1,5 @@
+import {logManager} from "./logManager.js";
+
 let checkoutManager = {
   init: function() {
     checkoutManager.initValidation();
@@ -13,6 +15,9 @@ let checkoutManager = {
           if (form.checkValidity() === false) {
             event.preventDefault();
             event.stopPropagation();
+            logManager.sendLog("CHECKOUT", false);
+          } else {
+            logManager.sendLog("CHECKOUT", true);
           }
           form.classList.add('was-validated');
         }, false);
@@ -21,7 +26,7 @@ let checkoutManager = {
   },
   toggleShippingAddressVisibility: function() {
     let sameAddressCheckbox = document.querySelector("#same-address");
-    sameAddressCheckbox.checked = false;
+    // sameAddressCheckbox.checked = false;
     sameAddressCheckbox.addEventListener("change", event => checkoutManager.toggleShippingAddressVisibilityHandler(event));
   },
   toggleShippingAddressVisibilityHandler: function(event) {
