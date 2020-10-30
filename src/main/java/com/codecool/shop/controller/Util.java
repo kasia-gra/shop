@@ -51,6 +51,7 @@ public class Util {
     public File prepareFile(String relativeDirectoryPath, String filename, ServletContext context) {
         filename += ".json";
         String absoluteDirectoryPath = context.getRealPath(relativeDirectoryPath);
+        new File(absoluteDirectoryPath).mkdir();
         return new File(absoluteDirectoryPath, filename);
     }
 
