@@ -17,7 +17,7 @@ export let cartManager = {
             data.productId = productId;
             dataHandler._api_put("/cart", data, json_response => {
                     cartManager.changeCartItemsNumber(json_response);
-                cookiesHandler.setCookie("userId", json_response.userId, 30);
+                    cookiesHandler.setCookie("userId", json_response.userId, 30);
                 });
         } else {
             data.productId = productId;
