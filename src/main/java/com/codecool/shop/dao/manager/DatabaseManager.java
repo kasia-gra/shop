@@ -1,7 +1,11 @@
 package com.codecool.shop.dao.manager;
 
+import com.codecool.shop.dao.dao.ProductCategoryDao;
 import com.codecool.shop.dao.dao.ProductDao;
+import com.codecool.shop.dao.dao.SupplierDao;
+import com.codecool.shop.dao.jdbc.ProductCategoryDaoJdbc;
 import com.codecool.shop.dao.jdbc.ProductDaoJdbc;
+import com.codecool.shop.dao.jdbc.SupplierDaoJdbc;
 import org.postgresql.ds.PGSimpleDataSource;
 
 import javax.sql.DataSource;
@@ -13,6 +17,8 @@ import java.util.Properties;
 
 public class DatabaseManager {
 	public ProductDao productDao;
+	public SupplierDao supplierDao;
+	public ProductCategoryDao categoryDao;
 
 	public void run() {
 		try {
@@ -25,6 +31,8 @@ public class DatabaseManager {
 	public void setup() throws SQLException, IOException {
 		DataSource dataSource = connect();
 		productDao = new ProductDaoJdbc(dataSource);
+		supplierDao = new SupplierDaoJdbc(dataSource);
+		categoryDao = new ProductCategoryDaoJdbc(dataSource);
 
 	}
 
