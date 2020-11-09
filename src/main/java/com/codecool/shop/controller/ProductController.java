@@ -2,6 +2,7 @@ package com.codecool.shop.controller;
 
 import com.codecool.shop.config.TemplateEngineUtil;
 import com.codecool.shop.dao.dao.OrderDao;
+import com.codecool.shop.dao.manager.DatabaseManager;
 import com.codecool.shop.dao.dao.ProductCategoryDao;
 import com.codecool.shop.dao.dao.ProductDao;
 import com.codecool.shop.dao.jdbc.OrderDaoMem;
@@ -28,13 +29,13 @@ import java.util.Locale;
 public class ProductController extends HttpServlet {
     List<Product> products;
     private final Util util = new Util();
-//    DatabaseManager dbManager = new DatabaseManager();
+    DatabaseManager dbManager = new DatabaseManager();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        dbManager.run();
-//        ProductDao productDataStore = dbManager.productDao; //todo change data source to db instead od Mem objects
-        ProductDao productDataStore = ProductDaoMem.getInstance();
+        dbManager.run();
+        ProductDao productDataStore = dbManager.productDao; //todo change data source to db instead od Mem objects
+//        ProductDao productDataStore = ProductDaoMem.getInstance();
         ProductCategoryDao productCategoryDataStore = ProductCategoryDaoMem.getInstance();
         SupplierDaoMem supplierDataStore = SupplierDaoMem.getInstance();
         TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(req.getServletContext());

@@ -5,7 +5,9 @@ import com.codecool.shop.dao.ProductDaoJdbc;
 import org.postgresql.ds.PGSimpleDataSource;
 
 import javax.sql.DataSource;
+import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Properties;
 
 //TODO NOT WORKING YET
 
@@ -15,23 +17,28 @@ public class DatabaseManager {
 	public void run() {
 		try {
 			setup();
-		} catch (SQLException throwables) {
+		} catch (SQLException | IOException throwables) {
 			System.err.println("Could not connect to the database.");
 		}
 	}
 
-	public void setup() throws SQLException {
+	public void setup() throws SQLException, IOException {
 		DataSource dataSource = connect();
 		productDao = new ProductDaoJdbc(dataSource);
 
 	}
 
-
-	private DataSource connect() throws SQLException {
+	private DataSource connect() throws SQLException, IOException {
 		PGSimpleDataSource dataSource = new PGSimpleDataSource();
-		String dbName = System.getenv("PSQL_DB_NAME");
-		String user = System.getenv("PSQL_USER_NAME");
-		String password = System.getenv("PSQL_PASSWORD");
+		Properties db_config = new Properties();
+		db_config.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("db_config.properties"));
+		String dbName = db_config.getProperty("dbName");
+		String user = db_config.getProperty("user");
+		String password = db_config.getProperty("password");
+
+//		String dbName = System.getenv("PSQL_DB_NAME");
+//		String user = System.getenv("PSQL_USER_NAME");
+//		String password = System.getenv("PSQL_PASSWORD");
 
 		dataSource.setDatabaseName(dbName);
 		dataSource.setUser(user);

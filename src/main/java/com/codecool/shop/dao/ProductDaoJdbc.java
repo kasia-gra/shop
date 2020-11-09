@@ -41,12 +41,15 @@ public class ProductDaoJdbc implements ProductDao {
 	@Override
 	public List<Product> getAll() {
 		try (Connection conn = dataSource.getConnection()) {
-			String sql = "SELECT * FROM products";
+			String sql = "SELECT * FROM product";
 			ResultSet rs = conn.createStatement().executeQuery(sql);
 			while (rs.next()) { //temporary
 				ProductCategory cat = new ProductCategory("TESTs", "test", "A tablet");
 				Supplier sup = new Supplier("TEST", "TEST");
-				data.add(new Product(rs.getString(2), rs.getFloat(3), rs.getString(4), rs.getString(5), cat, sup));
+				Product product = new Product(rs.getString(2), rs.getFloat(3),
+						"USD", rs.getString(4), cat, sup);
+				product.setId(rs.getInt(1));
+				data.add(product);
 			}
 			return data;
 		} catch (SQLException e) {
