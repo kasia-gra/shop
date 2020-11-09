@@ -1,7 +1,7 @@
 package com.codecool.shop.controller;
 
 import com.codecool.shop.dao.dao.OrderDao;
-import com.codecool.shop.dao.jdbc.OrderDaoMem;
+import com.codecool.shop.dao.mem.OrderDaoMem;
 import com.codecool.shop.model.order.LineItem;
 import com.codecool.shop.model.order.Order;
 import com.google.gson.JsonObject;

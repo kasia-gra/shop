@@ -1,4 +1,4 @@
-package com.codecool.shop.dao.jdbc;
+package com.codecool.shop.dao.mem;
 
 import com.codecool.shop.dao.dao.OrderDao;
 import com.codecool.shop.model.order.Order;

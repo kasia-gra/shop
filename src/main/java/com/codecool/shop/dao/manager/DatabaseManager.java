@@ -1,7 +1,7 @@
 package com.codecool.shop.dao.manager;
 
 import com.codecool.shop.dao.dao.ProductDao;
-import com.codecool.shop.dao.ProductDaoJdbc;
+import com.codecool.shop.dao.jdbc.ProductDaoJdbc;
 import org.postgresql.ds.PGSimpleDataSource;
 
 import javax.sql.DataSource;
