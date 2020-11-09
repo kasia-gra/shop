@@ -1,4 +1,4 @@
-package com.codecool.shop.dao;
+package com.codecool.shop.dao.jdbc;
 
 import com.codecool.shop.dao.dao.ProductDao;
 import com.codecool.shop.model.product.Product;
