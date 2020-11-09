@@ -46,8 +46,8 @@ public class ProductDaoJdbc implements ProductDao {
 			while (rs.next()) { //temporary
 				ProductCategory cat = new ProductCategory("TESTs", "test", "A tablet");
 				Supplier sup = new Supplier("TEST", "TEST");
-				Product product = new Product(rs.getString(2), rs.getFloat(3),
-						"USD", rs.getString(4), cat, sup);
+				Product product = new Product(rs.getString("name"), rs.getFloat("default_price"),
+						"USD", rs.getString("description"), cat, sup);
 				product.setId(rs.getInt(1));
 				data.add(product);
 			}
