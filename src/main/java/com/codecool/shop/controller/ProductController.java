@@ -1,13 +1,13 @@
 package com.codecool.shop.controller;
 
 import com.codecool.shop.config.TemplateEngineUtil;
+import com.codecool.shop.dao.dao.SupplierDao;
 import com.codecool.shop.dao.dao.OrderDao;
-import com.codecool.shop.dao.manager.DatabaseManager;
 import com.codecool.shop.dao.dao.ProductCategoryDao;
 import com.codecool.shop.dao.dao.ProductDao;
+import com.codecool.shop.dao.manager.DatabaseManager;
 import com.codecool.shop.dao.mem.OrderDaoMem;
 import com.codecool.shop.dao.mem.ProductCategoryDaoMem;
-import com.codecool.shop.dao.mem.SupplierDaoMem;
 import com.codecool.shop.model.order.Order;
 import com.codecool.shop.model.product.Product;
 import org.thymeleaf.TemplateEngine;
@@ -30,10 +30,10 @@ public class ProductController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         dbManager.run();
-        ProductDao productDataStore = dbManager.productDao; //todo change data source to db instead od Mem objects
-//        ProductDao productDataStore = ProductDaoMem.getInstance();
-        ProductCategoryDao productCategoryDataStore = ProductCategoryDaoMem.getInstance();
-        SupplierDaoMem supplierDataStore = SupplierDaoMem.getInstance();
+        ProductDao productDataStore = dbManager.productDao;
+        ProductCategoryDao productCategoryDataStore = dbManager.categoryDao;
+        SupplierDao supplierDataStore = dbManager.supplierDao;
+
         TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(req.getServletContext());
         WebContext context = new WebContext(req, resp, req.getServletContext());
 
@@ -41,10 +41,10 @@ public class ProductController extends HttpServlet {
         String supplier = (req.getParameter("supplier"));
 
         if (category != null && supplier == null) {
-            products = productDataStore.getBy(productCategoryDataStore.getCategoryByName(category));
+            products = null; // TODO get data by category using ProductJDBC
         }
         else if (category == null && supplier != null) {
-            products = productDataStore.getBy(supplierDataStore.getSipplierByName(supplier));
+            products = null; // TODO: get data by supplier using ProductJdbc
         }
         else {
             products = productDataStore.getAll();
@@ -66,7 +66,7 @@ public class ProductController extends HttpServlet {
         context.setVariable("itemsNumber", itemsNumber);
     }
 
-    private void setContextParameters(ProductCategoryDao productCategoryDataStore, SupplierDaoMem supplierDataStore, WebContext context) {
+    private void setContextParameters(ProductCategoryDao productCategoryDataStore, SupplierDao supplierDataStore, WebContext context) {
         context.setVariable("products", products);
         context.setVariable("categories", productCategoryDataStore.getAll());
         context.setVariable("suppliers", supplierDataStore.getAll());
