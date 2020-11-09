@@ -34,8 +34,8 @@ public class SupplierDaoMem implements SupplierDao {
         return data.stream().filter(t -> t.getId() == id).findFirst().orElse(null);
     }
 
-    @Override
-    public Supplier getSipplierByName(String supplierName) {
+
+    public Supplier getSupplierByName(String supplierName) {
         return data.stream().filter(t -> t.getName().equals(supplierName)).findFirst().orElse(null);
     }
 
