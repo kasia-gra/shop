@@ -1,13 +1,13 @@
-package com.codecool.shop.model.order;
+package com.codecool.shop.model;
 
 import com.codecool.shop.model.user.Address;
 
-public class OrderAddressDetail {
+public class AddressDetail {
     private int id;
     private Address billingAddress;
     private Address shippingAddress;
 
-    public OrderAddressDetail(Address billingAddress, Address shippingAddress) {
+    public AddressDetail(Address billingAddress, Address shippingAddress) {
         this.billingAddress = billingAddress;
         this.shippingAddress = shippingAddress;
     }

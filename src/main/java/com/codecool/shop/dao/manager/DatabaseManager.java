@@ -19,7 +19,7 @@ public class DatabaseManager {
 
 	public LineItemDao lineItemDao;
 	public AddressDao addressDao;
-	public OrderAddressDetailDao orderAddressDetailDao;
+	public AddressDetailDao addressDetailDao;
 
 	private DatabaseManager() {
 	}
@@ -46,7 +46,7 @@ public class DatabaseManager {
 		productDao = new ProductDaoJdbc(dataSource, supplierDao, categoryDao);
 		lineItemDao = new LineItemDaoJdbc(dataSource);
 		addressDao = new AddressDaoJdbc(dataSource);
-		orderAddressDetailDao = new OrderAddressDetailDaoJdbc(dataSource, addressDao);
+		addressDetailDao = new AddressDetailDaoJdbc(dataSource, addressDao);
 
 	}
 

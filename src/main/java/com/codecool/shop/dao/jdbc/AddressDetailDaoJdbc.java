@@ -1,8 +1,8 @@
 package com.codecool.shop.dao.jdbc;
 
 import com.codecool.shop.dao.dao.AddressDao;
-import com.codecool.shop.dao.dao.OrderAddressDetailDao;
-import com.codecool.shop.model.order.OrderAddressDetail;
+import com.codecool.shop.dao.dao.AddressDetailDao;
+import com.codecool.shop.model.AddressDetail;
 import com.codecool.shop.model.user.Address;
 
 import javax.sql.DataSource;
@@ -10,36 +10,36 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrderAddressDetailDaoJdbc implements OrderAddressDetailDao {
+public class AddressDetailDaoJdbc implements AddressDetailDao {
     private DataSource dataSource;
     private AddressDao addressDao;
 
-    public OrderAddressDetailDaoJdbc(DataSource dataSource, AddressDao addressDao) {
+    public AddressDetailDaoJdbc(DataSource dataSource, AddressDao addressDao) {
         this.dataSource = dataSource;
         this.addressDao = addressDao;
     }
 
     @Override
-    public void add(OrderAddressDetail orderAddressDetail) {
+    public void add(AddressDetail addressDetail) {
         try (Connection conn = dataSource.getConnection()) {
-            String sql = "INSERT INTO order_address_detail (order_billing_address_id, order_shipping_address_id) VALUES (?, ?)";
+            String sql = "INSERT INTO address_detail (billing_address_id, shipping_address_id) VALUES (?, ?)";
             PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            statement.setInt(1, orderAddressDetail.getBillingAddress().getId());
-            statement.setInt(2, orderAddressDetail.getShippingAddress().getId());
+            statement.setInt(1, addressDetail.getBillingAddress().getId());
+            statement.setInt(2, addressDetail.getShippingAddress().getId());
             statement.executeUpdate();
 
             ResultSet resultSet = statement.getGeneratedKeys();
             resultSet.next();
-            orderAddressDetail.setId(resultSet.getInt("id"));
+            addressDetail.setId(resultSet.getInt("id"));
         } catch (SQLException exception) {
             throw new RuntimeException("Error while adding new order address detail.", exception);
         }
     }
 
     @Override
-    public OrderAddressDetail find(int id) {
+    public AddressDetail find(int id) {
         try (Connection conn = dataSource.getConnection()) {
-            String sql = "SELECT * FROM order_address_detail WHERE id = ?";
+            String sql = "SELECT * FROM address_detail WHERE id = ?";
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
@@ -50,33 +50,33 @@ public class OrderAddressDetailDaoJdbc implements OrderAddressDetailDao {
             Address orderBillingAddress = addressDao.find(resultSet.getInt("order_billing_address_id"));
             Address orderShippingAddress = addressDao.find(resultSet.getInt("order_shipping_address_id"));
 
-            OrderAddressDetail orderAddressDetail = new OrderAddressDetail(orderBillingAddress, orderShippingAddress);
-            orderAddressDetail.setId(id);
+            AddressDetail addressDetail = new AddressDetail(orderBillingAddress, orderShippingAddress);
+            addressDetail.setId(id);
 
-            return orderAddressDetail;
+            return addressDetail;
         } catch (SQLException exception) {
             throw new RuntimeException("Error while retrieving order address detail with id: " + id, exception);
         }
     }
 
     @Override
-    public void update(OrderAddressDetail orderAddressDetail) {
+    public void update(AddressDetail addressDetail) {
         try (Connection connection = dataSource.getConnection()) {
-            String sql = "UPDATE order_address_detail SET order_billing_address_id = ?, order_shipping_address_id = ? WHERE id = ?";
+            String sql = "UPDATE address_detail SET billing_address_id = ?, shipping_address_id = ? WHERE id = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setInt(1, orderAddressDetail.getBillingAddress().getId());
-            statement.setInt(2, orderAddressDetail.getShippingAddress().getId());
-            statement.setInt(3, orderAddressDetail.getId());
+            statement.setInt(1, addressDetail.getBillingAddress().getId());
+            statement.setInt(2, addressDetail.getShippingAddress().getId());
+            statement.setInt(3, addressDetail.getId());
             statement.executeUpdate();
         } catch (SQLException exception) {
-            throw new RuntimeException("Error while updating order address detail with id: " + orderAddressDetail.getId(), exception);
+            throw new RuntimeException("Error while updating order address detail with id: " + addressDetail.getId(), exception);
         }
     }
 
     @Override
     public void remove(int id) {
         try (Connection conn = dataSource.getConnection()) {
-            String sql = "DELETE FROM order_address_detail WHERE id = ?";
+            String sql = "DELETE FROM address_detail WHERE id = ?";
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setInt(1, id);
             statement.executeUpdate();
@@ -86,20 +86,20 @@ public class OrderAddressDetailDaoJdbc implements OrderAddressDetailDao {
     }
 
     @Override
-    public List<OrderAddressDetail> getAll() {
+    public List<AddressDetail> getAll() {
         try (Connection conn = dataSource.getConnection()) {
-            String sql = "SELECT * FROM order_address_detail";
+            String sql = "SELECT * FROM address_detail";
             ResultSet resultSet = conn.createStatement().executeQuery(sql);
-            List<OrderAddressDetail> orderAddressDetailList = new ArrayList<>();
+            List<AddressDetail> addressDetailList = new ArrayList<>();
             while (resultSet.next()) {
                 Address orderBillingAddress = addressDao.find(resultSet.getInt("order_billing_address_id"));
                 Address orderShippingAddress = addressDao.find(resultSet.getInt("order_shipping_address_id"));
 
-                OrderAddressDetail orderAddressDetail = new OrderAddressDetail(orderBillingAddress, orderShippingAddress);
-                orderAddressDetail.setId(resultSet.getInt("id"));
-                orderAddressDetailList.add(orderAddressDetail);
+                AddressDetail addressDetail = new AddressDetail(orderBillingAddress, orderShippingAddress);
+                addressDetail.setId(resultSet.getInt("id"));
+                addressDetailList.add(addressDetail);
             }
-            return orderAddressDetailList;
+            return addressDetailList;
         } catch (SQLException exception) {
             throw new RuntimeException("Error while retrieving all order address details.", exception);
         }
