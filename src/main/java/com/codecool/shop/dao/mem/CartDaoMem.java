@@ -24,11 +24,11 @@ public class CartDaoMem implements CartDao {
     }
 
     @Override
-    public int add(Cart cart) {
+    public void add(Cart cart) {
         cart.setId(sequenceNumber);
         data.add(cart);
         sequenceNumber++;
-        return cart.getId();
+//        return cart.getId();
     }
 
     @Override
@@ -40,7 +40,7 @@ public class CartDaoMem implements CartDao {
     }
 
     @Override
-    public void update(Cart newCart) {
+    public void addItemToCart(Cart cart, int productPrice, int addedQuantity) {
     }
 
     @Override

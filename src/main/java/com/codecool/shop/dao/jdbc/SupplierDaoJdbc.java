@@ -61,7 +61,7 @@ public class SupplierDaoJdbc implements SupplierDao {
         try (Connection conn = dataSource.getConnection()) {
             String sql = "DELETE from supplier WHERE id = ?";
             PreparedStatement st = conn.prepareStatement(sql);
-            st.setInt(1, 1);
+            st.setInt(1,    id);
             st.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
