@@ -11,6 +11,8 @@ import java.util.Properties;
 
 
 public class DatabaseManager {
+	private static DatabaseManager instance = null;
+
 	public ProductDao productDao;
 	public SupplierDao supplierDao;
 	public ProductCategoryDao categoryDao;
@@ -18,6 +20,16 @@ public class DatabaseManager {
 	public LineItemDao lineItemDao;
 	public AddressDao addressDao;
 	public OrderAddressDetailDao orderAddressDetailDao;
+
+	private DatabaseManager() {
+	}
+
+	public static DatabaseManager getInstance() {
+		if (instance == null) {
+			instance = new DatabaseManager();
+		}
+		return instance;
+	}
 
 	public void run() {
 		try {
