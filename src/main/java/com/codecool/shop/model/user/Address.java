@@ -1,11 +1,12 @@
 package com.codecool.shop.model.user;
 
 public class Address {
+    private int id;
+
     private String country;
     private String city;
     private String zipCode;
     private String address;
-
     public Address(String country, String city, String zipCode, String address) {
         this.country = country;
         this.city = city;
@@ -43,5 +44,12 @@ public class Address {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
     }
 }
