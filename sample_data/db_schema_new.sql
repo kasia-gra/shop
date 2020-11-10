@@ -31,7 +31,8 @@ CREATE TABLE public.line_item
     cart_id          int    NOT NULL,
     product_id       int    NOT NULL,
     quantity         int    NOT NULL,
-    total_line_price int    NOT NULL
+    total_line_price int    NOT NULL,
+    CONSTRAINT product_per_cart UNIQUE (cart_id, product_id)
 );
 
 
