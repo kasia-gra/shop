@@ -67,7 +67,7 @@
     <div id="products" class="row m-2">
         <div class="col col-sm-12 col-md-6 col-lg-4 mb-2" th:each="prod,iterStat : ${products}">
             <div class="card h-100" th:attr="data-product-id=${prod.id}">
-                <span class="h-60"><img class="card-img-top" src="http://placehold.it/400x250/000/fff" th:attr="src='/static/img/product_' + ${prod.id} + '.jpg'" alt="" /></span>
+                <span class="h-60"><img class="card-img-top" src="http://placehold.it/400x250/000/fff" th:attr="src='/static/img/' + ${prod.getPictureName()}" alt="" /></span>
                 <div class="card-header" style="height: 15vh;">
                     <h4 class="card-title" th:text="${prod.name}">Product name</h4>
                     <p class="card-text" th:text="${prod.description}">Product description... </p>

@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Properties;
 
-//TODO NOT WORKING YET
 
 public class DatabaseManager {
 	public ProductDao productDao;
@@ -33,10 +32,10 @@ public class DatabaseManager {
 	}
 
 	public void setup() throws SQLException, IOException {
-		DataSource dataSource = connect();
-		productDao = new ProductDaoJdbc(dataSource);
+		DataSource dataSource = connect();;
 		supplierDao = new SupplierDaoJdbc(dataSource);
 		categoryDao = new ProductCategoryDaoJdbc(dataSource);
+		productDao = new ProductDaoJdbc(dataSource, supplierDao, categoryDao);
 		lineItemDao = new LineItemDaoJdbc(dataSource);
 
 	}

@@ -1,12 +1,15 @@
 package com.codecool.shop.dao.jdbc;
 
 import com.codecool.shop.dao.dao.LineItemDao;
+import com.codecool.shop.dao.dao.ProductDao;
+import com.codecool.shop.dao.dao.SupplierDao;
 import com.codecool.shop.model.order.Cart;
 import com.codecool.shop.model.order.LineItem;
 import com.codecool.shop.model.product.Product;
 import com.codecool.shop.model.product.ProductCategory;
 import com.codecool.shop.model.product.Supplier;
 import com.codecool.shop.model.user.Address;
+import jdk.jfr.Category;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -14,8 +17,15 @@ import java.sql.*;
 public class LineItemDaoJdbc implements LineItemDao {
 
     private final DataSource dataSource;
+    private final ProductDao productDao;
+    private final SupplierDao supplierDao;
+    private final ProductCategoryDaoJdbc productCategoryDao;
+
     public LineItemDaoJdbc(DataSource dataSource) {
         this.dataSource = dataSource;
+        this.supplierDao = new SupplierDaoJdbc(dataSource);
+        this.productCategoryDao = new ProductCategoryDaoJdbc(dataSource);
+        this.productDao = new ProductDaoJdbc(dataSource, supplierDao, productCategoryDao);
     }
 
     @Override
@@ -47,10 +57,7 @@ public class LineItemDaoJdbc implements LineItemDao {
             if (!resultSet.next()) {
                 return null;
             }
-            // TODO: 10/11/2020 Update product to pull up data from products table
-            Product product = new Product("test", 1, "USD", "test",
-                    new ProductCategory("test", "test", "test"),
-                    new Supplier("test", "test"));
+            Product product = productDao.find(id);
             return new LineItem(product, resultSet.getInt("quantity"), resultSet.getInt("id"),
                     resultSet.getInt("cart_id"));
         } catch (SQLException exception) {
