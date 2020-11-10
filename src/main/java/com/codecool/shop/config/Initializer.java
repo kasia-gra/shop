@@ -3,6 +3,7 @@ package com.codecool.shop.config;
 import com.codecool.shop.dao.dao.ProductCategoryDao;
 import com.codecool.shop.dao.dao.ProductDao;
 import com.codecool.shop.dao.dao.SupplierDao;
+import com.codecool.shop.dao.manager.DatabaseManager;
 import com.codecool.shop.dao.mem.ProductCategoryDaoMem;
 import com.codecool.shop.dao.mem.ProductDaoMem;
 import com.codecool.shop.dao.mem.SupplierDaoMem;
@@ -19,6 +20,9 @@ public class Initializer implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
+        DatabaseManager databaseManager = DatabaseManager.getInstance();
+        databaseManager.run();
+
         ProductDao productDataStore = ProductDaoMem.getInstance();
         ProductCategoryDao productCategoryDataStore = ProductCategoryDaoMem.getInstance();
         SupplierDao supplierDataStore = SupplierDaoMem.getInstance();

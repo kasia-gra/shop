@@ -23,11 +23,10 @@ import java.util.List;
 public class ProductController extends HttpServlet {
     List<Product> products;
     private final Util util = new Util();
-    DatabaseManager dbManager = new DatabaseManager();
+    DatabaseManager dbManager = DatabaseManager.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        dbManager.run();
         ProductDao productDataStore = dbManager.productDao;
         ProductCategoryDao productCategoryDataStore = dbManager.categoryDao;
         SupplierDao supplierDataStore = dbManager.supplierDao;

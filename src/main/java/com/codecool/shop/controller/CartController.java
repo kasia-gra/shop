@@ -29,7 +29,6 @@ public class CartController extends HttpServlet {
     private final ProductDao productDataStore = ProductDaoMem.getInstance();
     private final UserDao userDataStore = UserDaoMem.getInstance();
 
-    DatabaseManager dbManager = new DatabaseManager();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

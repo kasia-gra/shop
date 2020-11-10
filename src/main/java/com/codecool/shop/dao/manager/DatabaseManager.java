@@ -1,5 +1,7 @@
 package com.codecool.shop.dao.manager;
 
+import com.codecool.shop.dao.dao.*;
+import com.codecool.shop.dao.jdbc.*;
 import com.codecool.shop.dao.dao.LineItemDao;
 import com.codecool.shop.dao.dao.CartDao;
 import com.codecool.shop.dao.dao.ProductCategoryDao;
@@ -19,6 +21,8 @@ import java.util.Properties;
 
 
 public class DatabaseManager {
+	private static DatabaseManager instance = null;
+
 	public ProductDao productDao;
 	public SupplierDao supplierDao;
 	public ProductCategoryDao categoryDao;
@@ -26,6 +30,18 @@ public class DatabaseManager {
 	public CartDao cartDao;
 
 	public LineItemDao lineItemDao;
+	public AddressDao addressDao;
+	public AddressDetailDao addressDetailDao;
+
+	private DatabaseManager() {
+	}
+
+	public static DatabaseManager getInstance() {
+		if (instance == null) {
+			instance = new DatabaseManager();
+		}
+		return instance;
+	}
 
 	public void run() {
 		try {
@@ -40,6 +56,8 @@ public class DatabaseManager {
 		supplierDao = new SupplierDaoJdbc(dataSource);
 		categoryDao = new ProductCategoryDaoJdbc(dataSource);
 		productDao = new ProductDaoJdbc(dataSource, supplierDao, categoryDao);
+		addressDao = new AddressDaoJdbc(dataSource);
+		addressDetailDao = new AddressDetailDaoJdbc(dataSource, addressDao);
 		lineItemDao = new LineItemDaoJdbc(dataSource, productDao);
 		cartDao = new CartDaoJdbc(dataSource, lineItemDao);
 
