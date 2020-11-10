@@ -1,5 +1,6 @@
 package com.codecool.shop.model.order;
 
+import com.codecool.shop.model.AddressDetail;
 import com.codecool.shop.model.user.User;
 
 public class Order {
@@ -8,7 +9,7 @@ public class Order {
     private Cart cart;
     private boolean isArchival = false;
     private Payment payment;
-    private OrderAddressDetail orderAddressDetail;
+    private AddressDetail orderAddressDetail;
 
     public Order(User user) {
         this.user = user;
@@ -55,11 +56,11 @@ public class Order {
         this.payment = payment;
     }
 
-    public OrderAddressDetail getOrderAddressDetail() {
+    public AddressDetail getOrderAddressDetail() {
         return orderAddressDetail;
     }
 
-    public void setOrderAddressDetail(OrderAddressDetail orderAddressDetail) {
+    public void setOrderAddressDetail(AddressDetail orderAddressDetail) {
         this.orderAddressDetail = orderAddressDetail;
     }
 }
