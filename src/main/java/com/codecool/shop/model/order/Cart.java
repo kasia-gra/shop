@@ -43,12 +43,12 @@ public class Cart {
     }
 
 
-    public void addLineItem(Product product) {
+    public void addLineItem(Product product, int cartId) {
         List<LineItem> searchedLineItems = lineItems.stream()
                 .filter(lineItem -> lineItem.getProduct().equals(product))
                 .collect(Collectors.toList());
         if (searchedLineItems.size() == 0) {
-            lineItems.add(new LineItem(product, 1, lineItems.size()));
+            lineItems.add(new LineItem(product, 1,  cartId));
         } else {
             LineItem searchedLineItem = searchedLineItems.get(0);
             searchedLineItem.setQty(searchedLineItem.getQty() + 1);
@@ -73,8 +73,7 @@ public class Cart {
     }
 
     public String getCartCurrency() {
-        String currency = (lineItems.size() > 0) ? lineItems.get(0).getProduct().getDefaultCurrency().getCurrencyCode() : "-";
-        return currency;
+         return "USD";
     }
 
     public void removeLineItemById(int searchedId) throws IllegalStateException {

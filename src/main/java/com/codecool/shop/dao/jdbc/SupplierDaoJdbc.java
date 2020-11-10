@@ -1,8 +1,6 @@
 package com.codecool.shop.dao.jdbc;
 
 import com.codecool.shop.dao.dao.SupplierDao;
-import com.codecool.shop.model.product.Product;
-import com.codecool.shop.model.product.ProductCategory;
 import com.codecool.shop.model.product.Supplier;
 
 import javax.sql.DataSource;
@@ -57,11 +55,30 @@ public class SupplierDaoJdbc implements SupplierDao {
     }
 
     @Override
+    public Supplier getSupplierByName(String supplierName) {
+        try(Connection conn = dataSource.getConnection()) {
+            String sql = "SELECT * FROM supplier WHERE name = ?";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setString(1, supplierName);
+            ResultSet rs = statement.executeQuery();
+            if (!rs.next()) {
+                return null;
+            }
+            Supplier supplier = new Supplier(supplierName, rs.getString("description"));
+            supplier.setId(rs.getInt("id"));
+            return supplier;
+        }
+        catch (SQLException e) {
+            throw new RuntimeException("Error while reading supplier by name", e);
+        }
+    }
+
+    @Override
     public void remove(int id) {
         try (Connection conn = dataSource.getConnection()) {
             String sql = "DELETE from supplier WHERE id = ?";
             PreparedStatement st = conn.prepareStatement(sql);
-            st.setInt(1,    id);
+            st.setInt(1, id);
             st.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);

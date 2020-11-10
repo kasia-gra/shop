@@ -6,8 +6,11 @@ import com.codecool.shop.dao.manager.DatabaseManager;
 import com.codecool.shop.dao.mem.OrderDaoMem;
 import com.codecool.shop.dao.mem.ProductCategoryDaoMem;
 import com.codecool.shop.model.order.Cart;
+import com.codecool.shop.model.order.LineItem;
 import com.codecool.shop.model.order.Order;
 import com.codecool.shop.model.product.Product;
+import com.codecool.shop.model.product.ProductCategory;
+import com.codecool.shop.model.product.Supplier;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
@@ -40,10 +43,12 @@ public class ProductController extends HttpServlet {
         String supplier = (req.getParameter("supplier"));
 
         if (category != null && supplier == null) {
-            products = null; // TODO get data by category using ProductJDBC
+            ProductCategory productCategory = productCategoryDataStore.getCategoryByName(category);
+            products = productDataStore.getBy(productCategory);
         }
         else if (category == null && supplier != null) {
-            products = null; // TODO: get data by supplier using ProductJdbc
+            Supplier productSupplier = supplierDataStore.getSupplierByName(supplier);
+            products = productDataStore.getBy(productSupplier);
         }
         else {
             products = productDataStore.getAll();
@@ -71,10 +76,3 @@ public class ProductController extends HttpServlet {
         context.setVariable("suppliers", supplierDataStore.getAll());
     }
 }
-
-
-// // Alternative setting of the template context
-// Map<String, Object> params = new HashMap<>();
-// params.put("category", productCategoryDataStore.find(1));
-// params.put("products", productDataStore.getBy(productCategoryDataStore.find(1)));
-// context.setVariables(params);

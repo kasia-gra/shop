@@ -1,9 +1,11 @@
 package com.codecool.shop.dao.manager;
 
+import com.codecool.shop.dao.dao.LineItemDao;
 import com.codecool.shop.dao.dao.CartDao;
 import com.codecool.shop.dao.dao.ProductCategoryDao;
 import com.codecool.shop.dao.dao.ProductDao;
 import com.codecool.shop.dao.dao.SupplierDao;
+import com.codecool.shop.dao.jdbc.LineItemDaoJdbc;
 import com.codecool.shop.dao.jdbc.CartDaoJdbc;
 import com.codecool.shop.dao.jdbc.ProductCategoryDaoJdbc;
 import com.codecool.shop.dao.jdbc.ProductDaoJdbc;
@@ -15,7 +17,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Properties;
 
-//TODO NOT WORKING YET
 
 public class DatabaseManager {
 	public ProductDao productDao;
@@ -23,6 +24,8 @@ public class DatabaseManager {
 	public ProductCategoryDao categoryDao;
 
 	public CartDao cartDao;
+
+	public LineItemDao lineItemDao;
 
 	public void run() {
 		try {
@@ -33,10 +36,11 @@ public class DatabaseManager {
 	}
 
 	public void setup() throws SQLException, IOException {
-		DataSource dataSource = connect();
-		productDao = new ProductDaoJdbc(dataSource);
+		DataSource dataSource = connect();;
 		supplierDao = new SupplierDaoJdbc(dataSource);
 		categoryDao = new ProductCategoryDaoJdbc(dataSource);
+		productDao = new ProductDaoJdbc(dataSource, supplierDao, categoryDao);
+		lineItemDao = new LineItemDaoJdbc(dataSource);
 		cartDao = new CartDaoJdbc(dataSource);
 
 	}
