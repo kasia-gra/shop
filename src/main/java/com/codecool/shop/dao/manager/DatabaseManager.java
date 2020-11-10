@@ -40,8 +40,8 @@ public class DatabaseManager {
 		supplierDao = new SupplierDaoJdbc(dataSource);
 		categoryDao = new ProductCategoryDaoJdbc(dataSource);
 		productDao = new ProductDaoJdbc(dataSource, supplierDao, categoryDao);
-		lineItemDao = new LineItemDaoJdbc(dataSource);
-		cartDao = new CartDaoJdbc(dataSource);
+		lineItemDao = new LineItemDaoJdbc(dataSource, productDao);
+		cartDao = new CartDaoJdbc(dataSource, lineItemDao);
 
 	}
 

@@ -25,7 +25,7 @@ public class CartDaoMem implements CartDao {
     }
 
     @Override
-    public void add(Cart cart, int productId) {
+    public void addEmptyCart(Cart cart) {
         cart.setId(sequenceNumber);
         data.add(cart);
         sequenceNumber++;
@@ -45,7 +45,13 @@ public class CartDaoMem implements CartDao {
     }
 
     @Override
+    public void removeItemFromCart(int lineItemId, int cartId){
+
+    };
+
+    @Override
     public void remove(int id) {
         data.remove(find(id));
     }
 }
+

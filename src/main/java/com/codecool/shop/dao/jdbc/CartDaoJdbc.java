@@ -2,42 +2,27 @@ package com.codecool.shop.dao.jdbc;
 
 import com.codecool.shop.dao.dao.CartDao;
 import com.codecool.shop.dao.dao.LineItemDao;
-import com.codecool.shop.dao.dao.ProductDao;
-import com.codecool.shop.dao.dao.SupplierDao;
 import com.codecool.shop.model.order.Cart;
 import com.codecool.shop.model.order.LineItem;
-import com.codecool.shop.model.product.Product;
-import com.codecool.shop.model.product.Supplier;
 
-import javax.sound.sampled.Line;
+
 import javax.sql.DataSource;
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class CartDaoJdbc implements CartDao {
 
-    private DataSource dataSource;
-    private LineItemDao lineItemDao;
-    private List<Supplier> data = new ArrayList<>();
-    private Cart cart;
-    private Product product;
-    private final ProductDao productDao;
-    private final SupplierDao supplierDao;
-    private final ProductCategoryDaoJdbc productCategoryDao;
+    private final DataSource dataSource;
+    private final LineItemDao lineItemDao;
 
-    public CartDaoJdbc(DataSource dataSource) {
+    public CartDaoJdbc(DataSource dataSource, LineItemDao lineItemDao) {
         this.dataSource = dataSource;
-        this.lineItemDao = new LineItemDaoJdbc( dataSource);
-        this.supplierDao = new SupplierDaoJdbc(dataSource);
-        this.productCategoryDao = new ProductCategoryDaoJdbc(dataSource);
-        this.productDao = new ProductDaoJdbc(dataSource, supplierDao, productCategoryDao);
+        this.lineItemDao = lineItemDao;
     }
 
     @Override
-    public void add(Cart cart, int productId) {
+    public void addEmptyCart(Cart cart) {
         try (Connection conn = dataSource.getConnection()) {
-            lineItemDao.add(cart.getId(), productId);
             String sql = "INSERT INTO cart (total_price, cart_size) VALUES (?, ?)";
             PreparedStatement st = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             st.setInt(1, (int) cart.getTotalPrice());
@@ -52,28 +37,9 @@ public class CartDaoJdbc implements CartDao {
     }
 
     @Override
-    public Cart find(int id) {
-        try (Connection conn = dataSource.getConnection()) {
-            LineItem lineItem = lineItemDao.find(id);
-            String sql = "SELECT * FROM cart WHERE id = ?";
-            PreparedStatement statement = conn.prepareStatement(sql);
-            statement.setInt(1, id);
-            ResultSet resultSet = statement.executeQuery(sql);
-            if (!resultSet.next()) {
-                return null;
-            }
-            List<LineItem> lineItems = lineItemDao.findLineItemsByCartId(id);
-            return new Cart(resultSet.getInt("total_line_price"), resultSet.getInt("quantity"),
-                    lineItems);
-        } catch (SQLException exception) {
-            throw new RuntimeException("Error while retrieving address with id: " + id, exception);
-        }
-    }
-
-    @Override
     public void addItemToCart(int cartId, int productId, int addedQuantity) {
         try (Connection connection = dataSource.getConnection()) {
-            lineItemDao.add(cartId, productId);
+            lineItemDao.addProduct(cartId, productId, addedQuantity);
             String sql = "UPDATE cart SET total_price = ?, cart_size = ? WHERE id = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setInt(1, lineItemDao.getTotalValueOfLinesInCart(cartId));
@@ -81,7 +47,41 @@ public class CartDaoJdbc implements CartDao {
             statement.setInt(3, cartId);
             statement.executeUpdate();
         } catch (SQLException exception) {
-            throw new RuntimeException("Error while updating cart with id: " + cart, exception);
+            throw new RuntimeException("Error while updating cart with id: " + cartId, exception);
+        }
+    }
+
+
+    @Override
+    public void removeItemFromCart(int lineItemId, int cartId) {
+        try (Connection connection = dataSource.getConnection()) {
+            lineItemDao.remove(lineItemId);
+            String sql = "UPDATE cart SET total_price = ?, cart_size = ? WHERE id = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, lineItemDao.getTotalValueOfLinesInCart(cartId));
+            statement.setInt(2, lineItemDao.getTotalNumberOfLinesInCart(cartId));
+            statement.setInt(3, cartId);
+            statement.executeUpdate();
+        } catch (SQLException exception) {
+            throw new RuntimeException("Error while updating cart", exception);
+        }
+    }
+
+    @Override
+    public Cart find(int id) {
+        try (Connection conn = dataSource.getConnection()) {
+            String sql = "SELECT * FROM cart WHERE id = ?";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            if (!resultSet.next()) {
+                return null;
+            }
+            List<LineItem> lineItems = lineItemDao.findLineItemsByCartId(id);
+            return new Cart(resultSet.getInt("total_price"), resultSet.getInt("cart_size"),
+                    lineItems);
+        } catch (SQLException exception) {
+            throw new RuntimeException("Error while retrieving address with id: " + id, exception);
         }
     }
 

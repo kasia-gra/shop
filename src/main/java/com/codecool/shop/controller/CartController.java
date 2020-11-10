@@ -35,7 +35,6 @@ public class CartController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(req.getServletContext());
         WebContext context = new WebContext(req, resp, req.getServletContext());
-
         if (util.isExistingOrder(req)) {
             setContextParameter(req, context);
         }
@@ -76,8 +75,6 @@ public class CartController extends HttpServlet {
     }
 
     private void addOrderToDataStorage(Product product, Order order) {
-        dbManager.run();
-        CartDao cartDataStore = dbManager.cartDao;
         order.getCart().addLineItem(product, order.getCart().getId());
         orderDataStore.add(order);
     }
