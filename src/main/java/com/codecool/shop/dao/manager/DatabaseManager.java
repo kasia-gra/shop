@@ -1,8 +1,10 @@
 package com.codecool.shop.dao.manager;
 
+import com.codecool.shop.dao.dao.LineItemDao;
 import com.codecool.shop.dao.dao.ProductCategoryDao;
 import com.codecool.shop.dao.dao.ProductDao;
 import com.codecool.shop.dao.dao.SupplierDao;
+import com.codecool.shop.dao.jdbc.LineItemDaoJdbc;
 import com.codecool.shop.dao.jdbc.ProductCategoryDaoJdbc;
 import com.codecool.shop.dao.jdbc.ProductDaoJdbc;
 import com.codecool.shop.dao.jdbc.SupplierDaoJdbc;
@@ -19,6 +21,8 @@ public class DatabaseManager {
 	public SupplierDao supplierDao;
 	public ProductCategoryDao categoryDao;
 
+	public LineItemDao lineItemDao;
+
 	public void run() {
 		try {
 			setup();
@@ -28,10 +32,11 @@ public class DatabaseManager {
 	}
 
 	public void setup() throws SQLException, IOException {
-		DataSource dataSource = connect();
+		DataSource dataSource = connect();;
 		supplierDao = new SupplierDaoJdbc(dataSource);
 		categoryDao = new ProductCategoryDaoJdbc(dataSource);
 		productDao = new ProductDaoJdbc(dataSource, supplierDao, categoryDao);
+		lineItemDao = new LineItemDaoJdbc(dataSource);
 
 	}
 
