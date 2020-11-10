@@ -54,8 +54,7 @@ public class Cart {
     }
 
     public String getCartCurrency() {
-        String currency = (lineItems.size() > 0) ? lineItems.get(0).getProduct().getDefaultCurrency().getCurrencyCode() : "-";
-        return currency;
+         return "USD";
     }
 
     public void removeLineItemById(int searchedId) throws IllegalStateException {
