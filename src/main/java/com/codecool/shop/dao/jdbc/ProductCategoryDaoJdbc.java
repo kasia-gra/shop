@@ -41,17 +41,38 @@ public class ProductCategoryDaoJdbc implements ProductCategoryDao {
             String sql = "SELECT * FROM category WHERE id = ?";
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setInt(1, id);
-            ResultSet rs = statement.executeQuery(sql);
+            ResultSet rs = statement.executeQuery();
             if (!rs.next()) {
                 return null;
             }
-            return new ProductCategory(rs.getString("name"),
+            ProductCategory category = new ProductCategory(rs.getString("name"),
                     rs.getString("department"), rs.getString("description"));
-
-        } catch (SQLException e) {
+            category.setId(id);
+            return category;
+        }
+        catch (SQLException e) {
             throw new RuntimeException("Error while reading category", e);
         }
 
+    }
+
+    @Override
+    public ProductCategory getCategoryByName(String categoryName) {
+        try(Connection conn = dataSource.getConnection()) {
+            String sql = "SELECT * FROM category WHERE name = ?";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setString(1, categoryName);
+            ResultSet rs = statement.executeQuery();
+            if (!rs.next()) {
+                return null;
+            }
+            ProductCategory category =  new ProductCategory(categoryName,
+                    rs.getString("department"), rs.getString("description"));
+            category.setId(rs.getInt("id"));
+            return category;
+        } catch (SQLException e) {
+            throw new RuntimeException("Error while reading category", e);
+        }
     }
 
     @Override
@@ -59,7 +80,7 @@ public class ProductCategoryDaoJdbc implements ProductCategoryDao {
         try (Connection conn = dataSource.getConnection()) {
             String sql = "DELETE from category WHERE id = ?";
             PreparedStatement st = conn.prepareStatement(sql);
-            st.setInt(1, 1);
+            st.setInt(1, id);
             st.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -76,6 +97,7 @@ public class ProductCategoryDaoJdbc implements ProductCategoryDao {
             while (rs.next()) {
                 ProductCategory category = new ProductCategory(rs.getString("name"),
                         rs.getString("department"), rs.getString("description"));
+                category.setId(rs.getInt("id"));
                 categories.add(category);
             }
             return categories;
