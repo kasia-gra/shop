@@ -75,7 +75,7 @@ public class CartController extends HttpServlet {
     }
 
     private void addOrderToDataStorage(Product product, Order order) {
-        order.getCart().addLineItem(product);
+        order.getCart().addLineItem(product, order.getCart().getId());
         orderDataStore.add(order);
     }
 
@@ -88,7 +88,7 @@ public class CartController extends HttpServlet {
 
     private void addProductToCart(JsonObject jsonRequest, Order order) {
         Product product = getProduct(jsonRequest);
-        order.getCart().addLineItem(product);
+        order.getCart().addLineItem(product, order.getCart().getId());
     }
 
     private Order getOrder(JsonObject jsonRequest) {

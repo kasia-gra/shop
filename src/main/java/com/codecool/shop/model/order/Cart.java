@@ -24,12 +24,12 @@ public class Cart {
     }
 
 
-    public void addLineItem(Product product) {
+    public void addLineItem(Product product, int cartId) {
         List<LineItem> searchedLineItems = lineItems.stream()
                 .filter(lineItem -> lineItem.getProduct().equals(product))
                 .collect(Collectors.toList());
         if (searchedLineItems.size() == 0) {
-            lineItems.add(new LineItem(product, 1, lineItems.size()));
+            lineItems.add(new LineItem(product, 1, lineItems.size(), cartId));
         } else {
             LineItem searchedLineItem = searchedLineItems.get(0);
             searchedLineItem.setQty(searchedLineItem.getQty() + 1);

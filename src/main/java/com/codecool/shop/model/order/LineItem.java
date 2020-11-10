@@ -8,11 +8,17 @@ public class LineItem {
     int qty;
     float linePrice;
     int lineId;
+    int cartId;
 
-    LineItem(Product product, int qty, int id) {
+    public LineItem(Product product, int qty, int id, int cartId) {
         this.product = product;
         this.qty = qty;
         this.lineId = id;
+        this.cartId = cartId;
+    }
+
+    public int getCartId(){
+        return this.cartId;
     }
 
     public Product getProduct() {
@@ -40,6 +46,10 @@ public class LineItem {
 
     public int getLineId () {
         return this.lineId;
+    }
+
+    public void setLineId (int lineId){
+        this.lineId = lineId;
     }
 }
 
