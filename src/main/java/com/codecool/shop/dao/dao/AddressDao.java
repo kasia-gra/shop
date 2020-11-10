@@ -7,6 +7,7 @@ import java.util.List;
 public interface AddressDao {
     void add(Address address);
     Address find(int id);
+    void update(Address address);
     void remove(int id);
     List<Address> getAll();
 }
