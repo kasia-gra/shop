@@ -3,7 +3,6 @@ package com.codecool.shop.dao.jdbc;
 import com.codecool.shop.dao.dao.AddressDetailDao;
 import com.codecool.shop.dao.dao.UserDao;
 import com.codecool.shop.model.AddressDetail;
-import com.codecool.shop.model.user.Address;
 import com.codecool.shop.model.user.User;
 
 import javax.sql.DataSource;
@@ -25,6 +24,9 @@ public class UserDaoJdbc implements UserDao {
         try (Connection conn = dataSource.getConnection()) {
             String sql = "INSERT INTO \"user\" (first_name, last_name, email, phone_number, user_address_details_id) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
+            addressDetailDao.add(user.getUserAddressDetail());
+
             statement.setString(1, user.getFirstName());
             statement.setString(2, user.getLastName());
             statement.setString(3, user.getEmail());
