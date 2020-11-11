@@ -7,7 +7,7 @@ import java.util.List;
 public interface OrderDao {
     void add(Order order, int productId);
     Order find(int id);
-    void update(int id);
+    void update(Order order);
     void remove(int id);
 
     List<Order> getAll();

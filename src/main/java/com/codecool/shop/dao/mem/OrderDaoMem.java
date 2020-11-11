@@ -41,7 +41,7 @@ public class OrderDaoMem implements OrderDao {
     }
 
     @Override
-    public void update(int id) {
+    public void update(Order order) {
 
     }
 

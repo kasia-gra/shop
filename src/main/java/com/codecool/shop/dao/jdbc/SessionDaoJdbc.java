@@ -2,6 +2,7 @@ package com.codecool.shop.dao.jdbc;
 
 import com.codecool.shop.dao.dao.SessionDao;
 import com.codecool.shop.model.Session;
+import com.codecool.shop.model.user.Address;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -27,6 +28,24 @@ public class SessionDaoJdbc implements SessionDao {
             session.setId(resultSet.getInt("id"));
         } catch (SQLException exception) {
             throw new RuntimeException("Error while adding new session.", exception);
+        }
+    }
+
+    @Override
+    public Session find(int id) {
+        try (Connection conn = dataSource.getConnection()) {
+            String sql = "SELECT * FROM session WHERE id = ?";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            if (!resultSet.next()) {
+                return null;
+            }
+            Session session =  new Session();
+            session.setId(id);
+            return session;
+        } catch (SQLException exception) {
+            throw new RuntimeException("Error while retrieving session with id: " + id, exception);
         }
     }
 

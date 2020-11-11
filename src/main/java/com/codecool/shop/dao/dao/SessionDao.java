@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface SessionDao {
     void add(Session session);
+    Session find(int id);
     void remove(int id);
     List<Session> getAll();
 }

@@ -65,7 +65,7 @@ public class DatabaseManager {
 		sessionDao = new SessionDaoJdbc(dataSource);
 		lineItemDao = new LineItemDaoJdbc(dataSource, productDao);
 		cartDao = new CartDaoJdbc(dataSource, lineItemDao);
-		orderDao = new OrderDaoJdbc(dataSource, cartDao, sessionDao);
+		orderDao = new OrderDaoJdbc(dataSource, cartDao, sessionDao, userDao, addressDetailDao);
 
 	}
 
