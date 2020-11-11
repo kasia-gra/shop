@@ -30,7 +30,7 @@ public class LineItemsController extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         JsonObject jsonRequest = util.getJsonObjectFromRequest(req);
-        Order order = orderDataStore.getActual(Integer.parseInt(util.getCookieValueBy("userId", req)));
+        Order order = orderDataStore.getActual(Integer.parseInt(util.getCookieValueBy("sessionId", req)));
 
         LineItem lineItem = addLineItem(jsonRequest, order);
         JsonObject jsonResponse = prepareJsonResponse(order);
@@ -45,7 +45,7 @@ public class LineItemsController extends HttpServlet {
         JsonObject jsonRequest = util.getJsonObjectFromRequest(req);
         int lineItemId = jsonRequest.get("lineItemId").getAsInt();
 
-        Order order = orderDataStore.getActual(Integer.parseInt(util.getCookieValueBy("userId", req)));
+        Order order = orderDataStore.getActual(Integer.parseInt(util.getCookieValueBy("sessionId", req)));
         order.getCart().removeLineItemById(lineItemId);
 
         if (isEmptyCart(order)) {

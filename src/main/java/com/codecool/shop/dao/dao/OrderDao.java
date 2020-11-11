@@ -12,5 +12,5 @@ public interface OrderDao {
 
     List<Order> getAll();
     List<Order> getBy(int userId);
-    Order getActual(int userId);
+    Order getActual(int sessionId);
 }

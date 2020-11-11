@@ -37,14 +37,14 @@ public class PaymentController extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		//TODO confirm payment
-		Order order = orderDataStore.getActual(Integer.parseInt(util.getCookieValueBy("userId", req)));
+		Order order = orderDataStore.getActual(Integer.parseInt(util.getCookieValueBy("sessionId", req)));
 		saveOrderToFile(order, getServletContext());
 		setPaymentParameters(order, req);
 		resp.sendRedirect("/paymentConfirmation");
 	}
 
 	private void setContextParameters(HttpServletRequest req, WebContext context) {
-		Order order = orderDataStore.getActual(Integer.parseInt(util.getCookieValueBy("userId", req)));
+		Order order = orderDataStore.getActual(Integer.parseInt(util.getCookieValueBy("sessionId", req)));
 		float totalPrice = order.getCart().getLineItemsTotalPrice();
 		int itemsNumber = order.getCart().getCartSize();
 
