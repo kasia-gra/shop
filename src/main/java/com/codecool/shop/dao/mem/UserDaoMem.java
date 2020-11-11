@@ -24,11 +24,10 @@ public class UserDaoMem implements UserDao {
     }
 
     @Override
-    public int add(User user) {
+    public void add(User user) {
         user.setId(sequenceNumber);
         data.add(user);
         sequenceNumber++;
-        return user.getId();
     }
 
     @Override
@@ -37,6 +36,11 @@ public class UserDaoMem implements UserDao {
                 filter(user -> user.getId() == id).
                 findFirst().
                 orElse(null);
+    }
+
+    @Override
+    public void update(User user) {
+
     }
 
     @Override

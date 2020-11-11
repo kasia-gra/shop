@@ -67,6 +67,9 @@ public class CartController extends HttpServlet {
 
         Session session = new Session();
         sessionDao.add(session);
+        User user = new User();
+        userDataStore.add(user);
+        int userId = user.getId();
 
         Order order = new Order();
         addOrderToDataStorage(product, order);
