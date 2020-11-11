@@ -32,6 +32,7 @@ public class DatabaseManager {
 	public LineItemDao lineItemDao;
 	public AddressDao addressDao;
 	public AddressDetailDao addressDetailDao;
+	public SessionDao sessionDao;
 
 	private DatabaseManager() {
 	}
@@ -58,6 +59,7 @@ public class DatabaseManager {
 		productDao = new ProductDaoJdbc(dataSource, supplierDao, categoryDao);
 		addressDao = new AddressDaoJdbc(dataSource);
 		addressDetailDao = new AddressDetailDaoJdbc(dataSource, addressDao);
+		sessionDao = new SessionDaoJdbc(dataSource);
 		lineItemDao = new LineItemDaoJdbc(dataSource, productDao);
 		cartDao = new CartDaoJdbc(dataSource, lineItemDao);
 

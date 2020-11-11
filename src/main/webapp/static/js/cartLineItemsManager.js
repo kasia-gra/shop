@@ -60,7 +60,7 @@ const changeLineItemQty =  function (lineItemId, currentQtyField, updatedQty, li
     let dataDict = {};
     dataDict.lineItemId = lineItemId;
     dataDict.qty = updatedQty;
-    dataDict.userId = cookiesHandler.getCookie("userId");
+    dataDict.userId = cookiesHandler.getCookie("sessionId");
     dataHandler._api_put(`/line_item`, dataDict, json_response => {
         updateQtyValueField (currentQtyField, updatedQty)
         updateLineItemPrice(json_response, lineItemContainer);
@@ -75,11 +75,11 @@ const updateQtyValueField = function(currentQtyField, updatedQty) {
 const deleteLineItem = function(lineItemId, lineItemContainer) {
     let dataDict = {};
     dataDict.lineItemId = lineItemId;
-    dataDict.userId = cookiesHandler.getCookie("userId");
+    dataDict.userId = cookiesHandler.getCookie("sessionId");
     dataHandler._api_delete(`/line_item`, dataDict, json_response => {
         removeLineItemFromCart(lineItemContainer)
         updateCart(json_response, lineItemContainer);
-        disableCheckoutIfAllItemsRemoved(cookiesHandler.checkCookie("userId"));
+        disableCheckoutIfAllItemsRemoved(cookiesHandler.checkCookie("sessionId"));
     });
 }
 

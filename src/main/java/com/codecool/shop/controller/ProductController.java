@@ -61,7 +61,7 @@ public class ProductController extends HttpServlet {
 
     private void addItemsNumberToContext(HttpServletRequest req, WebContext context) {
         OrderDao orderDataStore = OrderDaoMem.getInstance();
-        Order order = orderDataStore.getActual(Integer.parseInt(util.getCookieValueBy("userId", req)));
+        Order order = orderDataStore.getActual(Integer.parseInt(util.getCookieValueBy("sessionId", req)));
         int itemsNumber = order.getCart().getCartSize();
         context.setVariable("itemsNumber", itemsNumber);
     }

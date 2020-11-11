@@ -7,11 +7,11 @@ CREATE TABLE public.order
 (
     id                       serial NOT NULL PRIMARY KEY,
     cart_id                  int    NOT NULL,
-    user_id                  int    NOT NULL,
+    user_id                  int,
     order_address_details_id int    NOT NULL,
     date                     timestamp,
-    current_status           status
-
+    current_status           status,
+    session_id               int NOT NULL
 );
 
 
@@ -102,6 +102,12 @@ CREATE TABLE public.address
     address  text   NOT NULL
 );
 
+DROP TABLE IF EXISTS public.session;
+CREATE TABLE public.session
+(
+    id                       serial NOT NULL PRIMARY KEY
+);
+
 ALTER TABLE ONLY "order"
     ADD CONSTRAINT "cart_id" FOREIGN KEY (cart_id)
         REFERENCES cart (id) ON DELETE CASCADE;
@@ -113,6 +119,10 @@ ALTER TABLE ONLY "order"
 ALTER TABLE ONLY "order"
     ADD CONSTRAINT "order_address_details_id" FOREIGN KEY (order_address_details_id)
         REFERENCES "address_detail" (id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY "order"
+    ADD CONSTRAINT "session_id" FOREIGN KEY (session_id)
+        REFERENCES "session" (id) ON DELETE CASCADE;
 
 ALTER TABLE ONLY "line_item"
     ADD CONSTRAINT "cart_id" FOREIGN KEY (cart_id)

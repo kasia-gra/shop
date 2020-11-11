@@ -37,7 +37,7 @@ public class OrderDaoJdbc implements OrderDao {
     }
 
     @Override
-    public Order getActual(int userId) {
+    public Order getActual(int sessionId) {
         return null;
     }
 }
