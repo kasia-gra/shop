@@ -17,7 +17,7 @@ public class LineItemDaoJdbc implements LineItemDao {
 
     private final DataSource dataSource;
     private final ProductDao productDao;
-    private final List<LineItem> lineItems = new ArrayList<>();
+
 
     public LineItemDaoJdbc(DataSource dataSource,  ProductDao productDao) {
         this.dataSource = dataSource;
@@ -90,15 +90,17 @@ public class LineItemDaoJdbc implements LineItemDao {
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setInt(1, cartId);
             ResultSet rs = statement.executeQuery();
+            List<LineItem> lineItems = new ArrayList<>();
             while (rs.next()) {
                 LineItem lineItem = new LineItem(productDao.find(rs.getInt("product_id")),
                         rs.getInt("quantity"), rs.getInt("total_line_price"));
-                lineItem.setLineId(rs.getInt(1));
+                lineItem.setLineId(rs.getInt("id"));
                 lineItems.add(lineItem);
             }
+            System.out.println("From lineItemDao: " + lineItems);
             return lineItems;
         } catch (SQLException e) {
-            throw new RuntimeException("ERROR while reading suppliers " + e.getMessage());
+            throw new RuntimeException("ERROR while reading line items." + e.getMessage());
         }
     }
 

@@ -5,7 +5,6 @@ import com.codecool.shop.config.TemplateEngineUtil;
 import com.codecool.shop.dao.dao.OrderDao;
 import com.codecool.shop.dao.dao.ProductDao;
 import com.codecool.shop.dao.manager.DatabaseManager;
-import com.codecool.shop.dao.mem.OrderDaoMem;
 import com.codecool.shop.model.Session;
 import com.codecool.shop.model.order.Cart;
 import com.codecool.shop.model.order.Order;
@@ -24,7 +23,6 @@ import java.io.IOException;
 @WebServlet(urlPatterns = {"/cart"}, loadOnStartup = 2)
 public class CartController extends HttpServlet {
     private final Util util = new Util();
-    private final OrderDao orderDataStore = OrderDaoMem.getInstance();
     private final ProductDao productDao = DatabaseManager.getInstance().productDao;
     private final OrderDao orderDao = DatabaseManager.getInstance().orderDao;
 
@@ -101,6 +99,7 @@ public class CartController extends HttpServlet {
     private void setContextParameter(HttpServletRequest req, WebContext context) {
         Order order = orderDao.getActual(Integer.parseInt(util.getCookieValueBy("sessionId", req)));
         Cart cart = order.getCart();
+        System.out.println("line item: " + cart.getLineItems().toString());
         context.setVariable("cart", cart);
     }
 

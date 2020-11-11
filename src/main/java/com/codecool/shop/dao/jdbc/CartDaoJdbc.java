@@ -85,7 +85,7 @@ public class CartDaoJdbc implements CartDao {
             cart.setId(id);
             return cart;
         } catch (SQLException exception) {
-            throw new RuntimeException("Error while retrieving address with id: " + id, exception);
+            throw new RuntimeException("Error while retrieving cart with id: " + id, exception);
         }
     }
 

@@ -23,7 +23,7 @@ public class UserDaoJdbc implements UserDao {
     @Override
     public void add(User user) {
         try (Connection conn = dataSource.getConnection()) {
-            String sql = "INSERT INTO user (first_name, last_name, email, phone_number, user_address_details_id) VALUES (?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO \"user\" (first_name, last_name, email, phone_number, user_address_details_id) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, user.getFirstName());
             statement.setString(2, user.getLastName());
@@ -43,7 +43,7 @@ public class UserDaoJdbc implements UserDao {
     @Override
     public User find(int id) {
         try (Connection conn = dataSource.getConnection()) {
-            String sql = "SELECT * FROM user WHERE id = ?";
+            String sql = "SELECT * FROM \"user\" WHERE id = ?";
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
@@ -68,7 +68,7 @@ public class UserDaoJdbc implements UserDao {
     @Override
     public void update(User user) {
         try (Connection connection = dataSource.getConnection()) {
-            String sql = "UPDATE user SET first_name = ?, last_name = ?,email = ?, phone_number = ?," +
+            String sql = "UPDATE \"user\" SET first_name = ?, last_name = ?,email = ?, phone_number = ?," +
                     "user_address_details_id = ? WHERE id = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, user.getFirstName());
@@ -85,7 +85,7 @@ public class UserDaoJdbc implements UserDao {
     @Override
     public void remove(int id) {
         try (Connection conn = dataSource.getConnection()) {
-            String sql = "DELETE FROM user WHERE id = ?";
+            String sql = "DELETE FROM \"user\" WHERE id = ?";
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setInt(1, id);
             statement.executeUpdate();
@@ -97,7 +97,7 @@ public class UserDaoJdbc implements UserDao {
     @Override
     public List<User> getAll() {
         try (Connection conn = dataSource.getConnection()) {
-            String sql = "SELECT * FROM address_detail";
+            String sql = "SELECT * FROM \"user\"";
             ResultSet resultSet = conn.createStatement().executeQuery(sql);
             List<User> users = new ArrayList<>();
             while (resultSet.next()) {

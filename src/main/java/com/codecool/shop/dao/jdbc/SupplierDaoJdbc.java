@@ -10,8 +10,8 @@ import java.util.List;
 
 public class SupplierDaoJdbc implements SupplierDao {
 
-    private DataSource dataSource;
-    private List<Supplier> data = new ArrayList<>();
+    private final DataSource dataSource;
+
 
     public SupplierDaoJdbc(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -90,6 +90,7 @@ public class SupplierDaoJdbc implements SupplierDao {
         try (Connection conn = dataSource.getConnection()) {
             String sql = "SELECT * FROM supplier";
             ResultSet rs = conn.createStatement().executeQuery(sql);
+            List<Supplier> data = new ArrayList<>();
             while (rs.next()) {
                 Supplier supplier = new Supplier(rs.getString("name"), rs.getString("description"));
                 supplier.setId(rs.getInt(1));

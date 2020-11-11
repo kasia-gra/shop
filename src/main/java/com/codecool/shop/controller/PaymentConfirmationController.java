@@ -5,7 +5,7 @@ import com.codecool.shop.Log;
 import com.codecool.shop.LogType;
 import com.codecool.shop.config.TemplateEngineUtil;
 import com.codecool.shop.dao.dao.OrderDao;
-import com.codecool.shop.dao.mem.OrderDaoMem;
+import com.codecool.shop.dao.manager.DatabaseManager;
 import com.codecool.shop.model.order.LineItem;
 import com.codecool.shop.model.order.Order;
 import com.google.gson.Gson;
@@ -25,7 +25,7 @@ import java.util.List;
 
 @WebServlet(urlPatterns = {"/paymentConfirmation"}, loadOnStartup = 5)
 public class PaymentConfirmationController extends HttpServlet {
-    private final OrderDao orderDataStore = OrderDaoMem.getInstance();
+    private final OrderDao orderDao = DatabaseManager.getInstance().orderDao;
     private final Util util = new Util();
     private final Gson gson = new Gson();
 
@@ -39,7 +39,7 @@ public class PaymentConfirmationController extends HttpServlet {
             return;
         }
 
-        Order order = orderDataStore.getActual(Integer.parseInt(util.getCookieValueBy("sessionId", req)));
+        Order order = orderDao.getActual(Integer.parseInt(util.getCookieValueBy("sessionId", req)));
 
         if (order.getPayment().getCardOwner().equals("Daniel Rzeszutko")) { // draft version of payment validation
             finalizeSuccessfulPayment(resp, context, order);

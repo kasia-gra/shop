@@ -4,7 +4,6 @@ import com.codecool.shop.config.TemplateEngineUtil;
 import com.codecool.shop.dao.dao.OrderDao;
 import com.codecool.shop.dao.dao.UserDao;
 import com.codecool.shop.dao.manager.DatabaseManager;
-import com.codecool.shop.dao.mem.OrderDaoMem;
 import com.codecool.shop.model.AddressDetail;
 import com.codecool.shop.model.order.LineItem;
 import com.codecool.shop.model.order.Order;
@@ -24,7 +23,7 @@ import java.util.List;
 @WebServlet(urlPatterns = {"/checkout"}, loadOnStartup = 3)
 public class CheckoutController extends HttpServlet {
     Util util = new Util();
-    OrderDao orderDataStore = OrderDaoMem.getInstance();
+    OrderDao orderDao = DatabaseManager.getInstance().orderDao;
     UserDao userDao = DatabaseManager.getInstance().userDao;
 
     @Override
@@ -37,7 +36,7 @@ public class CheckoutController extends HttpServlet {
             return;
         }
 
-        Order order = orderDataStore.getActual(Integer.parseInt(util.getCookieValueBy("sessionId", req)));
+        Order order = orderDao.getActual(Integer.parseInt(util.getCookieValueBy("sessionId", req)));
         List<LineItem> orderedProducts = order.getCart().getLineItems();
         float totalPrice = order.getCart().getLineItemsTotalPrice();
         String currency = order.getCart().getCartCurrency();

@@ -147,7 +147,7 @@ public class OrderDaoJdbc implements OrderDao {
             if (!resultSet.next()) {
                 return null;
             }
-
+            System.out.println("GetActual cart_id: " + resultSet.getInt("cart_id"));
             Cart cart = cartDao.find(resultSet.getInt("cart_id"));
             Session session = sessionDao.find(resultSet.getInt("session_id"));
             Order order = new Order(cart, session);

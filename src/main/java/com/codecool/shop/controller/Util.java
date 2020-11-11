@@ -74,7 +74,7 @@ public class Util {
     }
 
     public boolean isExistingOrder(HttpServletRequest request) {
-        return getCookieValueBy("userId", request) != null;
+        return getCookieValueBy("sessionId", request) != null;
     }
 
     public void showErrorPage(HttpServletResponse resp, TemplateEngine engine, WebContext context) throws IOException {
@@ -83,7 +83,7 @@ public class Util {
     }
 
     public void removeCookie(HttpServletResponse resp) {
-        Cookie cookie = new Cookie("userId", "");
+        Cookie cookie = new Cookie("sessionId", "");
         cookie.setMaxAge(0);
         resp.addCookie(cookie);
     }

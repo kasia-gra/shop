@@ -14,10 +14,10 @@ import java.util.List;
 
 
 public class ProductDaoJdbc implements ProductDao {
-	private DataSource dataSource;
-	private SupplierDao supplierDao;
-	private ProductCategoryDao categoryDao;
-	private List<Product> products = new ArrayList<>();
+	private final DataSource dataSource;
+	private final SupplierDao supplierDao;
+	private final ProductCategoryDao categoryDao;
+
 
 	public ProductDaoJdbc(DataSource dataSource, SupplierDao supplierDao, ProductCategoryDao categoryDao) {
 		this.dataSource = dataSource;
@@ -85,7 +85,7 @@ public class ProductDaoJdbc implements ProductDao {
 		try(Connection conn = dataSource.getConnection()) {
 			String sql = "SELECT * FROM product";
 			ResultSet rs = conn.createStatement().executeQuery(sql);
-
+			List<Product> products = new ArrayList<>();
 			while (rs.next()) {
 				Supplier supplier = supplierDao.find(rs.getInt("supplier_id"));
 				ProductCategory category = categoryDao.find(rs.getInt("category_id"));
