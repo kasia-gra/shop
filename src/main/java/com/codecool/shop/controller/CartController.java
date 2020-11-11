@@ -61,7 +61,8 @@ public class CartController extends HttpServlet {
         Product product = getProduct(jsonRequest);
 
         User user = new User();
-        int userId = userDataStore.add(user);
+        userDataStore.add(user);
+        int userId = user.getId();
 
         Order order = new Order(user);
         addOrderToDataStorage(product, order);
