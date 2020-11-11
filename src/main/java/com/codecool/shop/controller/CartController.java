@@ -4,19 +4,12 @@ import com.codecool.shop.AdminLogger;
 import com.codecool.shop.config.TemplateEngineUtil;
 import com.codecool.shop.dao.dao.OrderDao;
 import com.codecool.shop.dao.dao.ProductDao;
-import com.codecool.shop.dao.dao.SessionDao;
-import com.codecool.shop.dao.dao.UserDao;
-import com.codecool.shop.dao.manager.DatabaseManager;
-import com.codecool.shop.dao.dao.*;
 import com.codecool.shop.dao.manager.DatabaseManager;
 import com.codecool.shop.dao.mem.OrderDaoMem;
-import com.codecool.shop.dao.mem.ProductDaoMem;
-import com.codecool.shop.dao.mem.UserDaoMem;
 import com.codecool.shop.model.Session;
 import com.codecool.shop.model.order.Cart;
 import com.codecool.shop.model.order.Order;
 import com.codecool.shop.model.product.Product;
-import com.codecool.shop.model.user.User;
 import com.google.gson.JsonObject;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
@@ -32,7 +25,7 @@ import java.io.IOException;
 public class CartController extends HttpServlet {
     private final Util util = new Util();
     private final OrderDao orderDataStore = OrderDaoMem.getInstance();
-    private final ProductDao productDataStore = DatabaseManager.getInstance().productDao;
+    private final ProductDao productDao = DatabaseManager.getInstance().productDao;
     private final OrderDao orderDao = DatabaseManager.getInstance().orderDao;
 
     @Override
@@ -53,7 +46,9 @@ public class CartController extends HttpServlet {
         JsonObject jsonRequest = util.getJsonObjectFromRequest(req);
 
         Order order = getOrder(jsonRequest);
-        addProductToCart(jsonRequest, order);
+        orderDao.addItemToOrder(order, jsonRequest.get("productId").getAsInt());
+//        orderDao.update(order);
+//        addProductToCart(jsonRequest, order);
 
         JsonObject jsonResponse = prepareJsonResponse(order);
 
@@ -68,7 +63,6 @@ public class CartController extends HttpServlet {
         Cart cart = new Cart();
 
         Session session = new Session();
-//        sessionDao.add(session);
 
         Order order = new Order(cart, session);
 
@@ -101,17 +95,17 @@ public class CartController extends HttpServlet {
 
     private Order getOrder(JsonObject jsonRequest) {
         int sessionId = jsonRequest.get("sessionId").getAsInt();
-        return orderDataStore.getActual(sessionId);
+        return orderDao.getActual(sessionId);
     }
 
     private void setContextParameter(HttpServletRequest req, WebContext context) {
-        Order order = orderDataStore.getActual(Integer.parseInt(util.getCookieValueBy("sessionId", req)));
+        Order order = orderDao.getActual(Integer.parseInt(util.getCookieValueBy("sessionId", req)));
         Cart cart = order.getCart();
         context.setVariable("cart", cart);
     }
 
     private Product getProduct(JsonObject jsonRequest) {
         int productId = jsonRequest.get("productId").getAsInt();
-        return productDataStore.find(productId);
+        return productDao.find(productId);
     }
 }

@@ -28,9 +28,9 @@ public class LineItemDaoJdbc implements LineItemDao {
     public void addProduct(int cartId, int productId, int addedQuantity) {
         try (Connection conn = dataSource.getConnection()) {
             Product product = productDao.find(productId);
-            String sql = "INSERT INTO line_item (cart_id, product_id, quantity, total_line_price) VALUES (?, ?, ?, ?)" +
-                    " ON CONFLICT ON CONSTRAINT product_per_cart" +
-                    " DO UPDATE SET quantity = excluded.quantity + ?, total_line_price = excluded.total_line_price + ?;";
+            String sql = "INSERT INTO line_item AS current_line_item (cart_id, product_id, quantity, total_line_price) VALUES (?, ?, ?, ?)" +
+                    " ON CONFLICT (cart_id, product_id)" +
+                    " DO UPDATE SET quantity = current_line_item.quantity + ?, total_line_price = current_line_item.total_line_price + ?";
             PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             statement.setInt(1, cartId);
             statement.setInt(2, product.getId());

@@ -80,8 +80,10 @@ public class CartDaoJdbc implements CartDao {
                 return null;
             }
             List<LineItem> lineItems = lineItemDao.findLineItemsByCartId(id);
-            return new Cart(resultSet.getInt("total_price"), resultSet.getInt("cart_size"),
+            Cart cart = new Cart(resultSet.getInt("total_price"), resultSet.getInt("cart_size"),
                     lineItems);
+            cart.setId(id);
+            return cart;
         } catch (SQLException exception) {
             throw new RuntimeException("Error while retrieving address with id: " + id, exception);
         }

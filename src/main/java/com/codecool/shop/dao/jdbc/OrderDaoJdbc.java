@@ -83,6 +83,7 @@ public class OrderDaoJdbc implements OrderDao {
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setInt(1, order.getCart().getId());
             statement.setInt(2, order.getSession().getId());
+            statement.setInt(7, order.getId());
 
             setStatementOptionalParameters(statement, order);
 
@@ -102,6 +103,11 @@ public class OrderDaoJdbc implements OrderDao {
         } catch (SQLException exception) {
             throw new RuntimeException("Error while deleting order with id: " + id, exception);
         }
+    }
+
+    @Override
+    public void addItemToOrder(Order order, int productId) {
+        cartDao.addItemToCart(order.getCart().getId(), productId, 1);
     }
 
     @Override
@@ -154,6 +160,8 @@ public class OrderDaoJdbc implements OrderDao {
         }
     }
 
+
+
     private void setOrderOptionalParameters(ResultSet resultSet, Order order) throws SQLException {
         if (resultSet.getInt("user_id") != 0) {
             User user = userDao.find(resultSet.getInt("user_id"));
@@ -175,8 +183,12 @@ public class OrderDaoJdbc implements OrderDao {
 
     private void setStatementOptionalParameters(PreparedStatement statement, Order order) throws SQLException {
         if (order.getUser() != null) statement.setInt(3, order.getUser().getId());
+        else statement.setNull(3, Types.INTEGER);
         if (order.getOrderAddressDetail() != null) statement.setInt(4, order.getOrderAddressDetail().getId());
-        statement.setDate(5, new java.sql.Date(order.getDate().getTime()));
-        statement.setString(6, order.getStatus().name());
+        else statement.setNull(4, Types.INTEGER);
+        if (order.getDate() != null) statement.setDate(5, new java.sql.Date(order.getDate().getTime()));
+        else statement.setNull(5, Types.DATE);
+        if (order.getStatus() != null) statement.setObject(6, order.getStatus());
+        else statement.setObject(6, null);
     }
 }
