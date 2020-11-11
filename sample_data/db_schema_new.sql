@@ -76,7 +76,7 @@ CREATE TABLE public.user
     first_name          text   NOT NULL,
     last_name           text   NOT NULL,
     email               text   NOT NULL,
-    password            text   NOT NULL,
+    password            text,
     phone_number        text,
     registration_date   timestamp,
     user_address_details_id int    NOT NULL
