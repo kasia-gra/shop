@@ -64,9 +64,9 @@ public class OrderDaoMem implements OrderDao {
     }
 
     @Override
-    public Order getActual(int userId) {
+    public Order getActual(int sessionId) {
         return data.stream().
-                filter(order -> order.getUser().getId() == userId).
+                filter(order -> order.getSession().getId() == sessionId).
                 filter(order -> !order.isArchival()).
                 findFirst().
                 orElse(null);

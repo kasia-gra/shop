@@ -39,7 +39,7 @@ public class PaymentConfirmationController extends HttpServlet {
             return;
         }
 
-        Order order = orderDataStore.getActual(Integer.parseInt(util.getCookieValueBy("userId", req)));
+        Order order = orderDataStore.getActual(Integer.parseInt(util.getCookieValueBy("sessionId", req)));
 
         if (order.getPayment().getCardOwner().equals("Daniel Rzeszutko")) { // draft version of payment validation
             finalizeSuccessfulPayment(resp, context, order);

@@ -36,7 +36,7 @@ public class CheckoutController extends HttpServlet {
             return;
         }
 
-        Order order = orderDataStore.getActual(Integer.parseInt(util.getCookieValueBy("userId", req)));
+        Order order = orderDataStore.getActual(Integer.parseInt(util.getCookieValueBy("sessionId", req)));
         List<LineItem> orderedProducts = order.getCart().getLineItems();
         float totalPrice = order.getCart().getLineItemsTotalPrice();
         String currency = order.getCart().getCartCurrency();
@@ -49,9 +49,9 @@ public class CheckoutController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String userId = util.getCookieValueBy("userId", req);
+        String sessionId = util.getCookieValueBy("sessionId", req);
 
-        User user = userDataStorage.find(Integer.parseInt(userId));
+        User user = userDataStorage.find(Integer.parseInt(sessionId));
         setUserParameters(user, req);
 //        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/payment");
 //        dispatcher.forward(req, resp);
