@@ -1,6 +1,7 @@
 package com.codecool.shop.dao.mem;
 
 import com.codecool.shop.dao.dao.OrderDao;
+import com.codecool.shop.model.order.Cart;
 import com.codecool.shop.model.order.Order;
 
 import java.util.ArrayList;
@@ -48,6 +49,11 @@ public class OrderDaoMem implements OrderDao {
     @Override
     public void remove(int id) {
         data.remove(find(id));
+    }
+
+    @Override
+    public void removeItem(int productId, Cart cart){
+
     }
 
     @Override

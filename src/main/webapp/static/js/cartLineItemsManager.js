@@ -92,7 +92,6 @@ const removeLineItemFromCart = function (lineItemDOMElement) {
 }
 
 const updateLineItemPrice = function (json_response, lineItemContainer) {
-    console.log("UPDATING PRICE TO " + parseInt(json_response.linePrice))
     lineItemContainer.querySelector(".total-line-price").innerText = parseInt(json_response.linePrice).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');;
 }
 
@@ -105,7 +104,7 @@ const formatPrice = function(price) {
 }
 
 const disableCheckoutIfAllItemsRemoved = function (isCookiePresent){
-    console.log("COOKIE NAME " + cookiesHandler.getCookie());
+
     if (!isCookiePresent) {
         document.querySelector("#emptyCard").classList.remove("hidden");
         document.querySelector("#notEmptyCard").classList.add("hidden");
