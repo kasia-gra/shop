@@ -2,9 +2,8 @@ package com.codecool.shop.controller;
 
 import com.codecool.shop.AdminLogger;
 import com.codecool.shop.config.TemplateEngineUtil;
-import com.codecool.shop.dao.dao.OrderDao;
-import com.codecool.shop.dao.dao.ProductDao;
-import com.codecool.shop.dao.dao.UserDao;
+import com.codecool.shop.dao.dao.*;
+import com.codecool.shop.dao.manager.DatabaseManager;
 import com.codecool.shop.dao.mem.OrderDaoMem;
 import com.codecool.shop.dao.mem.ProductDaoMem;
 import com.codecool.shop.dao.mem.UserDaoMem;
@@ -30,11 +29,11 @@ public class CartController extends HttpServlet {
     private final ProductDao productDataStore = ProductDaoMem.getInstance();
     private final UserDao userDataStore = UserDaoMem.getInstance();
 
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(req.getServletContext());
         WebContext context = new WebContext(req, resp, req.getServletContext());
-
         if (util.isExistingOrder(req)) {
             setContextParameter(req, context);
         }
@@ -89,6 +88,7 @@ public class CartController extends HttpServlet {
     private void addProductToCart(JsonObject jsonRequest, Order order) {
         Product product = getProduct(jsonRequest);
         order.getCart().addLineItem(product, order.getCart().getId());
+
     }
 
     private Order getOrder(JsonObject jsonRequest) {

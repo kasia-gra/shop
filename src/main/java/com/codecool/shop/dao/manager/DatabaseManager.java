@@ -2,6 +2,16 @@ package com.codecool.shop.dao.manager;
 
 import com.codecool.shop.dao.dao.*;
 import com.codecool.shop.dao.jdbc.*;
+import com.codecool.shop.dao.dao.LineItemDao;
+import com.codecool.shop.dao.dao.CartDao;
+import com.codecool.shop.dao.dao.ProductCategoryDao;
+import com.codecool.shop.dao.dao.ProductDao;
+import com.codecool.shop.dao.dao.SupplierDao;
+import com.codecool.shop.dao.jdbc.LineItemDaoJdbc;
+import com.codecool.shop.dao.jdbc.CartDaoJdbc;
+import com.codecool.shop.dao.jdbc.ProductCategoryDaoJdbc;
+import com.codecool.shop.dao.jdbc.ProductDaoJdbc;
+import com.codecool.shop.dao.jdbc.SupplierDaoJdbc;
 import org.postgresql.ds.PGSimpleDataSource;
 
 import javax.sql.DataSource;
@@ -16,6 +26,8 @@ public class DatabaseManager {
 	public ProductDao productDao;
 	public SupplierDao supplierDao;
 	public ProductCategoryDao categoryDao;
+
+	public CartDao cartDao;
 
 	public LineItemDao lineItemDao;
 	public AddressDao addressDao;
@@ -44,9 +56,10 @@ public class DatabaseManager {
 		supplierDao = new SupplierDaoJdbc(dataSource);
 		categoryDao = new ProductCategoryDaoJdbc(dataSource);
 		productDao = new ProductDaoJdbc(dataSource, supplierDao, categoryDao);
-		lineItemDao = new LineItemDaoJdbc(dataSource);
 		addressDao = new AddressDaoJdbc(dataSource);
 		addressDetailDao = new AddressDetailDaoJdbc(dataSource, addressDao);
+		lineItemDao = new LineItemDaoJdbc(dataSource, productDao);
+		cartDao = new CartDaoJdbc(dataSource, lineItemDao);
 
 	}
 

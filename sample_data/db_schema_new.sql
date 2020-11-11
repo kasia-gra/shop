@@ -20,7 +20,8 @@ CREATE TABLE public.cart
 (
     id          serial NOT NULL PRIMARY KEY,
     total_price int    NOT NULL,
-    cart_size   int    NOT NULL
+    cart_size   int    NOT NULL,
+    CONSTRAINT cart_id UNIQUE (id)
 );
 
 
@@ -31,7 +32,8 @@ CREATE TABLE public.line_item
     cart_id          int    NOT NULL,
     product_id       int    NOT NULL,
     quantity         int    NOT NULL,
-    total_line_price int    NOT NULL
+    total_line_price int    NOT NULL,
+    CONSTRAINT product_per_cart UNIQUE (cart_id, product_id)
 );
 
 

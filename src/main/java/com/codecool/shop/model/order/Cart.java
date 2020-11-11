@@ -10,10 +10,29 @@ public class Cart {
     private int id;
     private List<LineItem> lineItems;
 
-    public Cart() {
+    private float totalPrice;
+    private int size;
 
+    public Cart() {
+        this.totalPrice = 0;
+        this.size = 0;
         this.lineItems = new ArrayList<>();
     }
+
+    public Cart(float totalPrice, int size, List<LineItem> lineItems) {
+        this.totalPrice = totalPrice;
+        this.size = size;
+        this.lineItems = lineItems;
+    }
+
+    public float getTotalPrice (){
+        return this.totalPrice;
+    }
+
+    public int getSize(){
+        return this.size;
+    }
+
 
     public int getId() {
         return id;
@@ -29,7 +48,7 @@ public class Cart {
                 .filter(lineItem -> lineItem.getProduct().equals(product))
                 .collect(Collectors.toList());
         if (searchedLineItems.size() == 0) {
-            lineItems.add(new LineItem(product, 1, lineItems.size(), cartId));
+            lineItems.add(new LineItem(product, 1,  cartId));
         } else {
             LineItem searchedLineItem = searchedLineItems.get(0);
             searchedLineItem.setQty(searchedLineItem.getQty() + 1);

@@ -2,6 +2,7 @@ package com.codecool.shop.dao.mem;
 
 import com.codecool.shop.dao.dao.CartDao;
 import com.codecool.shop.model.order.Cart;
+import com.codecool.shop.model.product.Product;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,11 +25,11 @@ public class CartDaoMem implements CartDao {
     }
 
     @Override
-    public int add(Cart cart) {
+    public void addEmptyCart(Cart cart, int productId, int addedQuantity) {
         cart.setId(sequenceNumber);
         data.add(cart);
         sequenceNumber++;
-        return cart.getId();
+//        return cart.getId();
     }
 
     @Override
@@ -40,11 +41,17 @@ public class CartDaoMem implements CartDao {
     }
 
     @Override
-    public void update(Cart newCart) {
+    public void addItemToCart(int cartId, int productId, int addedQuantity) {
     }
+
+    @Override
+    public void removeItemFromCart(int lineItemId, int cartId){
+
+    };
 
     @Override
     public void remove(int id) {
         data.remove(find(id));
     }
 }
+

@@ -10,10 +10,9 @@ public class LineItem {
     int lineId;
     int cartId;
 
-    public LineItem(Product product, int qty, int id, int cartId) {
+    public LineItem(Product product, int qty, int cartId) {
         this.product = product;
         this.qty = qty;
-        this.lineId = id;
         this.cartId = cartId;
     }
 

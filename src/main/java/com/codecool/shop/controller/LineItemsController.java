@@ -48,6 +48,9 @@ public class LineItemsController extends HttpServlet {
         Order order = orderDataStore.getActual(Integer.parseInt(util.getCookieValueBy("userId", req)));
         order.getCart().removeLineItemById(lineItemId);
 
+
+
+
         if (isEmptyCart(order)) {
             orderDataStore.remove(order.getId());
             util.removeCookie(resp);

@@ -3,8 +3,9 @@ package com.codecool.shop.dao.dao;
 import com.codecool.shop.model.order.Cart;
 
 public interface CartDao {
-    int add(Cart cart);
+    void addEmptyCart(Cart cart, int productId, int addedQuantity);
     Cart find(int id);
-    void update(Cart cart);
+    void addItemToCart(int cartId, int productId, int addedQuantity);
+    void removeItemFromCart(int lineItemId, int cartId);
     void remove(int id);
 }
