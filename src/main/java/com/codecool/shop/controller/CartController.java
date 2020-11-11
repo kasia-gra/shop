@@ -74,6 +74,23 @@ public class CartController extends HttpServlet {
         util.setResponse(resp, jsonResponse);
     }
 
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        JsonObject jsonRequest = util.getJsonObjectFromRequest(req);
+        int lineItemId = jsonRequest.get("lineItemId").getAsInt();
+
+        Order order = orderDao.getActual(Integer.parseInt(util.getCookieValueBy("sessionId", req)));
+        order.getCart().removeLineItemById(lineItemId);
+
+        if (isEmptyCart(order)) {
+            orderDao.remove(order.getId());
+            util.removeCookie(resp);
+        }
+
+        JsonObject jsonResponse = prepareJsonResponse(order);
+        util.setResponse(resp, jsonResponse);
+    }
+
 //    private void addOrderToDataStorage(Product product, Order order) {
 //        order.getCart().addLineItem(product, order.getCart().getId());
 //        orderDataStore.add(order);
@@ -106,5 +123,9 @@ public class CartController extends HttpServlet {
     private Product getProduct(JsonObject jsonRequest) {
         int productId = jsonRequest.get("productId").getAsInt();
         return productDao.find(productId);
+    }
+
+    private boolean isEmptyCart(Order order) {
+        return order.getCart().getCartSize() == 0;
     }
 }
