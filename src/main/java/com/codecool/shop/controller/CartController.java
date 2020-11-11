@@ -33,8 +33,7 @@ public class CartController extends HttpServlet {
     private final Util util = new Util();
     private final OrderDao orderDataStore = OrderDaoMem.getInstance();
     private final ProductDao productDataStore = DatabaseManager.getInstance().productDao;
-    private final SessionDao sessionDao = DatabaseManager.getInstance().sessionDao;
-
+    private final OrderDao orderDao = DatabaseManager.getInstance().orderDao;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -66,11 +65,14 @@ public class CartController extends HttpServlet {
         JsonObject jsonRequest = util.getJsonObjectFromRequest(req);
         Product product = getProduct(jsonRequest);
 
-        Session session = new Session();
-        sessionDao.add(session);
+        Cart cart = new Cart();
 
-        Order order = new Order();
-        addOrderToDataStorage(product, order);
+        Session session = new Session();
+//        sessionDao.add(session);
+
+        Order order = new Order(cart, session);
+
+        orderDao.add(order, product.getId());
 
         AdminLogger.createLogFile(order.getId(), getServletContext());
 
@@ -80,10 +82,10 @@ public class CartController extends HttpServlet {
         util.setResponse(resp, jsonResponse);
     }
 
-    private void addOrderToDataStorage(Product product, Order order) {
-        order.getCart().addLineItem(product, order.getCart().getId());
-        orderDataStore.add(order);
-    }
+//    private void addOrderToDataStorage(Product product, Order order) {
+//        order.getCart().addLineItem(product, order.getCart().getId());
+//        orderDataStore.add(order);
+//    }
 
     private JsonObject prepareJsonResponse(Order order) {
         int itemsNumber = order.getCart().getCartSize();

@@ -2,19 +2,28 @@ package com.codecool.shop.model.order;
 
 import com.codecool.shop.model.AddressDetail;
 import com.codecool.shop.model.Session;
+import com.codecool.shop.model.product.Product;
 import com.codecool.shop.model.user.User;
+
+import java.util.Date;
 
 public class Order {
     private int id;
     private User user;
     private Cart cart;
-    private boolean isArchival = false;
     private Payment payment;
     private AddressDetail orderAddressDetail;
     private Session session;
+    private Status status;
+    private Date date;
 
     public Order() {
         this.cart = new Cart();
+    }
+
+    public Order(Cart cart, Session session) {
+        this.cart = cart;
+        this.session = session;
     }
 
     public int getId() {
@@ -41,14 +50,6 @@ public class Order {
         this.cart = cart;
     }
 
-    public boolean isArchival() {
-        return isArchival;
-    }
-
-    public void setArchival(boolean isArchival) {
-        this.isArchival = isArchival;
-    }
-
     public Payment getPayment() {
         return payment;
     }
@@ -71,5 +72,21 @@ public class Order {
 
     public void setSession(Session session) {
         this.session = session;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }

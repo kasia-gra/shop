@@ -8,7 +8,7 @@ CREATE TABLE public.order
     id                       serial NOT NULL PRIMARY KEY,
     cart_id                  int    NOT NULL,
     user_id                  int,
-    order_address_details_id int    NOT NULL,
+    order_address_details_id int,
     date                     timestamp,
     current_status           status,
     session_id               int NOT NULL

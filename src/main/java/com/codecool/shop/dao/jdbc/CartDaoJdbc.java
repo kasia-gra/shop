@@ -21,7 +21,7 @@ public class CartDaoJdbc implements CartDao {
     }
 
     @Override
-    public void addEmptyCart(Cart cart, int productId, int addedQuantity) {
+    public void addEmptyCart(Cart cart, int productId) {
         try (Connection conn = dataSource.getConnection()) {
             String sql = "INSERT INTO cart (total_price, cart_size) VALUES (?, ?)";
             PreparedStatement st = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -31,6 +31,7 @@ public class CartDaoJdbc implements CartDao {
             ResultSet rs = st.getGeneratedKeys();
             rs.next();
             cart.setId(rs.getInt(1));
+            int addedQuantity = 1;
             addItemToCart(rs.getInt(1), productId, addedQuantity);
         } catch (SQLException e) {
             throw new RuntimeException(e);

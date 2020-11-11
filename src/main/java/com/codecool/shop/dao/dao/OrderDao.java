@@ -5,7 +5,7 @@ import com.codecool.shop.model.order.Order;
 import java.util.List;
 
 public interface OrderDao {
-    int add(Order order);
+    void add(Order order, int productId);
     Order find(int id);
     void update(int id);
     void remove(int id);

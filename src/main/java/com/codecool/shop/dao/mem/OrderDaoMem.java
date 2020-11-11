@@ -26,11 +26,10 @@ public class OrderDaoMem implements OrderDao {
     }
 
     @Override
-    public int add(Order order) {
+    public void add(Order order, int productId) {
         order.setId(sequenceNumber);
         data.add(order);
         sequenceNumber++;
-        return order.getId();
     }
 
     @Override
@@ -67,7 +66,6 @@ public class OrderDaoMem implements OrderDao {
     public Order getActual(int sessionId) {
         return data.stream().
                 filter(order -> order.getSession().getId() == sessionId).
-                filter(order -> !order.isArchival()).
                 findFirst().
                 orElse(null);
     }
