@@ -4,6 +4,7 @@ import com.codecool.shop.config.TemplateEngineUtil;
 import com.codecool.shop.dao.dao.*;
 import com.codecool.shop.dao.manager.DatabaseManager;
 import com.codecool.shop.dao.mem.OrderDaoMem;
+import com.codecool.shop.model.order.Cart;
 import com.codecool.shop.model.order.Order;
 import com.codecool.shop.model.product.Product;
 import com.codecool.shop.model.product.ProductCategory;
@@ -30,8 +31,6 @@ public class ProductController extends HttpServlet {
         ProductDao productDataStore = dbManager.productDao;
         ProductCategoryDao productCategoryDataStore = dbManager.categoryDao;
         SupplierDao supplierDataStore = dbManager.supplierDao;
-        CartDao cartDao = dbManager.cartDao;
-        LineItemDao lineItemDao = dbManager.lineItemDao;
 
         TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(req.getServletContext());
         WebContext context = new WebContext(req, resp, req.getServletContext());

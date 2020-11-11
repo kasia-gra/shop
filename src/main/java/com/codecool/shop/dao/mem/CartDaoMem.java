@@ -25,7 +25,7 @@ public class CartDaoMem implements CartDao {
     }
 
     @Override
-    public void addEmptyCart(Cart cart) {
+    public void addEmptyCart(Cart cart, int productId, int addedQuantity) {
         cart.setId(sequenceNumber);
         data.add(cart);
         sequenceNumber++;

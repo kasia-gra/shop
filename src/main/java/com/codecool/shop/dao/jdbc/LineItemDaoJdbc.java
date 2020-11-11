@@ -25,19 +25,19 @@ public class LineItemDaoJdbc implements LineItemDao {
     }
 
     @Override
-    public void addProduct(int cartId, int productId, int newQuantity) {
+    public void addProduct(int cartId, int productId, int addedQuantity) {
         try (Connection conn = dataSource.getConnection()) {
             Product product = productDao.find(productId);
             String sql = "INSERT INTO line_item (cart_id, product_id, quantity, total_line_price) VALUES (?, ?, ?, ?)" +
                     " ON CONFLICT ON CONSTRAINT product_per_cart" +
-                    " DO UPDATE SET quantity = ?, total_line_price = ?;";
+                    " DO UPDATE SET quantity = excluded.quantity + ?, total_line_price = excluded.total_line_price + ?;";
             PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             statement.setInt(1, cartId);
             statement.setInt(2, product.getId());
-            statement.setInt(3, newQuantity);
-            statement.setInt(4, (int) product.getDefaultPrice() * newQuantity);
-            statement.setInt(5, newQuantity);
-            statement.setInt(6, (int) product.getDefaultPrice() * newQuantity);
+            statement.setInt(3, addedQuantity);
+            statement.setInt(4, (int) product.getDefaultPrice() * addedQuantity);
+            statement.setInt(5, addedQuantity);
+            statement.setInt(6, (int) product.getDefaultPrice() * addedQuantity);
             statement.executeUpdate();
             ResultSet resultSet = statement.getGeneratedKeys();
             resultSet.next();
@@ -69,11 +69,15 @@ public class LineItemDaoJdbc implements LineItemDao {
 
     @Override
     public void remove(int id) {
+        System.out.println("WILL BE REMOVING ITEMS");
         try (Connection conn = dataSource.getConnection()) {
             String sql = "DELETE FROM line_item WHERE id = ? RETURNING *";
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setInt(1, id);
-            statement.executeQuery();
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()){
+                System.out.println("NEXT RESULT " + rs.getInt(1));
+            }
         } catch (SQLException exception) {
             throw new RuntimeException("Error while deleting line_item with id: " + id, exception);
         }
