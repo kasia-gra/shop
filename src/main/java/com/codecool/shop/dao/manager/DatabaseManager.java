@@ -20,6 +20,7 @@ public class DatabaseManager {
 	public LineItemDao lineItemDao;
 	public AddressDao addressDao;
 	public AddressDetailDao addressDetailDao;
+	public UserDao userDao;
 
 	private DatabaseManager() {
 	}
@@ -47,6 +48,7 @@ public class DatabaseManager {
 		lineItemDao = new LineItemDaoJdbc(dataSource);
 		addressDao = new AddressDaoJdbc(dataSource);
 		addressDetailDao = new AddressDetailDaoJdbc(dataSource, addressDao);
+		userDao = new UserDaoJdbc(dataSource, addressDetailDao);
 
 	}
 

@@ -3,8 +3,9 @@ package com.codecool.shop.controller;
 import com.codecool.shop.config.TemplateEngineUtil;
 import com.codecool.shop.dao.dao.OrderDao;
 import com.codecool.shop.dao.dao.UserDao;
+import com.codecool.shop.dao.manager.DatabaseManager;
 import com.codecool.shop.dao.mem.OrderDaoMem;
-import com.codecool.shop.dao.mem.UserDaoMem;
+import com.codecool.shop.model.AddressDetail;
 import com.codecool.shop.model.order.LineItem;
 import com.codecool.shop.model.order.Order;
 import com.codecool.shop.model.user.Address;
@@ -24,7 +25,7 @@ import java.util.List;
 public class CheckoutController extends HttpServlet {
     Util util = new Util();
     OrderDao orderDataStore = OrderDaoMem.getInstance();
-    UserDao userDataStorage = UserDaoMem.getInstance();
+    UserDao userDao = DatabaseManager.getInstance().userDao;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -49,10 +50,8 @@ public class CheckoutController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String userId = util.getCookieValueBy("userId", req);
-
-        User user = userDataStorage.find(Integer.parseInt(userId));
-        setUserParameters(user, req);
+        User user = getUser(req);
+        userDao.add(user);
 //        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/payment");
 //        dispatcher.forward(req, resp);
         resp.sendRedirect("/payment");
@@ -65,15 +64,19 @@ public class CheckoutController extends HttpServlet {
         context.setVariable("cartValue", cartValue);
     }
 
-    private void setUserParameters(User user, HttpServletRequest request) {
-        user.setFirstName(request.getParameter("firstName"));
-        user.setLastName(request.getParameter("lastName"));
-        user.setEmail(request.getParameter("email"));
-        user.setPhone(request.getParameter("phone"));
-        user.setBillingAddress(getBillingAddress(request));
+    private User getUser(HttpServletRequest request) {
+        String firstName = request.getParameter("firstName");
+        String lastName = request.getParameter("lastName");
+        String email = request.getParameter("email");
+        String phone = request.getParameter("phone");
+        Address billingAddress = getBillingAddress(request);
+        Address shippingAddress;
         if (request.getParameter("sameAddress").equals("on")) {
-            user.setShippingAddress(getBillingAddress(request));
-        } else user.setShippingAddress(getShippingAddress(request));
+            shippingAddress = billingAddress;
+        } else shippingAddress = getShippingAddress(request);
+        AddressDetail addressDetail = new AddressDetail(billingAddress, shippingAddress);
+
+        return new User(firstName, lastName, email, phone, addressDetail);
     }
 
     private Address getBillingAddress(HttpServletRequest request) {
