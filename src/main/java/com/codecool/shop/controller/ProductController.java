@@ -3,8 +3,6 @@ package com.codecool.shop.controller;
 import com.codecool.shop.config.TemplateEngineUtil;
 import com.codecool.shop.dao.dao.*;
 import com.codecool.shop.dao.manager.DatabaseManager;
-import com.codecool.shop.dao.mem.OrderDaoMem;
-import com.codecool.shop.model.order.Cart;
 import com.codecool.shop.model.order.Order;
 import com.codecool.shop.model.product.Product;
 import com.codecool.shop.model.product.ProductCategory;
@@ -60,8 +58,8 @@ public class ProductController extends HttpServlet {
     }
 
     private void addItemsNumberToContext(HttpServletRequest req, WebContext context) {
-        OrderDao orderDataStore = OrderDaoMem.getInstance();
-        Order order = orderDataStore.getActual(Integer.parseInt(util.getCookieValueBy("userId", req)));
+        OrderDao orderDao = DatabaseManager.getInstance().orderDao;
+        Order order = orderDao.getActual(Integer.parseInt(util.getCookieValueBy("sessionId", req)));
         int itemsNumber = order.getCart().getCartSize();
         context.setVariable("itemsNumber", itemsNumber);
     }

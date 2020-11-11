@@ -44,8 +44,10 @@ public class AddressDaoJdbc implements AddressDao {
             if (!resultSet.next()) {
                 return null;
             }
-            return new Address(resultSet.getString("country"), resultSet.getString("city"),
+            Address address = new Address(resultSet.getString("country"), resultSet.getString("city"),
                     resultSet.getString("zip_code"), resultSet.getString("address"));
+            address.setId(id);
+            return address;
         } catch (SQLException exception) {
             throw new RuntimeException("Error while retrieving address with id: " + id, exception);
         }

@@ -50,6 +50,11 @@ public class LineItem {
     public void setLineId (int lineId){
         this.lineId = lineId;
     }
+
+    @Override
+    public String toString() {
+        return "[Product: " + product.getName() + ", quantity: " + qty + "]";
+    }
 }
 
 

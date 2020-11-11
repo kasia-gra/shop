@@ -1,13 +1,25 @@
 package com.codecool.shop.model.user;
 
+import com.codecool.shop.model.AddressDetail;
+
 public class User {
     private int id;
     private String email;
     private String phone;
     private String firstName;
     private String lastName;
-    private Address shippingAddress;
-    private Address billingAddress;
+    private AddressDetail userAddressDetail;
+
+    public User() {
+    }
+
+    public User(String firstName, String lastName, String email, String phone, AddressDetail userAddressDetail) {
+        this.email = email;
+        this.phone = phone;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.userAddressDetail = userAddressDetail;
+    }
 
     public int getId() {
         return id;
@@ -49,19 +61,11 @@ public class User {
         this.lastName = lastName;
     }
 
-    public Address getShippingAddress() {
-        return shippingAddress;
+    public AddressDetail getUserAddressDetail() {
+        return userAddressDetail;
     }
 
-    public void setShippingAddress(Address shippingAddress) {
-        this.shippingAddress = shippingAddress;
-    }
-
-    public Address getBillingAddress() {
-        return billingAddress;
-    }
-
-    public void setBillingAddress(Address billingAddress) {
-        this.billingAddress = billingAddress;
+    public void setUserAddressDetail(AddressDetail userAddressDetail) {
+        this.userAddressDetail = userAddressDetail;
     }
 }

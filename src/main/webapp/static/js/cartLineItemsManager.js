@@ -28,7 +28,7 @@ export let cartLineItemsManager = {
         let currentQty = parseInt(currentQtyField.value);
         let lineItemId = event.target.parentElement.id;
         let lineItemContainer = event.target.parentElement.parentElement.parentElement;
-        if (currentQty == 1) {
+        if (currentQty === 1) {
             deleteLineItem(lineItemId, lineItemContainer);
         }
         else {
@@ -46,7 +46,7 @@ const updateQty =  function (currentQtyField) {
         alert("Please enter an integer");
         currentQtyField.value = currentQtyField.dataset.qty;
     }
-    else if (currentQty == 0) {
+    else if (currentQty === 0) {
         currentQtyField.dataset.qty = currentQty;
         deleteLineItem(lineItemId, lineItemContainer);
     }
@@ -60,8 +60,8 @@ const changeLineItemQty =  function (lineItemId, currentQtyField, updatedQty, li
     let dataDict = {};
     dataDict.lineItemId = lineItemId;
     dataDict.qty = updatedQty;
-    dataDict.userId = cookiesHandler.getCookie("userId");
-    dataHandler._api_put(`/line_item`, dataDict, json_response => {
+    dataDict.userId = cookiesHandler.getCookie("sessionId");
+    dataHandler._api_post(`/cart`, dataDict, json_response => {
         updateQtyValueField (currentQtyField, updatedQty)
         updateLineItemPrice(json_response, lineItemContainer);
         updateCart(json_response, lineItemContainer);
@@ -75,11 +75,11 @@ const updateQtyValueField = function(currentQtyField, updatedQty) {
 const deleteLineItem = function(lineItemId, lineItemContainer) {
     let dataDict = {};
     dataDict.lineItemId = lineItemId;
-    dataDict.userId = cookiesHandler.getCookie("userId");
-    dataHandler._api_delete(`/line_item`, dataDict, json_response => {
+    dataDict.userId = cookiesHandler.getCookie("sessionId");
+    dataHandler._api_delete(`/cart`, dataDict, json_response => {
         removeLineItemFromCart(lineItemContainer)
         updateCart(json_response, lineItemContainer);
-        disableCheckoutIfAllItemsRemoved(cookiesHandler.checkCookie("userId"));
+        disableCheckoutIfAllItemsRemoved(cookiesHandler.checkCookie("sessionId"));
     });
 }
 

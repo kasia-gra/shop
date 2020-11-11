@@ -17,7 +17,7 @@ public class LineItemDaoJdbc implements LineItemDao {
 
     private final DataSource dataSource;
     private final ProductDao productDao;
-    private final List<LineItem> lineItems = new ArrayList<>();
+
 
     public LineItemDaoJdbc(DataSource dataSource,  ProductDao productDao) {
         this.dataSource = dataSource;
@@ -28,9 +28,9 @@ public class LineItemDaoJdbc implements LineItemDao {
     public void addProduct(int cartId, int productId, int addedQuantity) {
         try (Connection conn = dataSource.getConnection()) {
             Product product = productDao.find(productId);
-            String sql = "INSERT INTO line_item (cart_id, product_id, quantity, total_line_price) VALUES (?, ?, ?, ?)" +
-                    " ON CONFLICT ON CONSTRAINT product_per_cart" +
-                    " DO UPDATE SET quantity = excluded.quantity + ?, total_line_price = excluded.total_line_price + ?;";
+            String sql = "INSERT INTO line_item AS current_line_item (cart_id, product_id, quantity, total_line_price) VALUES (?, ?, ?, ?)" +
+                    " ON CONFLICT (cart_id, product_id)" +
+                    " DO UPDATE SET quantity = current_line_item.quantity + ?, total_line_price = current_line_item.total_line_price + ?";
             PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             statement.setInt(1, cartId);
             statement.setInt(2, product.getId());
@@ -90,15 +90,17 @@ public class LineItemDaoJdbc implements LineItemDao {
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setInt(1, cartId);
             ResultSet rs = statement.executeQuery();
+            List<LineItem> lineItems = new ArrayList<>();
             while (rs.next()) {
                 LineItem lineItem = new LineItem(productDao.find(rs.getInt("product_id")),
                         rs.getInt("quantity"), rs.getInt("total_line_price"));
-                lineItem.setLineId(rs.getInt(1));
+                lineItem.setLineId(rs.getInt("id"));
                 lineItems.add(lineItem);
             }
+            System.out.println("From lineItemDao: " + lineItems);
             return lineItems;
         } catch (SQLException e) {
-            throw new RuntimeException("ERROR while reading suppliers " + e.getMessage());
+            throw new RuntimeException("ERROR while reading line items." + e.getMessage());
         }
     }
 

@@ -2,7 +2,7 @@ package com.codecool.shop.controller;
 
 import com.codecool.shop.config.TemplateEngineUtil;
 import com.codecool.shop.dao.dao.OrderDao;
-import com.codecool.shop.dao.mem.OrderDaoMem;
+import com.codecool.shop.dao.manager.DatabaseManager;
 import com.codecool.shop.model.order.Order;
 import com.codecool.shop.model.order.Payment;
 import org.thymeleaf.TemplateEngine;
@@ -19,7 +19,7 @@ import java.io.*;
 @WebServlet(urlPatterns = {"/payment"}, loadOnStartup = 4)
 public class PaymentController extends HttpServlet {
 	private final Util util = new Util();
-	private final OrderDao orderDataStore = OrderDaoMem.getInstance();
+	private final OrderDao orderDao = DatabaseManager.getInstance().orderDao;
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -37,14 +37,14 @@ public class PaymentController extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		//TODO confirm payment
-		Order order = orderDataStore.getActual(Integer.parseInt(util.getCookieValueBy("userId", req)));
+		Order order = orderDao.getActual(Integer.parseInt(util.getCookieValueBy("sessionId", req)));
 		saveOrderToFile(order, getServletContext());
 		setPaymentParameters(order, req);
 		resp.sendRedirect("/paymentConfirmation");
 	}
 
 	private void setContextParameters(HttpServletRequest req, WebContext context) {
-		Order order = orderDataStore.getActual(Integer.parseInt(util.getCookieValueBy("userId", req)));
+		Order order = orderDao.getActual(Integer.parseInt(util.getCookieValueBy("sessionId", req)));
 		float totalPrice = order.getCart().getLineItemsTotalPrice();
 		int itemsNumber = order.getCart().getCartSize();
 
