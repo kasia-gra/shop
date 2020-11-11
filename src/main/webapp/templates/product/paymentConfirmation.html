@@ -16,10 +16,10 @@
                 <i class="fa fa-shopping-cart"></i>Cart
                 <span class="text-success" th:text="${order.getCart().getCartSize()}">0</span>
             </a></li>
-            <li><a class="nav-link" id="register" data-toggle="modal" data-target="#modalRegisterForm"
-                   href="#"><span class="link fas fa-user-plus"></span> Sign in</a></li>
-            <li><a class="nav-link" id="login" data-toggle="modal" data-target="#modalLoginForm"
-                   href="#"><span class="link fas fa-sign-in-alt"></span> Log in</a></li>
+            <li><a class="nav-link" id="register" href="/registration">
+                <span class="link fas fa-user-plus"></span> Sign in</a></li>
+            <li><a class="nav-link" id="login" href="/login">
+                <span class="link fas fa-sign-in-alt"></span> Log in</a></li>
         </ul>
     </div>
 </nav>
