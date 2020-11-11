@@ -1,13 +1,14 @@
 package com.codecool.shop.dao.dao;
 
+import com.codecool.shop.model.order.Cart;
 import com.codecool.shop.model.order.LineItem;
 
 import java.util.List;
 
 public interface LineItemDao {
 
-    void addProduct(int cartId, int productId, int quantity);
-    LineItem find(int id);
+    void addProduct(Cart cart, int productId, int quantity);
+    LineItem find(int product_id, int cartId);
     void remove(int id);
     List<LineItem> findLineItemsByCartId(int cartId);
     int getTotalValueOfLinesInCart(int cartId);

@@ -40,7 +40,7 @@
                 <div class="order-summary">
                     <h4 id="total-to-pay">
                         <span>Total: </span>
-                        <span th:text="${#numbers.formatDecimal(cart.getLineItemsTotalPrice(),1,'COMMA',2,'POINT')}"></span>
+                        <span th:text="${#numbers.formatDecimal(cart.getTotalPrice(),1,'COMMA',2,'POINT')}"></span>
                         <span th:text="${cart.getCartCurrency()}"></span>
                     </h4>
                 </div>
@@ -59,7 +59,7 @@
 
             <div class="card-line-item" th:each="lineItem : ${cart.getLineItems()}">
                 <div class="card-product-img"><img class="fit_contain" src="http://placehold.it/400x250/000/fff"
-                                                   th:attr="src='/static/img/product_' + ${lineItem.getProduct().id} + '.jpg'"
+                                                   th:attr="src='/static/img/' + ${lineItem.getProduct().getPictureName()}"
                                                    alt=""/></div>
                 <div class="card-product-name">
                     <h3 th:text="${lineItem.getProduct().name}">Product name</h3>
@@ -78,7 +78,7 @@
                             <span th:text="${cart.getCartCurrency()}"></span>
                         </h5>
                     </div>
-                    <div class="card-product-actions" th:id="${lineItem.getLineId()}">
+                    <div class="card-product-actions" th:id="${lineItem.getProduct().getId()}">
                         <button class="line-item-summary-wrapper increase-qty">+</button>
                         <input class="line-item-summary-wrapper choose-qty" th:attr="data-qty=${lineItem.getQty()}"
                                th:value="${lineItem.getQty()}"/>

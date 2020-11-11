@@ -41,7 +41,7 @@ public class CartDaoMem implements CartDao {
     }
 
     @Override
-    public void addItemToCart(int cartId, int productId, int addedQuantity) {
+    public void addItemToCart(Cart cart, int productId, int addedQuantity) {
     }
 
     @Override

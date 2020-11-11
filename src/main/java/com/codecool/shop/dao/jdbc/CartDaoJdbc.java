@@ -25,23 +25,25 @@ public class CartDaoJdbc implements CartDao {
         try (Connection conn = dataSource.getConnection()) {
             String sql = "INSERT INTO cart (total_price, cart_size) VALUES (?, ?)";
             PreparedStatement st = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            st.setInt(1, (int) cart.getTotalPrice());
+            st.setInt(1, (int) cart.getLineItemsTotalPrice());
             st.setInt(2, cart.getSize());
             st.executeUpdate();
             ResultSet rs = st.getGeneratedKeys();
             rs.next();
             cart.setId(rs.getInt(1));
             int addedQuantity = 1;
-            addItemToCart(rs.getInt(1), productId, addedQuantity);
+            System.out.println("CREATED EMPTY CART WITH ID " + cart.getId());
+            addItemToCart(cart, productId, addedQuantity);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void addItemToCart(int cartId, int productId, int addedQuantity) {
+    public void addItemToCart(Cart cart, int productId, int addedQuantity) {
+        int cartId = cart.getId();
         try (Connection connection = dataSource.getConnection()) {
-            lineItemDao.addProduct(cartId, productId, addedQuantity);
+            lineItemDao.addProduct(cart, productId, addedQuantity);
             String sql = "UPDATE cart SET total_price = ?, cart_size = ? WHERE id = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setInt(1, lineItemDao.getTotalValueOfLinesInCart(cartId));

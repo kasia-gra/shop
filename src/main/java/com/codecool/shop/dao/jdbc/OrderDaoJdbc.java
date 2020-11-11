@@ -106,8 +106,8 @@ public class OrderDaoJdbc implements OrderDao {
     }
 
     @Override
-    public void addItemToOrder(Order order, int productId) {
-        cartDao.addItemToCart(order.getCart().getId(), productId, 1);
+    public void addItemToOrder(Order order, int productId, int addedQuantity) {
+        cartDao.addItemToCart(order.getCart(), productId, addedQuantity);
     }
 
     @Override

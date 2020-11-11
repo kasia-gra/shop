@@ -4,6 +4,7 @@ import com.codecool.shop.model.product.Product;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class Cart {
@@ -25,11 +26,11 @@ public class Cart {
         this.lineItems = lineItems;
     }
 
-    public float getTotalPrice (){
+    public float getTotalPrice() {
         return this.totalPrice;
     }
 
-    public int getSize(){
+    public int getSize() {
         return this.size;
     }
 
@@ -48,7 +49,7 @@ public class Cart {
                 .filter(lineItem -> lineItem.getProduct().equals(product))
                 .collect(Collectors.toList());
         if (searchedLineItems.size() == 0) {
-            lineItems.add(new LineItem(product, 1,  cartId));
+            lineItems.add(new LineItem(product, 1, cartId));
         } else {
             LineItem searchedLineItem = searchedLineItems.get(0);
             searchedLineItem.setQty(searchedLineItem.getQty() + 1);
@@ -73,23 +74,32 @@ public class Cart {
     }
 
     public String getCartCurrency() {
-         return "USD";
+        return "USD";
     }
 
     public void removeLineItemById(int searchedId) throws IllegalStateException {
         lineItems.remove(getLineItemById(searchedId));
     }
 
-    public LineItem getLineItemById (int searchedId) throws IllegalStateException {
+    public LineItem getLineItemById(int searchedId) throws IllegalStateException {
         List<LineItem> searchedLineItems = lineItems.stream()
                 .filter(lineItem -> lineItem.getLineId() == searchedId)
                 .collect(Collectors.toList());
         if (searchedLineItems.size() > 0) {
             return searchedLineItems.get(0);
-        }
-        else {
+        } else {
             throw new IllegalStateException();
         }
     }
 
+    public Optional<LineItem> getLineItemByProductId(int productId) throws IllegalStateException {
+        return lineItems.stream()
+                .filter(lineItem -> lineItem.getProduct().getId() == productId).findFirst();
+    }
+
+    public float getLineItemPriceByProduct(int productId) {
+        if (getLineItemByProductId(productId).isPresent()) {
+            return getLineItemByProductId(productId).get().getLinePrice();
+        } else throw new NullPointerException();
+    }
 }
