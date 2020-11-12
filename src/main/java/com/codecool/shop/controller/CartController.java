@@ -43,12 +43,13 @@ public class CartController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         JsonObject jsonRequest = util.getJsonObjectFromRequest(req);
 
-        Order order = getOrder(jsonRequest);
-        orderDao.addItemToOrder(order, jsonRequest.get("productId").getAsInt());
-//        orderDao.update(order);
-//        addProductToCart(jsonRequest, order);
+        int addedQuantity = jsonRequest.get("qty").getAsInt();
+        int productId = jsonRequest.get("productId").getAsInt();
 
-        JsonObject jsonResponse = prepareJsonResponse(order);
+        Order order = getOrder(jsonRequest);
+        orderDao.addItemToOrder(order, productId, addedQuantity);
+
+        JsonObject jsonResponse = prepareJsonResponse(order, productId);
 
         util.setResponse(resp, jsonResponse);
     }
@@ -57,18 +58,17 @@ public class CartController extends HttpServlet {
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         JsonObject jsonRequest = util.getJsonObjectFromRequest(req);
         Product product = getProduct(jsonRequest);
-
+        int productId = product.getId();
         Cart cart = new Cart();
 
         Session session = new Session();
-
         Order order = new Order(cart, session);
 
-        orderDao.add(order, product.getId());
+        orderDao.add(order, productId);
 
         AdminLogger.createLogFile(order.getId(), getServletContext());
 
-        JsonObject jsonResponse = prepareJsonResponse(order);
+        JsonObject jsonResponse = prepareJsonResponse(order, productId);
         jsonResponse.addProperty("sessionId", session.getId());
 
         util.setResponse(resp, jsonResponse);
@@ -77,17 +77,18 @@ public class CartController extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         JsonObject jsonRequest = util.getJsonObjectFromRequest(req);
-        int lineItemId = jsonRequest.get("lineItemId").getAsInt();
+        int productId = jsonRequest.get("productId").getAsInt();
 
         Order order = orderDao.getActual(Integer.parseInt(util.getCookieValueBy("sessionId", req)));
-        order.getCart().removeLineItemById(lineItemId);
+
+//        order.getCart().removeLineItemById(productId);
 
         if (isEmptyCart(order)) {
             orderDao.remove(order.getId());
             util.removeCookie(resp);
         }
 
-        JsonObject jsonResponse = prepareJsonResponse(order);
+        JsonObject jsonResponse = prepareJsonResponse(order,  productId);
         util.setResponse(resp, jsonResponse);
     }
 
@@ -96,10 +97,15 @@ public class CartController extends HttpServlet {
 //        orderDataStore.add(order);
 //    }
 
-    private JsonObject prepareJsonResponse(Order order) {
+    private JsonObject prepareJsonResponse(Order order, int productId) {
         int itemsNumber = order.getCart().getCartSize();
         JsonObject jsonResponse = new JsonObject();
+
+        jsonResponse.addProperty("linePrice", order.getCart().getLineItemPriceByProduct(productId));
+        jsonResponse.addProperty("productId", productId);
         jsonResponse.addProperty("itemsNumber", itemsNumber);
+        jsonResponse.addProperty("totalCartValue", order.getCart().getLineItemsTotalPrice());
+
         return jsonResponse;
     }
 

@@ -20,6 +20,7 @@ export let cartManager = {
                     cookiesHandler.setCookie("sessionId", json_response.sessionId, 30);
                 });
         } else {
+            data.qty = 1;
             data.productId = productId;
             data.sessionId = cookiesHandler.getCookie("sessionId");
             dataHandler._api_post("/cart", data, cartManager.changeCartItemsNumber);

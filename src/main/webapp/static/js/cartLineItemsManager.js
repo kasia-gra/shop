@@ -18,21 +18,21 @@ export let cartLineItemsManager = {
     increaseQty: function (event) {
         let currentQtyField = event.target.parentElement.querySelector(".choose-qty");
         let currentQty = parseInt(currentQtyField.value);
-        let lineItemId = event.target.parentElement.id;
+        let productId = event.target.parentElement.id;
         let lineItemContainer = event.target.parentElement.parentElement.parentElement;
-        changeLineItemQty(lineItemId, currentQtyField, currentQty + 1, lineItemContainer);
+        changeLineItemQty(productId, currentQtyField, 1, lineItemContainer);
     },
 
     decreaseQty: function (event) {
         let currentQtyField = event.target.parentElement.querySelector(".choose-qty");
         let currentQty = parseInt(currentQtyField.value);
-        let lineItemId = event.target.parentElement.id;
+        let productId = event.target.parentElement.id;
         let lineItemContainer = event.target.parentElement.parentElement.parentElement;
         if (currentQty === 1) {
-            deleteLineItem(lineItemId, lineItemContainer);
+            deleteLineItem(productId, lineItemContainer);
         }
         else {
-            changeLineItemQty(lineItemId, currentQtyField, currentQty - 1, lineItemContainer);
+            changeLineItemQty(productId, currentQtyField,  - 1, lineItemContainer);
         }
     },
 
@@ -40,7 +40,7 @@ export let cartLineItemsManager = {
 
 const updateQty =  function (currentQtyField) {
     const currentQty = parseInt(currentQtyField.value);
-    let lineItemId = currentQtyField.parentElement.id;
+    let productId = currentQtyField.parentElement.id;
     let lineItemContainer = currentQtyField.parentElement.parentElement.parentElement;
     if (currentQty < 0 || !Number.isInteger(currentQty)) {
         alert("Please enter an integer");
@@ -48,19 +48,20 @@ const updateQty =  function (currentQtyField) {
     }
     else if (currentQty === 0) {
         currentQtyField.dataset.qty = currentQty;
-        deleteLineItem(lineItemId, lineItemContainer);
+        deleteLineItem(productId, lineItemContainer);
     }
     else {
-        currentQtyField.dataset.qty = currentQty;
-        changeLineItemQty(lineItemId, currentQtyField, currentQty, lineItemContainer);
+        let addedQty = currentQty - currentQtyField.dataset.qty
+        changeLineItemQty(productId, currentQtyField, addedQty, lineItemContainer);
+
     }
 }
 
-const changeLineItemQty =  function (lineItemId, currentQtyField, updatedQty, lineItemContainer) {
+const changeLineItemQty =  function (productId, currentQtyField, updatedQty, lineItemContainer) {
     let dataDict = {};
-    dataDict.lineItemId = lineItemId;
+    dataDict.productId = productId;
     dataDict.qty = updatedQty;
-    dataDict.userId = cookiesHandler.getCookie("sessionId");
+    dataDict.sessionId = cookiesHandler.getCookie("sessionId");
     dataHandler._api_post(`/cart`, dataDict, json_response => {
         updateQtyValueField (currentQtyField, updatedQty)
         updateLineItemPrice(json_response, lineItemContainer);
@@ -69,13 +70,15 @@ const changeLineItemQty =  function (lineItemId, currentQtyField, updatedQty, li
 }
 
 const updateQtyValueField = function(currentQtyField, updatedQty) {
-    currentQtyField.value = updatedQty;
+    let currentQty = currentQtyField.dataset.qty
+    currentQtyField.value = parseInt(currentQty) + updatedQty;
+    currentQtyField.dataset.qty = parseInt(currentQty) + updatedQty;
 }
 
-const deleteLineItem = function(lineItemId, lineItemContainer) {
+const deleteLineItem = function(productId, lineItemContainer) {
     let dataDict = {};
-    dataDict.lineItemId = lineItemId;
-    dataDict.userId = cookiesHandler.getCookie("sessionId");
+    dataDict.productId = productId;
+    dataDict.sessionId = cookiesHandler.getCookie("sessionId");
     dataHandler._api_delete(`/cart`, dataDict, json_response => {
         removeLineItemFromCart(lineItemContainer)
         updateCart(json_response, lineItemContainer);
@@ -89,12 +92,13 @@ const removeLineItemFromCart = function (lineItemDOMElement) {
 }
 
 const updateLineItemPrice = function (json_response, lineItemContainer) {
+    console.log("UPDATING PRICE TO " + parseInt(json_response.linePrice))
     lineItemContainer.querySelector(".total-line-price").innerText = parseInt(json_response.linePrice).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');;
 }
 
 const updateCart = function(json_response, lineItemContainer) {
     document.getElementById("total-to-pay").innerText = (parseInt(json_response.totalCartValue)).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
-    document.querySelector(".text-success").innerHTML = json_response.numberOfProductsInCart;}
+    document.querySelector(".text-success").innerHTML = json_response.itemsNumber;}
 
 const formatPrice = function(price) {
     price.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');

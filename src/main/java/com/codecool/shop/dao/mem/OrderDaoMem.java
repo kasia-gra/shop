@@ -51,7 +51,7 @@ public class OrderDaoMem implements OrderDao {
     }
 
     @Override
-    public void addItemToOrder(Order order, int productId) {
+    public void addItemToOrder(Order order, int productId, int addedQuantity) {
 
     }
 

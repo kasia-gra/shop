@@ -4,6 +4,7 @@ import com.codecool.shop.dao.dao.LineItemDao;
 import com.codecool.shop.dao.dao.ProductCategoryDao;
 import com.codecool.shop.dao.dao.ProductDao;
 import com.codecool.shop.dao.dao.SupplierDao;
+import com.codecool.shop.model.order.Cart;
 import com.codecool.shop.model.order.LineItem;
 import com.codecool.shop.model.product.Product;
 
@@ -12,6 +13,7 @@ import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class LineItemDaoJdbc implements LineItemDao {
 
@@ -25,7 +27,8 @@ public class LineItemDaoJdbc implements LineItemDao {
     }
 
     @Override
-    public void addProduct(int cartId, int productId, int addedQuantity) {
+    public void addProduct(Cart cart, int productId, int addedQuantity) {
+        int cartId = cart.getId();
         try (Connection conn = dataSource.getConnection()) {
             Product product = productDao.find(productId);
             String sql = "INSERT INTO line_item AS current_line_item (cart_id, product_id, quantity, total_line_price) VALUES (?, ?, ?, ?)" +
@@ -41,42 +44,50 @@ public class LineItemDaoJdbc implements LineItemDao {
             statement.executeUpdate();
             ResultSet resultSet = statement.getGeneratedKeys();
             resultSet.next();
+            System.out.println("2 RESULT SET total_line_price" + resultSet.getInt("quantity"));
+            Optional<LineItem> updatedLineItem = cart.getLineItemByProductId(productId);
+            if (updatedLineItem.isPresent()){
+                updatedLineItem.get().setQty(resultSet.getInt("quantity"));
+                updatedLineItem.get().setLinePrice(resultSet.getInt("total_line_price"));
+            }
+            else {
+                cart.addLineItem(product, cartId);
+            }
         } catch (SQLException exception) {
             throw new RuntimeException("Error while adding new line item.", exception);
         }
     }
 
     @Override
-    public LineItem find(int id) {
+    public LineItem find(int productId, int cartId) {
         try (Connection conn = dataSource.getConnection()) {
-            String sql = "SELECT * FROM line_item WHERE id = ?";
+            String sql = "SELECT * FROM line_item WHERE product_id = ? AND cart_id = ?";
             PreparedStatement statement = conn.prepareStatement(sql);
-            statement.setInt(1, id);
+            statement.setInt(1, productId);
+            statement.setInt(2, cartId);
             ResultSet resultSet = statement.executeQuery();
             if (!resultSet.next()) {
                 return null;
             }
-            Product product = productDao.find(id);
+            Product product = productDao.find(productId);
             LineItem lineItem = new LineItem(product, resultSet.getInt("quantity"),
                     resultSet.getInt("cart_id"));
-            lineItem.setLineId(id);
+            lineItem.setLineId(resultSet.getInt("id"));
             return lineItem;
         } catch (SQLException exception) {
-            throw new RuntimeException("Error while retrieving line item with id: " + id, exception);
+            throw new RuntimeException("Error while retrieving line item for product id: " +  productId, exception);
         }
     }
 
 
     @Override
     public void remove(int id) {
-        System.out.println("WILL BE REMOVING ITEMS");
         try (Connection conn = dataSource.getConnection()) {
             String sql = "DELETE FROM line_item WHERE id = ? RETURNING *";
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setInt(1, id);
             ResultSet rs = statement.executeQuery();
             while (rs.next()){
-                System.out.println("NEXT RESULT " + rs.getInt(1));
             }
         } catch (SQLException exception) {
             throw new RuntimeException("Error while deleting line_item with id: " + id, exception);
@@ -97,7 +108,6 @@ public class LineItemDaoJdbc implements LineItemDao {
                 lineItem.setLineId(rs.getInt("id"));
                 lineItems.add(lineItem);
             }
-            System.out.println("From lineItemDao: " + lineItems);
             return lineItems;
         } catch (SQLException e) {
             throw new RuntimeException("ERROR while reading line items." + e.getMessage());
