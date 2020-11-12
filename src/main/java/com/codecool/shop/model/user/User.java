@@ -9,6 +9,7 @@ public class User {
     private String firstName;
     private String lastName;
     private AddressDetail userAddressDetail;
+    private String password;
 
     public User() {
     }
@@ -19,6 +20,14 @@ public class User {
         this.firstName = firstName;
         this.lastName = lastName;
         this.userAddressDetail = userAddressDetail;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public int getId() {

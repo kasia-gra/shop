@@ -22,7 +22,7 @@ public class UserDaoJdbc implements UserDao {
     @Override
     public void add(User user) {
         try (Connection conn = dataSource.getConnection()) {
-            String sql = "INSERT INTO \"user\" (first_name, last_name, email, phone_number, user_address_details_id) VALUES (?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO \"user\" (first_name, last_name, email, password, phone_number, user_address_details_id) VALUES (?, ?, ?, ?, ?, ?)";
             PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
             addressDetailDao.add(user.getUserAddressDetail());
@@ -30,8 +30,9 @@ public class UserDaoJdbc implements UserDao {
             statement.setString(1, user.getFirstName());
             statement.setString(2, user.getLastName());
             statement.setString(3, user.getEmail());
-            statement.setString(4, user.getPhone());
-            statement.setInt(5, user.getUserAddressDetail().getId());
+            statement.setString(4,user.getPassword());
+            statement.setString(5, user.getPhone());
+            statement.setInt(6, user.getUserAddressDetail().getId());
             statement.executeUpdate();
 
             ResultSet resultSet = statement.getGeneratedKeys();

@@ -7,11 +7,11 @@ CREATE TABLE public.order
 (
     id                       serial NOT NULL PRIMARY KEY,
     cart_id                  int    NOT NULL,
-    user_id                  int    NOT NULL,
-    order_address_details_id int    NOT NULL,
+    user_id                  int,
+    order_address_details_id int,
     date                     timestamp,
-    current_status           status
-
+    current_status           status,
+    session_id               int NOT NULL
 );
 
 
@@ -20,7 +20,8 @@ CREATE TABLE public.cart
 (
     id          serial NOT NULL PRIMARY KEY,
     total_price int    NOT NULL,
-    cart_size   int    NOT NULL
+    cart_size   int    NOT NULL,
+    CONSTRAINT cart_id UNIQUE (id)
 );
 
 
@@ -75,20 +76,19 @@ CREATE TABLE public.user
     first_name          text   NOT NULL,
     last_name           text   NOT NULL,
     email               text   NOT NULL,
-    password            text   NOT NULL,
+    password            text,
     phone_number        text,
     registration_date   timestamp,
-    billing_address_id  int    NOT NULL,
-    shipping_address_id int    NOT NULL
+    user_address_details_id int    NOT NULL
 );
 
 
-DROP TABLE IF EXISTS public.order_address_detail;
-CREATE TABLE public.order_address_detail
+DROP TABLE IF EXISTS public.address_detail;
+CREATE TABLE public.address_detail
 (
     id                        serial NOT NULL PRIMARY KEY,
-    order_billing_address_id  int    NOT NULL,
-    order_shipping_address_id int    NOT NULL
+    billing_address_id  int    NOT NULL,
+    shipping_address_id int    NOT NULL
 );
 
 
@@ -102,6 +102,12 @@ CREATE TABLE public.address
     address  text   NOT NULL
 );
 
+DROP TABLE IF EXISTS public.session;
+CREATE TABLE public.session
+(
+    id                       serial NOT NULL PRIMARY KEY
+);
+
 ALTER TABLE ONLY "order"
     ADD CONSTRAINT "cart_id" FOREIGN KEY (cart_id)
         REFERENCES cart (id) ON DELETE CASCADE;
@@ -111,8 +117,12 @@ ALTER TABLE ONLY "order"
         REFERENCES "user" (id) ON DELETE CASCADE;
 
 ALTER TABLE ONLY "order"
-    ADD CONSTRAINT "order_address_detail" FOREIGN KEY (order_address_details_id)
-        REFERENCES "order_address_detail" (id) ON DELETE CASCADE;
+    ADD CONSTRAINT "order_address_details_id" FOREIGN KEY (order_address_details_id)
+        REFERENCES "address_detail" (id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY "order"
+    ADD CONSTRAINT "session_id" FOREIGN KEY (session_id)
+        REFERENCES "session" (id) ON DELETE CASCADE;
 
 ALTER TABLE ONLY "line_item"
     ADD CONSTRAINT "cart_id" FOREIGN KEY (cart_id)
@@ -130,18 +140,14 @@ ALTER TABLE ONLY "product"
     ADD CONSTRAINT "supplier_id" FOREIGN KEY (supplier_id)
         REFERENCES "supplier" (id) ON DELETE CASCADE;
 
-ALTER TABLE ONLY "order_address_detail"
-    ADD CONSTRAINT "order_address_detail_id" FOREIGN KEY (order_billing_address_id)
+ALTER TABLE ONLY "address_detail"
+    ADD CONSTRAINT "billing_address_detail_id" FOREIGN KEY (billing_address_id)
         REFERENCES "address" (id) ON DELETE CASCADE;
 
-ALTER TABLE ONLY "order_address_detail"
-    ADD CONSTRAINT "order_shipping_address_id" FOREIGN KEY (order_shipping_address_id)
-        REFERENCES "address" (id) ON DELETE CASCADE;
-
-ALTER TABLE ONLY "user"
-    ADD CONSTRAINT "billing_address_id" FOREIGN KEY (billing_address_id)
+ALTER TABLE ONLY "address_detail"
+    ADD CONSTRAINT "shipping_address_detail_id" FOREIGN KEY (shipping_address_id)
         REFERENCES "address" (id) ON DELETE CASCADE;
 
 ALTER TABLE ONLY "user"
-    ADD CONSTRAINT "shipping_address_id" FOREIGN KEY (shipping_address_id)
-        REFERENCES "address" (id) ON DELETE CASCADE;
+    ADD CONSTRAINT "user_address_details_id" FOREIGN KEY (user_address_details_id)
+        REFERENCES "address_detail" (id) ON DELETE CASCADE;
