@@ -10,12 +10,14 @@
 
         <a class="navbar-brand" href="/"><img src="/static/img/KPD_logo.png" alt="logo" width="50%"></a>
 
+
         <form class="form-inline my-2">
             <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
 
         <ul class="nav navbar-nav navbar-right">
+            <li><div class="nav-link" th:if="${session.containsKey('name') and session.name!=null}" th:text="'Happy Shopping ' + ${session.name} + ' !'"></div></li>
             <li><a class="nav-link" href="/cart" id="cart">
                 <i class="fa fa-shopping-cart"></i>Cart
                 <span class="text-success" th:text="${itemsNumber}">0</span>

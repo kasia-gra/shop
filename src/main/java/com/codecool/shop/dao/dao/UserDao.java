@@ -12,4 +12,5 @@ public interface UserDao {
     void remove(int id);
     List<User> getAll();
     User findUserByEmail(String eMail);
+    User findUserByEmailAndPassword(String eMail, String password);
 }

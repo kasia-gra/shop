@@ -57,4 +57,9 @@ public class UserDaoMem implements UserDao {
     public User findUserByEmail(String eMail) {
         return null;
     }
+
+    @Override
+    public User findUserByEmailAndPassword(String eMail, String password) {
+        return null;
+    }
 }

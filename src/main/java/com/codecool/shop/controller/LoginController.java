@@ -1,6 +1,61 @@
 package com.codecool.shop.controller;
 
-public class LoginController {
 
+import com.codecool.shop.config.TemplateEngineUtil;
+import com.codecool.shop.dao.dao.UserDao;
+import com.codecool.shop.dao.manager.DatabaseManager;
+import com.codecool.shop.model.AddressDetail;
+import com.codecool.shop.model.user.Address;
+import com.codecool.shop.model.user.User;
+
+import com.google.gson.JsonObject;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.WebContext;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+
+@WebServlet(urlPatterns = {"/login"}, loadOnStartup = 6)
+public class LoginController extends HttpServlet {
+
+    UserDao userDao = DatabaseManager.getInstance().userDao;
+    Util util = new Util();
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(req.getServletContext());
+        WebContext context = new WebContext(req, resp, req.getServletContext());
+        String message = req.getParameter("message");
+        if (message != null) {
+            if (message.equals("error"))
+                context.setVariable("message", "Incorrect e-mail or password, please try again");
+        }
+        engine.process("product/userLogin.html", context, resp.getWriter());
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        User user = getUser(req);
+        if (user != null) {
+            HttpSession session = req.getSession();
+            session.setAttribute("name",user.getFirstName());
+            resp.sendRedirect("/");
+        }
+        else {
+            resp.sendRedirect("/login?message=error");
+        }
+
+    }
+
+    private User getUser(HttpServletRequest request) {
+        String password = request.getParameter("password");//TODO hash password
+        String email = request.getParameter("email");
+        return userDao.findUserByEmailAndPassword(email, password);
+    }
 
 }
