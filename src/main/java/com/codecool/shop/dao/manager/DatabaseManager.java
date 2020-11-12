@@ -46,16 +46,16 @@ public class DatabaseManager {
 		return instance;
 	}
 
-	public void run() {
+	public void run(String fileName) {
 		try {
-			setup();
+			setup(fileName);
 		} catch (SQLException | IOException throwables) {
 			System.err.println("Could not connect to the database.");
 		}
 	}
 
-	public void setup() throws SQLException, IOException {
-		DataSource dataSource = connect();;
+	public void setup(String fileName) throws SQLException, IOException {
+		DataSource dataSource = connect(fileName);
 		supplierDao = new SupplierDaoJdbc(dataSource);
 		categoryDao = new ProductCategoryDaoJdbc(dataSource);
 		productDao = new ProductDaoJdbc(dataSource, supplierDao, categoryDao);
@@ -69,10 +69,9 @@ public class DatabaseManager {
 
 	}
 
-	private DataSource connect() throws SQLException, IOException {
+	private DataSource connect(String fileName) throws SQLException, IOException {
 		PGSimpleDataSource dataSource = new PGSimpleDataSource();
-		Properties db_config = new Properties();
-		db_config.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("db_config.properties"));
+		Properties db_config = getProperties(fileName);
 		String dbName = db_config.getProperty("dbName");
 		String user = db_config.getProperty("user");
 		String password = db_config.getProperty("password");
@@ -90,5 +89,11 @@ public class DatabaseManager {
 		System.out.println("Connection ok.");
 
 		return dataSource;
+	}
+
+	private Properties getProperties(String fileName) throws IOException {
+		Properties db_config = new Properties();
+		db_config.load(Thread.currentThread().getContextClassLoader().getResourceAsStream( fileName));
+		return db_config;
 	}
 }

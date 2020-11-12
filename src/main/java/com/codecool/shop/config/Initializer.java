@@ -11,7 +11,7 @@ public class Initializer implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         DatabaseManager databaseManager = DatabaseManager.getInstance();
-        databaseManager.run();
+        databaseManager.run("db_config.properties");
 
 //        ProductDao productDataStore = ProductDaoMem.getInstance();
 //        ProductCategoryDao productCategoryDataStore = ProductCategoryDaoMem.getInstance();
