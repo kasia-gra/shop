@@ -49,7 +49,9 @@ public class RegistrationController extends HttpServlet {
 		} else shippingAddress = getShippingAddress(request);
 		AddressDetail addressDetail = new AddressDetail(billingAddress, shippingAddress);
 
-		return new User(firstName, lastName, email, phone, addressDetail);
+		User user = new User(firstName, lastName, email, phone, addressDetail);
+		user.setPassword(password);
+		return user;
 	}
 
 
