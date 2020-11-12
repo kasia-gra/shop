@@ -37,4 +37,12 @@ public class Supplier extends BaseModel {
                 this.description
         );
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return getClass().equals(obj.getClass()) &&
+                id == ((Supplier) obj).getId() &&
+                name.equals(((Supplier) obj).getName()) &&
+                description.equals(((Supplier) obj).getDescription());
+    }
 }
