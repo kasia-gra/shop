@@ -1,11 +1,13 @@
 package com.codecool.shop.dao.jdbc;
 
+import com.codecool.shop.dao.dao.DataDao;
+
 import javax.sql.DataSource;
 import java.io.*;
 import java.nio.file.Files;
 import java.sql.*;
 
-public class DataDaoJdbc {
+public class DataDaoJdbc implements DataDao {
 
     private final DataSource dataSource;
 
@@ -55,42 +57,22 @@ public class DataDaoJdbc {
 
     public void addData() {
         try (Connection conn = dataSource.getConnection()) {
-            String sql = "INSERT INTO public.supplier (id, name, description)\n" +
-                    "VALUES (1, 'Amazon', 'Digital content and services');\n" +
-                    "INSERT INTO public.supplier (id, name, description)\n" +
-                    "VALUES (2, 'Lenovo', 'Computers');\n" +
-                    "INSERT INTO public.supplier (id, name, description)\n" +
-                    "VALUES (3, 'Nokia', 'Smartphones and stuff');\n" +
-                    "INSERT INTO public.supplier (id, name, description)\n" +
-                    "VALUES (4, 'Samsung', 'Just stuff');\n" +
-                    "INSERT INTO public.supplier (id, name, description)\n" +
-                    "VALUES (6, 'Lego', 'Bricks');\n" +
+            String sql = "INSERT INTO public.supplier (name, description)\n" +
+                    "VALUES ('Amazon', 'Digital content and services');\n" +
+                    "INSERT INTO public.supplier (name, description)\n" +
+                    "VALUES ('Lenovo', 'Computers');\n" +
                     "\n" +
-                    "INSERT INTO public.category (id, name, department, description)\n" +
-                    "VALUES (1, 'Tablets', 'Hardware', 'A tablet computer, commonly shortened to tablet, is a thin, flat mobile computer with a touchscreen display.');\n" +
-                    "INSERT INTO public.category (id, name, department, description)\n" +
-                    "VALUES (2, 'Smartphones', 'Hardware', 'Smartphone, Everyone knows what is it.');\n" +
-                    "INSERT INTO public.category (id, name, department, description)\n" +
-                    "VALUES (3, 'Lego Bricks', 'Toys', 'Plastic construction toys that are manufactured by The Lego Group, a privately held company based in Billund, Denmark.');\n" +
+                    "INSERT INTO public.category (name, department, description)\n" +
+                    "VALUES ('Tablets', 'Hardware', 'A tablet computer, commonly shortened to tablet, is a thin, flat mobile computer with a touchscreen display.');\n" +
                     "\n" +
-                    "INSERT INTO public.product (id, name, default_price, description, picture_name, category_id, supplier_id)\n" +
-                    "VALUES (1, 'Amazon Fire', 49.9, 'Fantastic price. Large content ecosystem. Good parental controls. Helpful technical support.', 'product_1.jpg', 1, 1);\n" +
-                    "INSERT INTO public.product (id, name, default_price, description, picture_name, category_id, supplier_id)\n" +
-                    "VALUES (2, 'Lenovo IdeaPad Miix 700', 479, 'Keyboard cover is included. Fanless Core m5 processor. Full-size USB ports. Adjustable kickstand', 'product_2.jpg', 1, 2);\n" +
-                    "INSERT INTO public.product (id, name, default_price, description, picture_name, category_id, supplier_id)\n" +
-                    "VALUES (3, 'Amazon Fire HD 8', 89, 'Amazon''s latest Fire HD 8 tablet is a great value for media consumption.', 'product_3.jpg', 1, 1);\n" +
-                    "INSERT INTO public.product (id, name, default_price, description, picture_name, category_id, supplier_id)\n" +
-                    "VALUES (4, 'Hello Kitty Smartphone', 99, 'Smartphone for girls', 'product_4.jpg', 2, 4);\n" +
-                    "INSERT INTO public.product (id, name, default_price, description, picture_name, category_id, supplier_id)\n" +
-                    "VALUES (5, 'Pink flip smartphone', 79, 'Smartphone for little girls', 'product_5.jpg', 2, 4);\n" +
-                    "INSERT INTO public.product (id, name, default_price, description, picture_name, category_id, supplier_id)\n" +
-                    "VALUES (6, 'Old school phone', 149, 'Smartphone for real man', 'product_6.jpg', 2, 3);\n" +
-                    "INSERT INTO public.product (id, name, default_price, description, picture_name, category_id, supplier_id)\n" +
-                    "VALUES (7, 'Lego set', 59, 'Lego set for kids', 'product_7.jpg', 3, 6);\n" +
-                    "INSERT INTO public.product (id, name, default_price, description, picture_name, category_id, supplier_id)\n" +
-                    "VALUES (8, 'Lego set Fire Station', 209, 'Lego set with fire station for kids', 'product_8.jpg', 3, 6);\n" +
-                    "INSERT INTO public.product (id, name, default_price, description, picture_name, category_id, supplier_id)\n" +
-                    "VALUES (9, 'Lego set Star Wars', 119, 'Lego set with Star Wars theme for kids', 'product_8.jpg', 3, 6);";
+                    "INSERT INTO public.product (name, default_price, description, picture_name, category_id, supplier_id)\n" +
+                    "VALUES ('Amazon Fire', 49.9, 'Fantastic price. Large content ecosystem. Good parental controls. Helpful technical support.', 'product_1.jpg', 1, 1);\n" +
+                    "INSERT INTO public.product (name, default_price, description, picture_name, category_id, supplier_id)\n" +
+                    "VALUES ('Lenovo IdeaPad Miix 700', 479, 'Keyboard cover is included. Fanless Core m5 processor. Full-size USB ports. Adjustable kickstand', 'product_2.jpg', 1, 2);\n" +
+                    "INSERT INTO public.product (name, default_price, description, picture_name, category_id, supplier_id)\n" +
+                    "VALUES ('Amazon Fire HD 8', 89, 'Amazon''s latest Fire HD 8 tablet is a great value for media consumption.', 'product_3.jpg', 1, 1);\n" +
+                    "INSERT INTO public.product (name, default_price, description, picture_name, category_id, supplier_id)\n" +
+                    "VALUES ('Hello Kitty Smartphone', 99, 'Smartphone for girls', 'product_4.jpg', 2, 4);";
             Statement st = conn.createStatement();
             st.execute(sql);
         } catch (SQLException e) {
