@@ -40,7 +40,7 @@ public class RegistrationController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         User user = getUser(req);
-        if (userDao.findUserByEmail(user.getEmail()).equals(null)) {
+        if ((userDao.findUserByEmail(user.getEmail())) == null) {
             userDao.add(user);
             resp.sendRedirect("/");
         } else {
