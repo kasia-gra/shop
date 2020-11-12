@@ -32,7 +32,6 @@ public class LoginController extends HttpServlet {
         WebContext context = new WebContext(req, resp, req.getServletContext());
         String message = req.getParameter("message");
         String loginStatus = req.getParameter("login-status");
-        System.out.println("LOG STATUS MESSAGE " + loginStatus);
         verifyLoginCredentials(context, message);
         checkIfWantsToLogout(resp, req,loginStatus);
         engine.process("product/userLogin.html", context, resp.getWriter());
@@ -42,7 +41,9 @@ public class LoginController extends HttpServlet {
         if (loginStatus !=null) {
             if (loginStatus.equals("logout")){
                 HttpSession session = req.getSession();
+                session.removeAttribute("name");
                 session.invalidate();
+                util.removeCookie(resp);
                 resp.sendRedirect("/");
             }
         }
