@@ -99,6 +99,7 @@ public class CartDaoJdbc implements CartDao {
             PreparedStatement st = conn.prepareStatement(sql);
             st.setInt(1,    id);
             st.executeUpdate();
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
