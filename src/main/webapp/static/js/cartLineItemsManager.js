@@ -4,16 +4,24 @@ import {cookiesHandler} from "./cookiesHandler.js";
 const increaseQtyButtons = document.querySelectorAll(".increase-qty");
 const decreaseQtyButtons = document.querySelectorAll(".decrease-qty");
 const chooseQtyInputs = document.querySelectorAll(".choose-qty");
-
+const deleteLineButtons = document.querySelectorAll(".fa-trash-alt");
 
 export let cartLineItemsManager = {
     init: function () {
+        deleteLineButtons.forEach(button => button.addEventListener("click", this.deleteLine));
         increaseQtyButtons.forEach(button => button.addEventListener("click", this.increaseQty));
         decreaseQtyButtons.forEach(button => button.addEventListener("click", this.decreaseQty));
         chooseQtyInputs.forEach(button => button.addEventListener("change", function (event) {
             updateQty(event.target);
         }));
     },
+
+    deleteLine: function (event) {
+        console.log("DELETING LINE");
+        let productId = event.target.parentElement.id;
+        let lineItemContainer = event.target.parentElement.parentElement.parentElement;
+        deleteLineItem(productId, lineItemContainer);
+        },
 
     increaseQty: function (event) {
         let currentQtyField = event.target.parentElement.querySelector(".choose-qty");
@@ -92,7 +100,6 @@ const removeLineItemFromCart = function (lineItemDOMElement) {
 }
 
 const updateLineItemPrice = function (json_response, lineItemContainer) {
-    console.log("UPDATING PRICE TO " + parseInt(json_response.linePrice))
     lineItemContainer.querySelector(".total-line-price").innerText = parseInt(json_response.linePrice).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');;
 }
 
@@ -105,7 +112,7 @@ const formatPrice = function(price) {
 }
 
 const disableCheckoutIfAllItemsRemoved = function (isCookiePresent){
-    console.log("COOKIE NAME " + cookiesHandler.getCookie());
+
     if (!isCookiePresent) {
         document.querySelector("#emptyCard").classList.remove("hidden");
         document.querySelector("#notEmptyCard").classList.add("hidden");

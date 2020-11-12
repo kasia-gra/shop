@@ -106,6 +106,11 @@ public class OrderDaoJdbc implements OrderDao {
     }
 
     @Override
+    public void removeItem(int productId, Cart cart) {
+        cartDao.removeItemFromCart(productId, cart);
+    }
+
+    @Override
     public void addItemToOrder(Order order, int productId, int addedQuantity) {
         cartDao.addItemToCart(order.getCart(), productId, addedQuantity);
     }
@@ -147,7 +152,6 @@ public class OrderDaoJdbc implements OrderDao {
             if (!resultSet.next()) {
                 return null;
             }
-            System.out.println("GetActual cart_id: " + resultSet.getInt("cart_id"));
             Cart cart = cartDao.find(resultSet.getInt("cart_id"));
             Session session = sessionDao.find(resultSet.getInt("session_id"));
             Order order = new Order(cart, session);

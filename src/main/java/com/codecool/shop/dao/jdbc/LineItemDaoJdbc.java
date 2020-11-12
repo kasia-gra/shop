@@ -44,7 +44,6 @@ public class LineItemDaoJdbc implements LineItemDao {
             statement.executeUpdate();
             ResultSet resultSet = statement.getGeneratedKeys();
             resultSet.next();
-            System.out.println("2 RESULT SET total_line_price" + resultSet.getInt("quantity"));
             Optional<LineItem> updatedLineItem = cart.getLineItemByProductId(productId);
             if (updatedLineItem.isPresent()){
                 updatedLineItem.get().setQty(resultSet.getInt("quantity"));
@@ -81,16 +80,17 @@ public class LineItemDaoJdbc implements LineItemDao {
 
 
     @Override
-    public void remove(int id) {
+    public void remove(int productId,  Cart cart) {
+        int cartId = cart.getId();
         try (Connection conn = dataSource.getConnection()) {
-            String sql = "DELETE FROM line_item WHERE id = ? RETURNING *";
+            String sql = "DELETE FROM line_item WHERE product_id = ? AND cart_id = ? RETURNING *";
             PreparedStatement statement = conn.prepareStatement(sql);
-            statement.setInt(1, id);
+            statement.setInt(1, productId);
+            statement.setInt(2, cartId);
             ResultSet rs = statement.executeQuery();
-            while (rs.next()){
-            }
+            cart.removeLineByProductId(productId);
         } catch (SQLException exception) {
-            throw new RuntimeException("Error while deleting line_item with id: " + id, exception);
+            throw new RuntimeException("Error while deleting line_item with for product_id " + productId , exception);
         }
     }
 

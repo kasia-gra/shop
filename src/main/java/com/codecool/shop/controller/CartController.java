@@ -80,7 +80,8 @@ public class CartController extends HttpServlet {
         int productId = jsonRequest.get("productId").getAsInt();
 
         Order order = orderDao.getActual(Integer.parseInt(util.getCookieValueBy("sessionId", req)));
-
+        orderDao.removeItem(productId, order.getCart());
+        System.out.println("REMOVE ITEM ");
 //        order.getCart().removeLineItemById(productId);
 
         if (isEmptyCart(order)) {
@@ -122,7 +123,6 @@ public class CartController extends HttpServlet {
     private void setContextParameter(HttpServletRequest req, WebContext context) {
         Order order = orderDao.getActual(Integer.parseInt(util.getCookieValueBy("sessionId", req)));
         Cart cart = order.getCart();
-        System.out.println("line item: " + cart.getLineItems().toString());
         context.setVariable("cart", cart);
     }
 

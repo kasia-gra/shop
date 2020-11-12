@@ -100,6 +100,14 @@ public class Cart {
     public float getLineItemPriceByProduct(int productId) {
         if (getLineItemByProductId(productId).isPresent()) {
             return getLineItemByProductId(productId).get().getLinePrice();
-        } else throw new NullPointerException();
+        } else return 0;
+    }
+
+    public void removeLineByProductId(int productId) {
+        Optional<LineItem> searchedLineItem = getLineItemByProductId(productId);
+        if (searchedLineItem.isPresent()) {
+            lineItems.remove(searchedLineItem.get());
+        }
+        else throw new NullPointerException();
     }
 }
