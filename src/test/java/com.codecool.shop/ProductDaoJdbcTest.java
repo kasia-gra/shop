@@ -17,6 +17,9 @@ class ProductDaoJdbcTest {
 
     ProductDao productDao;
     DataDao dataDao;
+    ProductCategory testCategory;
+    Supplier testSupplier;
+
 
     @BeforeEach
     public void initializeTestDataBase () throws SQLException {
@@ -24,23 +27,26 @@ class ProductDaoJdbcTest {
         databaseManager.run("db_test_config.properties");
         productDao =  databaseManager.productDao;
         dataDao = databaseManager.dataDao;
+        testCategory = new ProductCategory("cat_1",  "cat_dept_1", "cat_description_1");
+        testCategory.setId(1);
+        testSupplier = new Supplier("supplier_1", "suppl_description_1");
+        testSupplier.setId(1);
+        dataDao.createTable();
+        dataDao.addDataForProductTest();
     }
 
     @org.junit.jupiter.api.Test
     void add() throws SQLException {
-        dataDao.createTable();
-        dataDao.addData();
-        ProductCategory testCategory = new ProductCategory("test_category",  "test_department", "test_description");
-        Supplier testSupplier = new Supplier("test_supplier", "test_description");
         Product testProduct = new Product("test", 1000, "test_pic.jpg",
                 "test product", testCategory, testSupplier);
         productDao.add(testProduct);
-        Product addedProduct = productDao.find(1);
-        assertEquals(testProduct.getPictureName(), addedProduct.getPictureName(), "Supplier not added" );
+        Product addedProduct = productDao.find(5);
+        assertEquals(testProduct.toString(), addedProduct.toString(), "Supplier not added" );
     }
 
     @org.junit.jupiter.api.Test
     void find() {
+
     }
 
     @org.junit.jupiter.api.Test

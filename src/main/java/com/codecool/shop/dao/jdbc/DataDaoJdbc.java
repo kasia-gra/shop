@@ -55,24 +55,28 @@ public class DataDaoJdbc implements DataDao {
         }
     }
 
+    @Override
     public void addData() {
+    }
+
+    public void addDataForProductTest() {
         try (Connection conn = dataSource.getConnection()) {
             String sql = "INSERT INTO public.supplier (name, description)\n" +
-                    "VALUES ('Amazon', 'Digital content and services');\n" +
+                    "VALUES ('supplier_1', 'suppl_description_1');\n" +
                     "INSERT INTO public.supplier (name, description)\n" +
-                    "VALUES ('Lenovo', 'Computers');\n" +
+                    "VALUES ('supplier_2', 'suppl_description_2');\n" +
                     "\n" +
                     "INSERT INTO public.category (name, department, description)\n" +
-                    "VALUES ('Tablets', 'Hardware', 'A tablet computer, commonly shortened to tablet, is a thin, flat mobile computer with a touchscreen display.');\n" +
+                    "VALUES ('cat_1', 'cat_dept_1', 'cat_description_1');\n" +
                     "\n" +
                     "INSERT INTO public.product (name, default_price, description, picture_name, category_id, supplier_id)\n" +
-                    "VALUES ('Amazon Fire', 49.9, 'Fantastic price. Large content ecosystem. Good parental controls. Helpful technical support.', 'product_1.jpg', 1, 1);\n" +
+                    "VALUES ('prod_1', 100, 'prod_desc_1', 'product_1.jpg', 1, 1);\n" +
                     "INSERT INTO public.product (name, default_price, description, picture_name, category_id, supplier_id)\n" +
-                    "VALUES ('Lenovo IdeaPad Miix 700', 479, 'Keyboard cover is included. Fanless Core m5 processor. Full-size USB ports. Adjustable kickstand', 'product_2.jpg', 1, 2);\n" +
+                    "VALUES ('prod_2', 200, 'prod_desc_2', 'product_2.jpg', 1, 1);\n" +
                     "INSERT INTO public.product (name, default_price, description, picture_name, category_id, supplier_id)\n" +
-                    "VALUES ('Amazon Fire HD 8', 89, 'Amazon''s latest Fire HD 8 tablet is a great value for media consumption.', 'product_3.jpg', 1, 1);\n" +
+                    "VALUES ('prod_3', 300, 'prod_desc_3', 'product_3.jpg', 1, 1);\n" +
                     "INSERT INTO public.product (name, default_price, description, picture_name, category_id, supplier_id)\n" +
-                    "VALUES ('Hello Kitty Smartphone', 99, 'Smartphone for girls', 'product_4.jpg', 2, 4);";
+                    "VALUES ('prod_4', 400, 'prod_desc_4', 'product_4.jpg', 1, 2);";
             Statement st = conn.createStatement();
             st.execute(sql);
         } catch (SQLException e) {

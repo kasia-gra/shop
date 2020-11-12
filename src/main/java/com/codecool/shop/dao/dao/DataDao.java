@@ -7,4 +7,5 @@ import java.sql.SQLException;
 public interface DataDao {
     void createTable()  throws SQLException;
     void addData();
+    void addDataForProductTest();
 }
