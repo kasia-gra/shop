@@ -40,7 +40,7 @@ public class AddressDaoJdbc implements AddressDao {
             String sql = "SELECT * FROM address WHERE id = ?";
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setInt(1, id);
-            ResultSet resultSet = statement.executeQuery(sql);
+            ResultSet resultSet = statement.executeQuery();
             if (!resultSet.next()) {
                 return null;
             }
