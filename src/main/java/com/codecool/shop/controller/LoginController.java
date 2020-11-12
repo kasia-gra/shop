@@ -31,11 +31,28 @@ public class LoginController extends HttpServlet {
         TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(req.getServletContext());
         WebContext context = new WebContext(req, resp, req.getServletContext());
         String message = req.getParameter("message");
+        String loginStatus = req.getParameter("login-status");
+        System.out.println("LOG STATUS MESSAGE " + loginStatus);
+        verifyLoginCredentials(context, message);
+        checkIfWantsToLogout(resp, req,loginStatus);
+        engine.process("product/userLogin.html", context, resp.getWriter());
+    }
+
+    private void checkIfWantsToLogout(HttpServletResponse resp, HttpServletRequest req, String loginStatus) throws IOException {
+        if (loginStatus !=null) {
+            if (loginStatus.equals("logout")){
+                HttpSession session = req.getSession();
+                session.invalidate();
+                resp.sendRedirect("/");
+            }
+        }
+    }
+
+    private void verifyLoginCredentials(WebContext context, String message) {
         if (message != null) {
             if (message.equals("error"))
                 context.setVariable("message", "Incorrect e-mail or password, please try again");
         }
-        engine.process("product/userLogin.html", context, resp.getWriter());
     }
 
     @Override
