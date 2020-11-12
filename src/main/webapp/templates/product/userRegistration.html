@@ -2,9 +2,10 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <div th:replace="headComponents.html :: components"></div>
+    <title>Sign up</title>
     <link rel="stylesheet" type="text/css" href="/static/css/checkout.css"/>
-    <script type="module" src="/static/js/checkoutManager.js" defer></script>
 
+    <script type="module" src="/static/js/checkoutManager.js" defer></script>
 </head>
 
 <body>
@@ -14,42 +15,51 @@
         <a class="navbar-brand" href="/"><img src="/static/img/KPD_logo.png" alt="logo" width="100"></a>
 
         <ul class="nav navbar-nav navbar-right">
-            <li><a class="nav-link" href="/cart" id="cart">
-                <i class="fa fa-shopping-cart"></i>Cart
-                <span class="text-success" th:text="${itemsNumber}">0</span>
-            </a></li>
-            <li><a class="nav-link" id="register" href="/registration">
-                <span class="link fas fa-user-plus"></span> Sign in</a></li>
-            <li><a class="nav-link" id="login" href="/login">
-                <span class="link fas fa-sign-in-alt"></span> Log in</a></li>
+            <li><a class="nav-link" id="register" data-toggle="modal" data-target="#modalRegisterForm"
+                   href="#"><span class="link fas fa-user-plus"></span> Sign in</a></li>
+            <li><a class="nav-link" id="login" data-toggle="modal" data-target="#modalLoginForm"
+                   href="#"><span class="link fas fa-sign-in-alt"></span> Log in</a></li>
         </ul>
     </div>
 </nav>
 
-<div class="container" style="margin-bottom: 10vh">
-    <div class="row mt-5">
-        <div class="col-md-4 order-md-2 mb-4">
-            <h4 class="d-flex justify-content-between align-items-center mb-3">
-                <span class="text-muted">Your cart</span>
-                <span class="badge badge-secondary badge-pill" th:text="${itemsNumber}">0</span>
-            </h4>
-            <ul class="list-group mb-3">
-                <li class="list-group-item d-flex justify-content-between lh-condensed" th:each="product : ${orderedProducts}">
-                    <div class="ml-2">
-                        <h6 class="my-0" th:text="${product.getProduct().getName()}">Product name</h6>
-                        <small class="text-muted" th:text="${product.getProduct().getDescription()}">Brief description</small>
+<div class="container">
+    <div class="card-body p-5" style="background-color: #eeeeee">
+
+        <form class="needs-validation" method="post" action="/registration">
+            <span id="emailAndPasswordContainer">
+                <h4 class="mb-3">Email and password</h4>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" id="email" value="" name="email"
+                               required placeholder="you@example.com">
+                        <div class="invalid-feedback">
+                            Valid Email is required.
+                        </div>
                     </div>
-                    <div class="text-muted" style="min-width: fit-content" th:text="${product.getQty() + ' x $' + product.getProduct().getDefaultPrice()}">0</div>
-                </li>
-                <li class="list-group-item d-flex justify-content-between">
-                    <span th:text="'Total (' + ${currency} + ')'">Total (USD)</span>
-                    <strong th:text="'$' + ${cartValue}">$0</strong>
-                </li>
-            </ul>
-        </div>
-        <div class="col-md-8 order-md-1">
-            <form class="needs-validation" method="post" action="/checkout" novalidate>
-                <span id="billingAddressContainer">
+                    <div class="col-md-4 mb-3">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" id="password" placeholder="" value="" name="password"
+                               required pattern="^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[0-9a-zA-Z]{6,}$">
+                        <div class="invalid-feedback">
+                            Valid password required.
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="password">Repeat password</label>
+                        <input type="password" class="form-control" id="repeatPassword" placeholder="" value="" name="repeatPassword"
+                               required pattern="^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[0-9a-zA-Z]{6,}$">
+                        <div class="invalid-feedback">
+                            Passwords must be equals!
+                        </div>
+                    </div>
+                </div>
+                <div class="row d-flex justify-content-center">Password must contain at least one letter, at least one number, and be longer than six charaters.</div>
+            </span>
+
+            <span id="billingAddressContainer">
+                <hr class="mb-4">
                 <h4 class="mb-3">Billing address</h4>
                 <div class="row">
                     <div class="col-md-6 mb-3">
@@ -68,13 +78,13 @@
                     </div>
                 </div>
 
-                <div class="mb-3">
-                    <label for="billingEmail">Email</label>
-                    <input type="email" class="form-control" id="billingEmail" name="email" placeholder="you@example.com" required>
-                    <div class="invalid-feedback">
-                        Please enter a valid email address for billing updates.
-                    </div>
-                </div>
+<!--                <div class="mb-3">-->
+<!--                    <label for="billingEmail">Email</label>-->
+<!--                    <input type="email" class="form-control" id="billingEmail" name="email" placeholder="you@example.com" required>-->
+<!--                    <div class="invalid-feedback">-->
+<!--                        Please enter a valid email address for billing updates.-->
+<!--                    </div>-->
+<!--                </div>-->
 
                 <div class="mb-3">
                     <label for="billingPhone">Phone number</label>
@@ -118,8 +128,8 @@
                         </div>
                     </div>
                 </div>
-                </span>
-                <fieldset id="shippingAddressContainer">
+            </span>
+            <fieldset id="shippingAddressContainer">
                 <hr class="mb-4">
                 <h4 class="mb-3">Shipping address</h4>
                 <div class="mb-3">
@@ -159,21 +169,23 @@
                         </div>
                     </div>
                 </div>
-                    </fieldset>
-                <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="same-address" name="sameAddress">
-                    <label class="custom-control-label" for="same-address">Shipping address is the same as my
-                        billing address</label>
-                </div>
-                <hr class="mb-4">
+            </fieldset>
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="same-address" name="sameAddress">
+                <label class="custom-control-label" for="same-address">Shipping address is the same as my
+                    billing address</label>
+            </div>
+            <hr class="mb-4">
 
-                <button type="submit" class="btn btn-primary btn-lg btn-block" id="submitButton">Continue to payment
-                </button>
+            <button type="submit" class="btn btn-primary btn-lg btn-block mb-5" id="submitButton">Sign up!
+            </button>
 
-            </form>
-        </div>
+        </form>
+
     </div>
+
+    <div th:replace="footer.html :: copy"></div>
+
 </div>
-<div th:replace="footer.html :: copy"></div>
 </body>
 </html>
