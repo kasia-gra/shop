@@ -119,4 +119,28 @@ public class UserDaoJdbc implements UserDao {
             throw new RuntimeException("Error while retrieving all users.", exception);
         }
     }
+
+    @Override
+    public User findUserByEmail(String eMail) {
+        try (Connection conn = dataSource.getConnection()) {
+            String sql = "SELECT * FROM \"user\" WHERE email = ?";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setString(1, eMail);
+            ResultSet resultSet = statement.executeQuery();
+            if (!resultSet.next()) {
+                return null;
+            }
+            String firstName = resultSet.getString("first_name");
+            String lastName = resultSet.getString("last_name");
+            String email = resultSet.getString("email");
+            String phoneNumber = resultSet.getString("phone_number");
+            AddressDetail userAddressDetail = addressDetailDao.find(resultSet.getInt("user_address_details_id"));
+            User user = new User(firstName, lastName, email, phoneNumber, userAddressDetail);
+            user.setId(resultSet.getInt("id"));
+            return user;
+        } catch (SQLException exception) {
+            throw new RuntimeException("Error while retrieving user with e-mail: " + eMail, exception);
+        }
+    }
+
 }

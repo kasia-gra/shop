@@ -17,6 +17,13 @@ export let dataHandler = {
                 "content-type": "application/json"
             })
         })
+            .then(response => {
+            if (response.ok) {
+                return response.json()}
+            else {
+                throw new Error('Ooops something went wrong');
+            }
+        })
             .then(response => response.json())
             .then(json_response => callback(json_response))
 

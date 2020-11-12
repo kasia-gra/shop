@@ -26,6 +26,10 @@
 <div class="container">
     <div class="card-body p-5" style="background-color: #eeeeee">
 
+        <div class="error-message"  th:if="${message != null}">
+            <h5 th:text="${message}"></h5>
+        </div>
+
         <form class="needs-validation" method="post" action="/registration">
             <span id="emailAndPasswordContainer">
                 <h4 class="mb-3">Email and password</h4>

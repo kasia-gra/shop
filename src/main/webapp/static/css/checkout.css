@@ -2,3 +2,12 @@
     display: none;
 }
 .lh-condensed { line-height: 1.25; }
+
+.error-message {
+    padding: 1em;
+}
+
+.error-message h5 {
+    color: #c80336;
+    font-weight: bold;
+}
