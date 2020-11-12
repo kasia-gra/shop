@@ -81,11 +81,10 @@ public class CartController extends HttpServlet {
 
         Order order = orderDao.getActual(Integer.parseInt(util.getCookieValueBy("sessionId", req)));
         orderDao.removeItem(productId, order.getCart());
-        System.out.println("REMOVE ITEM ");
 //        order.getCart().removeLineItemById(productId);
 
         if (isEmptyCart(order)) {
-            orderDao.remove(order.getId());
+            orderDao.remove(order);
             util.removeCookie(resp);
         }
 

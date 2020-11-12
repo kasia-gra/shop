@@ -94,12 +94,14 @@ public class OrderDaoJdbc implements OrderDao {
     }
 
     @Override
-    public void remove(int id) {
+    public void remove(Order order) {
+        int id = order.getId();
         try (Connection conn = dataSource.getConnection()) {
             String sql = "DELETE FROM \"order\" WHERE id = ?";
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setInt(1, id);
             statement.executeUpdate();
+            cartDao.remove(order.getCart().getId());
         } catch (SQLException exception) {
             throw new RuntimeException("Error while deleting order with id: " + id, exception);
         }

@@ -9,7 +9,7 @@ public interface OrderDao {
     void add(Order order, int productId);
     Order find(int id);
     void update(Order order);
-    void remove(int id);
+    void remove(Order order);
     void removeItem(int productId, Cart cart);
     void addItemToOrder(Order order, int productId, int addedQuantity);
     List<Order> getAll();
