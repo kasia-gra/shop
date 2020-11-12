@@ -9,7 +9,7 @@ public interface LineItemDao {
 
     void addProduct(Cart cart, int productId, int quantity);
     LineItem find(int product_id, int cartId);
-    void remove(int id);
+    void remove(int productId, Cart cart);
     List<LineItem> findLineItemsByCartId(int cartId);
     int getTotalValueOfLinesInCart(int cartId);
     int getTotalNumberOfLinesInCart(int cartId);

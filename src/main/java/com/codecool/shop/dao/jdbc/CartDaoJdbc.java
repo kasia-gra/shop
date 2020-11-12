@@ -57,9 +57,10 @@ public class CartDaoJdbc implements CartDao {
 
 
     @Override
-    public void removeItemFromCart(int lineItemId, int cartId) {
+    public void removeItemFromCart(int productId, Cart cart) {
+        int cartId = cart.getId();
         try (Connection connection = dataSource.getConnection()) {
-            lineItemDao.remove(lineItemId);
+            lineItemDao.remove(productId, cart);
             String sql = "UPDATE cart SET total_price = ?, cart_size = ? WHERE id = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setInt(1, lineItemDao.getTotalValueOfLinesInCart(cartId));
