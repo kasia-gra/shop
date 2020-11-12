@@ -4,16 +4,24 @@ import {cookiesHandler} from "./cookiesHandler.js";
 const increaseQtyButtons = document.querySelectorAll(".increase-qty");
 const decreaseQtyButtons = document.querySelectorAll(".decrease-qty");
 const chooseQtyInputs = document.querySelectorAll(".choose-qty");
-
+const deleteLineButtons = document.querySelectorAll(".fa-trash-alt");
 
 export let cartLineItemsManager = {
     init: function () {
+        deleteLineButtons.forEach(button => button.addEventListener("click", this.deleteLine));
         increaseQtyButtons.forEach(button => button.addEventListener("click", this.increaseQty));
         decreaseQtyButtons.forEach(button => button.addEventListener("click", this.decreaseQty));
         chooseQtyInputs.forEach(button => button.addEventListener("change", function (event) {
             updateQty(event.target);
         }));
     },
+
+    deleteLine: function (event) {
+        console.log("DELETING LINE");
+        let productId = event.target.parentElement.id;
+        let lineItemContainer = event.target.parentElement.parentElement.parentElement;
+        deleteLineItem(productId, lineItemContainer);
+        },
 
     increaseQty: function (event) {
         let currentQtyField = event.target.parentElement.querySelector(".choose-qty");
