@@ -47,8 +47,8 @@ public class OrderDaoMem implements OrderDao {
     }
 
     @Override
-    public void remove(int id) {
-        data.remove(find(id));
+    public void remove(Order order) {
+        data.remove(find(order.getId()));
     }
 
     @Override
