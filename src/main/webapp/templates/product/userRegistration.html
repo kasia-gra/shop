@@ -30,7 +30,7 @@
             <span id="emailAndPasswordContainer">
                 <h4 class="mb-3">Email and password</h4>
                 <div class="row">
-                    <div class="col-md-4 mb-3">
+                    <div class="col-md-6 mb-3">
                         <label for="email">Email</label>
                         <input type="email" class="form-control" id="email" value="" name="email"
                                required placeholder="you@example.com">
@@ -38,7 +38,7 @@
                             Valid Email is required.
                         </div>
                     </div>
-                    <div class="col-md-4 mb-3">
+                    <div class="col-md-6 mb-3">
                         <label for="password">Password</label>
                         <input type="password" class="form-control" id="password" placeholder="" value="" name="password"
                                required pattern="^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[0-9a-zA-Z]{6,}$">
@@ -46,14 +46,14 @@
                             Valid password required.
                         </div>
                     </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="password">Repeat password</label>
-                        <input type="password" class="form-control" id="repeatPassword" placeholder="" value="" name="repeatPassword"
-                               required pattern="^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[0-9a-zA-Z]{6,}$">
-                        <div class="invalid-feedback">
-                            Passwords must be equals!
-                        </div>
-                    </div>
+<!--                    <div class="col-md-4 mb-3">-->
+<!--                        <label for="password">Repeat password</label>-->
+<!--                        <input type="password" class="form-control" id="repeatPassword" placeholder="" value="" name="repeatPassword"-->
+<!--                               required pattern="^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[0-9a-zA-Z]{6,}$">-->
+<!--                        <div class="invalid-feedback">-->
+<!--                            Passwords must be equals!-->
+<!--                        </div>-->
+<!--                    </div>-->
                 </div>
                 <div class="row d-flex justify-content-center">Password must contain at least one letter, at least one number, and be longer than six charaters.</div>
             </span>
@@ -77,14 +77,6 @@
                         </div>
                     </div>
                 </div>
-
-<!--                <div class="mb-3">-->
-<!--                    <label for="billingEmail">Email</label>-->
-<!--                    <input type="email" class="form-control" id="billingEmail" name="email" placeholder="you@example.com" required>-->
-<!--                    <div class="invalid-feedback">-->
-<!--                        Please enter a valid email address for billing updates.-->
-<!--                    </div>-->
-<!--                </div>-->
 
                 <div class="mb-3">
                     <label for="billingPhone">Phone number</label>
