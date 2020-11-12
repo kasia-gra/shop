@@ -76,7 +76,9 @@ public class DataDaoJdbc implements DataDao {
                     "INSERT INTO public.product (name, default_price, description, picture_name, category_id, supplier_id)\n" +
                     "VALUES ('prod_3', 300, 'prod_desc_3', 'product_3.jpg', 1, 1);\n" +
                     "INSERT INTO public.product (name, default_price, description, picture_name, category_id, supplier_id)\n" +
-                    "VALUES ('prod_4', 400, 'prod_desc_4', 'product_4.jpg', 1, 2);";
+                    "VALUES ('prod_4', 400, 'prod_desc_4', 'product_4.jpg', 1, 1);\n" +
+                    "INSERT INTO public.product (name, default_price, description, picture_name, category_id, supplier_id)\n" +
+                    "VALUES ('prod_5', 500, 'prod_desc_5', 'product_5.jpg', 1, 2);";
             Statement st = conn.createStatement();
             st.execute(sql);
         } catch (SQLException e) {
