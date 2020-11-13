@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 @WebServlet(urlPatterns = {"/paymentConfirmation"}, loadOnStartup = 5)
 public class PaymentConfirmationController extends HttpServlet {
@@ -41,11 +42,11 @@ public class PaymentConfirmationController extends HttpServlet {
 
         Order order = orderDao.getActual(Integer.parseInt(util.getCookieValueBy("sessionId", req)));
 
-        if (order.getPayment().getCardOwner().equals("Daniel Rzeszutko")) { // draft version of payment validation
+        if (chanceOfSucess()) { // draft version of payment validation
             finalizeSuccessfulPayment(resp, context, order);
             engine.process("product/paymentConfirmation.html", context, resp.getWriter());
         } else {
-            sendLog(false);
+//            sendLog(false);
             engine.process("product/paymentFail.html", context, resp.getWriter());
         }
     }
@@ -58,7 +59,8 @@ public class PaymentConfirmationController extends HttpServlet {
     private void finalizeSuccessfulPayment(HttpServletResponse resp, WebContext context, Order order) throws IOException {
         String htmlMessage = createEmailHtmlMessage(order).toString();
         SendEmail.sendEmail(order.getUser().getEmail(), htmlMessage);
-        sendLog(true);
+//        sendLog(true);
+
         context.setVariable("order", order);
         util.removeCookie(resp);
     }
@@ -85,5 +87,10 @@ public class PaymentConfirmationController extends HttpServlet {
                     + " " + order.getCart().getCartCurrency() + "</p>");
         }
         return output;
+    }
+
+    private boolean chanceOfSucess() {
+        Random random = new Random();
+        return random.nextBoolean();
     }
 }

@@ -39,7 +39,7 @@ public class PaymentController extends HttpServlet {
 		//TODO confirm payment
 		Order order = orderDao.getActual(Integer.parseInt(util.getCookieValueBy("sessionId", req)));
 		saveOrderToFile(order, getServletContext());
-		setPaymentParameters(order, req);
+//		setPaymentParameters(order, req);
 		resp.sendRedirect("/paymentConfirmation");
 	}
 

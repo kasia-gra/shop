@@ -37,17 +37,17 @@
             <div class="row m-2">
                 <div class="col-md-4 mb-4">
                     <h5>Billing address</h5>
-                    <div th:text="'Country: ' + ${order.getUser().getBillingAddress().getCountry()}"></div>
-                    <div th:text="'Zip code: ' + ${order.getUser().getBillingAddress().getZipCode()}"></div>
-                    <div th:text="'City: ' + ${order.getUser().getBillingAddress().getCity()}"></div>
-                    <div th:text="'Address: ' + ${order.getUser().getBillingAddress().getAddress()}"></div>
+                    <div th:text="'Country: ' + ${order.getUser().getUserAddressDetail().getShippingAddress().getCountry()}"></div>
+                    <div th:text="'Zip code: ' + ${order.getUser().getUserAddressDetail().getBillingAddress().getZipCode()}"></div>
+                    <div th:text="'City: ' + ${order.getUser().getUserAddressDetail().getBillingAddress().getCity()}"></div>
+                    <div th:text="'Address: ' + ${order.getUser().getUserAddressDetail().getBillingAddress().getAddress()}"></div>
                 </div>
                 <div class="col-md-4 mb-4">
                     <h5>Shipping address</h5>
-                    <div th:text="'Country: ' + ${order.getUser().getShippingAddress().getCountry()}"></div>
-                    <div th:text="'Zip code: ' + ${order.getUser().getShippingAddress().getZipCode()}"></div>
-                    <div th:text="'City: ' + ${order.getUser().getShippingAddress().getCity()}"></div>
-                    <div th:text="'Address: ' + ${order.getUser().getShippingAddress().getAddress()}"></div>
+                    <div th:text="'Country: ' + ${order.getUser().getUserAddressDetail().getShippingAddress().getCountry()}"></div>
+                    <div th:text="'Zip code: ' + ${order.getUser().getUserAddressDetail().getShippingAddress().getZipCode()}"></div>
+                    <div th:text="'City: ' + ${order.getUser().getUserAddressDetail().getShippingAddress().getCity()}"></div>
+                    <div th:text="'Address: ' + ${order.getUser().getUserAddressDetail().getShippingAddress().getAddress()}"></div>
                 </div>
                 <div class="col-md-4 mb-4">
                     <h5>Other information</h5>
