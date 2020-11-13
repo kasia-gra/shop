@@ -52,4 +52,14 @@ public class UserDaoMem implements UserDao {
     public List<User> getAll() {
         return data;
     }
+
+    @Override
+    public User findUserByEmail(String eMail) {
+        return null;
+    }
+
+    @Override
+    public User findUserByEmailAndPassword(String eMail, String password) {
+        return null;
+    }
 }
