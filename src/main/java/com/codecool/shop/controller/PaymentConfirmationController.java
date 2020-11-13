@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 @WebServlet(urlPatterns = {"/paymentConfirmation"}, loadOnStartup = 5)
 public class PaymentConfirmationController extends HttpServlet {
@@ -43,7 +44,7 @@ public class PaymentConfirmationController extends HttpServlet {
 
         Order order = orderDao.getActual(Integer.parseInt(util.getCookieValueBy("sessionId", req)));
 
-        if (order.getPayment().getCardOwner().equals("Daniel Rzeszutko")) { // draft version of payment validation
+        if (chanceOfSucess()) { // draft version of payment validation
             finalizeSuccessfulPayment(resp, context, order);
             engine.process("product/paymentConfirmation.html", context, resp.getWriter());
         } else {
@@ -92,5 +93,10 @@ public class PaymentConfirmationController extends HttpServlet {
                     + " " + order.getCart().getCartCurrency() + "</p>");
         }
         return output;
+    }
+
+    private boolean chanceOfSucess() {
+        Random random = new Random();
+        return random.nextBoolean();
     }
 }

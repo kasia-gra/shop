@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="headComponents.html :: components"></div>
+    <title>Sign up</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/checkout.css"/>
+
+    <script type="module" src="/static/js/checkoutManager.js" defer></script>
+</head>
+
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid d-flex justify-content-between">
+
+        <a class="navbar-brand" href="/"><img src="/static/img/KPD_logo.png" alt="logo" width="100"></a>
+
+        <ul class="nav navbar-nav navbar-right">
+            <li><div class="nav-link" th:if="${session.containsKey('name') and session.name!=null}" th:text="'Happy Shopping ' + ${session.name} + ' !'"></div></li>
+            <li><a class="nav-link" id="register" data-toggle="modal" data-target="#modalRegisterForm"
+                   href="/registration"><span class="link fas fa-user-plus"></span> Sign in</a></li>
+            <li th:if="${!session.containsKey('name') or session.name==null}" ><a class="nav-link" id="login" href="/login">
+                <span class="link fas fa-sign-in-alt"></span> Log in</a></li>
+            <li th:if="${session.containsKey('name') and session.name!=null}" ><a class="nav-link" id="logout" href="/login?login-status=logout">
+                <span class="link fas fa-sign-out-alt"></span> Log out</a></li>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="card-body p-5" style="background-color: #eeeeee">
+
+        <div class="error-message"  th:if="${message != null}">
+            <h5 th:text="${message}"></h5>
+        </div>
+
+        <form class="needs-validation" method="post" action="/login">
+                <h4 class="mb-3">Login with your e-mail and password</h4>
+                <div class="col">
+                    <div class="col-md-6 mb-3">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" id="email" value="" name="email"
+                               required placeholder="you@example.com">
+                        <div class="invalid-feedback">
+                            Valid Email is required.
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" id="password" placeholder="" value="" name="password"
+                               required pattern="^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[0-9a-zA-Z]{6,}$">
+                        <div class="invalid-feedback">
+                            Valid password required.
+                        </div>
+                    </div>
+                </div>
+
+            <hr class="mb-4">
+
+            <button type="submit" class="btn btn-primary btn-lg btn-block mb-5" id="submitButton">Sign up!
+            </button>
+
+        </form>
+
+    </div>
+
+    <div th:replace="footer.html :: copy"></div>
+
+</div>
+</body>
+</html>
