@@ -30,27 +30,20 @@ public class CartController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(req.getServletContext());
         WebContext context = new WebContext(req, resp, req.getServletContext());
-
         if (util.isExistingOrder(req)) {
             setContextParameter(req, context);
         }
-
         engine.process("product/cart.html", context, resp.getWriter());
     }
-
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         JsonObject jsonRequest = util.getJsonObjectFromRequest(req);
-
         int addedQuantity = jsonRequest.get("qty").getAsInt();
         int productId = jsonRequest.get("productId").getAsInt();
-
         Order order = getOrder(jsonRequest);
         orderDao.addItemToOrder(order, productId, addedQuantity);
-
         JsonObject jsonResponse = prepareJsonResponse(order, productId);
-
         util.setResponse(resp, jsonResponse);
     }
 
@@ -78,24 +71,15 @@ public class CartController extends HttpServlet {
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         JsonObject jsonRequest = util.getJsonObjectFromRequest(req);
         int productId = jsonRequest.get("productId").getAsInt();
-
         Order order = orderDao.getActual(Integer.parseInt(util.getCookieValueBy("sessionId", req)));
         orderDao.removeItem(productId, order.getCart());
-//        order.getCart().removeLineItemById(productId);
-
         if (isEmptyCart(order)) {
             orderDao.remove(order);
             util.removeCookie(resp);
         }
-
         JsonObject jsonResponse = prepareJsonResponse(order,  productId);
         util.setResponse(resp, jsonResponse);
     }
-
-//    private void addOrderToDataStorage(Product product, Order order) {
-//        order.getCart().addLineItem(product, order.getCart().getId());
-//        orderDataStore.add(order);
-//    }
 
     private JsonObject prepareJsonResponse(Order order, int productId) {
         int itemsNumber = order.getCart().getCartSize();

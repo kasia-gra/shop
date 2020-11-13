@@ -62,3 +62,8 @@ input.line-item-summary-wrapper{
 .hidden {
     display: none;
 }
+
+.logged-in-user {
+    color:gray;
+    background-color: #c80336;
+}

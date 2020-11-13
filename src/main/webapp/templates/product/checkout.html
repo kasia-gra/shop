@@ -14,14 +14,15 @@
         <a class="navbar-brand" href="/"><img src="/static/img/KPD_logo.png" alt="logo" width="100"></a>
 
         <ul class="nav navbar-nav navbar-right">
+            <li><div class="nav-link" th:if="${session.containsKey('name') and session.name!=null}" th:text="'Happy Shopping ' + ${session.name} + ' !'"></div></li>
             <li><a class="nav-link" href="/cart" id="cart">
                 <i class="fa fa-shopping-cart"></i>Cart
                 <span class="text-success" th:text="${itemsNumber}">0</span>
             </a></li>
-            <li><a class="nav-link" id="register" href="/registration">
-                <span class="link fas fa-user-plus"></span> Sign in</a></li>
-            <li><a class="nav-link" id="login" href="/login">
+            <li th:if="${!session.containsKey('name') or session.name==null}" ><a class="nav-link" id="login" href="/login">
                 <span class="link fas fa-sign-in-alt"></span> Log in</a></li>
+            <li th:if="${session.containsKey('name') and session.name!=null}" ><a class="nav-link" id="logout" href="/login?login-status=logout">
+                <span class="link fas fa-sign-out-alt"></span> Log out</a></li>
         </ul>
     </div>
 </nav>
