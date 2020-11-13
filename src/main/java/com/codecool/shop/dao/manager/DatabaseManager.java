@@ -35,6 +35,7 @@ public class DatabaseManager {
 	public SessionDao sessionDao;
 	public UserDao userDao;
 	public OrderDao orderDao;
+	public LogfileDao logfileDao;
 
 	public DataDao dataDao;
 
@@ -70,6 +71,7 @@ public class DatabaseManager {
 		cartDao = new CartDaoJdbc(dataSource, lineItemDao);
 		orderDao = new OrderDaoJdbc(dataSource, cartDao, sessionDao, userDao, addressDetailDao);
 		dataDao = new DataDaoJdbc(dataSource);
+		logfileDao = new LogfileDaoJdbc(dataSource);
 	}
 
 	private DataSource connect(String fileName) throws SQLException, IOException {

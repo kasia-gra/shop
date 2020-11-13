@@ -2,9 +2,11 @@ package com.codecool.shop.controller;
 
 import com.codecool.shop.AdminLogger;
 import com.codecool.shop.config.TemplateEngineUtil;
+import com.codecool.shop.dao.dao.LogfileDao;
 import com.codecool.shop.dao.dao.OrderDao;
 import com.codecool.shop.dao.dao.ProductDao;
 import com.codecool.shop.dao.manager.DatabaseManager;
+import com.codecool.shop.model.Logfile;
 import com.codecool.shop.model.Session;
 import com.codecool.shop.model.order.Cart;
 import com.codecool.shop.model.order.Order;
@@ -25,6 +27,7 @@ public class CartController extends HttpServlet {
     private final Util util = new Util();
     private final ProductDao productDao = DatabaseManager.getInstance().productDao;
     private final OrderDao orderDao = DatabaseManager.getInstance().orderDao;
+    private final LogfileDao logfileDao = DatabaseManager.getInstance().logfileDao;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -60,6 +63,7 @@ public class CartController extends HttpServlet {
         orderDao.add(order, productId);
 
         AdminLogger.createLogFile(order.getId(), getServletContext());
+        logfileDao.add(new Logfile(order.getId(), AdminLogger.getFileName()));
 
         JsonObject jsonResponse = prepareJsonResponse(order, productId);
         jsonResponse.addProperty("sessionId", session.getId());

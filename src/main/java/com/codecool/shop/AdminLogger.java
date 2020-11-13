@@ -35,11 +35,19 @@ public class AdminLogger {
         return fileName;
     }
 
+    public static void setFileName(String fileName) {
+        AdminLogger.fileName = fileName;
+    }
+
     public static void appendLogToLogFile(JsonObject jsonObject) throws IOException {
         String data = util.readFile(file);
         Type listType = new TypeToken<JsonArray>(){}.getType();
         JsonArray jsonArray = gson.fromJson(data, listType);
         jsonArray.add(jsonObject);
         util.saveFile(gson.toJson(jsonArray), file);
+    }
+
+    public static void setFile(File file) {
+        AdminLogger.file = file;
     }
 }
