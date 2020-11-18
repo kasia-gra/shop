@@ -1,20 +1,13 @@
-# Codecool shop (sprint 1)
+This project runs on http://localhost:8888/.
+Start project using Maven (mvn jetty:run).
+SDK used  11.0.8.
+SQL script for creating database tables can be found in shop -> src -> main -> sql.
+Database config variables can be found in shop -> src -> main -> resources -> db_config.properties
+ 
 
-## Story
 
-Everyone loves to buy and sell stuff but we need a shop for that! In this
-project the goal is to build one the [most common type of websites on the
-web](https://www.expertmarket.co.uk/web-design/different-types-of-websites): an
-online eCommerce web-application, where users can browse products, add them into
-a shopping cart, checkout items and make payments.
 
-## What are you going to learn?
-
-- how to create dynamic web pages in `Java` with `servlets`,
-- how to use the `DAO` design pattern in `Java`,
-- how to use the `Thymeleaf` templating engine.
-
-## Tasks
+## Tasks Sprint 1
 
 1. As a Developer, I want to have a version-controlled Java project, where a Java webserver serves requests. So that I can start developing in a sandboxed environment.
     - Given I startup my Java web-application server, when I open `http://localhost:8888` in my browser, then ensure the server gives back an index page
@@ -60,9 +53,6 @@ a shopping cart, checkout items and make payments.
 11. As an Admin, I want to have a logfile about the checkout processes (per Order) so that I can see the steps of every Order and investigate issues.
     - Given the User started a checkout process then ensure it saves all the steps and details into a JSON file (where the filename is the Order ID and Date)
 
-## General requirements
-
-- Advanced OOP concepts are used in the project: inheritance, there is at least on abstract class, there is at least one interface implemented
 # Codecool shop (sprint 2)
 
 ## Story
@@ -74,17 +64,8 @@ checkout items and make payments. But also can log in and see the abandoned shop
 > Did you know that the very first product on eBay was a broken laser pointer?
 > If you don't believe, check their history: [eBay history](https://www.ebayinc.com/company/our-history/)
 
-## What are you going to learn?
 
-- how to use the `DAO` design pattern in `Java`,
-- using database to make the data persistent
-- writing tests to ensure the correct functionality and gain confidence for modification
-- enhancing the functionality to make the customer even more happy
-- practicing Java Advanced OOP concepts
-- refreshing SQL knowledge
-- practicing testing
-
-## Tasks
+## Tasks Sprint 2
 
 1. Create a new sprint tab on the existing backlog. Last week you had a long list of stories, a few new stories this week.
     - The new items are added to the backlog
@@ -163,34 +144,3 @@ then ensure to provide a login form with the following fields:
 the personal billing and shipping info (what is needed for the checkout)
     - Given there's a Shopping Cart review page. When I click on the "Checkout" button then ensure the system shows the pre-filled billing and shipping info on the checkout form.
 
-## General requirements
-
-- Advanced OOP concepts are used in the project: inheritance, there is at
-least on abstract class, there is at least one interface implemented
-- The page doesn't show a server error anytime during the review
-- All code is pushed to GitHub repository by atomic commits. The implemented feature related commits managed on separated feature branches and merged by a pull request to the `master` branch.
-
-## Hints
-
-- It's not required to integrate real payment services - you can use fake payment implementations.
-- Test (and use) the DAO implementations via interfaces so that it will be easy to change the implementation behind the interface. JUnit also provides support for this case, i. e. running the same test set against several implementations of the same interface.
-- Do not use a database, now only use in-memory storage or file storage but
-  through the DAO pattern (Data Access Object).
-- It's not required to integrate real payment services - you can use fake
-  payment implementations.
-
-## Starting your project
-
-
-
-## Background materials
-
-- <i class="far fa-exclamation"></i> [Java Dao pattern](https://www.baeldung.com/java-dao-pattern)
-- <i class="far fa-exclamation"></i> [Introducing servlets](project/curriculum/materials/pages/java/introducing-servlets.md)
-- <i class="far fa-exclamation"></i> [Servlet tutorial](https://www.tutorialspoint.com/servlets/servlets-form-data.htm)
-- <i class="far fa-exclamation"></i> [Java properties](https://www.baeldung.com/java-properties)
-- <i class="far fa-exclamation"></i> [Introducing servlets](project/curriculum/materials/pages/java/introducing-servlets.md)
-- <i class="far fa-exclamation"></i> [Servlet tutorial](https://www.tutorialspoint.com/servlets/servlets-form-data.htm)
-- <i class="far fa-exclamation"></i> [Java Dao pattern](https://www.baeldung.com/java-dao-pattern)
-- <i class="far fa-exclamation"></i> [Thymeleaf standard dialect](https://www.thymeleaf.org/doc/articles/standarddialect5minutes.html)
-- <i class="far fa-book-open"></i> [Thymeleaf introductions](https://www.thymeleaf.org/documentation.html#introductions)
