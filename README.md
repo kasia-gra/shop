@@ -5,8 +5,6 @@ SQL script for creating database tables can be found in shop -> src -> main -> s
 Database config variables can be found in shop -> src -> main -> resources -> db_config.properties
  
 
-
-
 ## Tasks Sprint 1
 
 1. As a Developer, I want to have a version-controlled Java project, where a Java webserver serves requests. So that I can start developing in a sandboxed environment.
