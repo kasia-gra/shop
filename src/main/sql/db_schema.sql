@@ -108,6 +108,14 @@ CREATE TABLE public.session
     id                       serial NOT NULL PRIMARY KEY
 );
 
+DROP TABLE IF EXISTS public.logfile;
+CREATE TABLE public.logfile
+(
+    id                        serial NOT NULL PRIMARY KEY,
+    order_id  int    NOT NULL,
+    filename text    NOT NULL
+);
+
 ALTER TABLE ONLY "order"
     ADD CONSTRAINT "cart_id" FOREIGN KEY (cart_id)
         REFERENCES cart (id) ON DELETE CASCADE;
@@ -151,3 +159,7 @@ ALTER TABLE ONLY "address_detail"
 ALTER TABLE ONLY "user"
     ADD CONSTRAINT "user_address_details_id" FOREIGN KEY (user_address_details_id)
         REFERENCES "address_detail" (id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY "logfile"
+    ADD CONSTRAINT "order_id" FOREIGN KEY (order_id)
+        REFERENCES "order" (id) ON DELETE CASCADE;

@@ -4,6 +4,7 @@ import com.codecool.shop.AdminLogger;
 import com.codecool.shop.Log;
 import com.codecool.shop.LogType;
 import com.codecool.shop.config.TemplateEngineUtil;
+import com.codecool.shop.dao.dao.LogfileDao;
 import com.codecool.shop.dao.dao.OrderDao;
 import com.codecool.shop.dao.manager.DatabaseManager;
 import com.codecool.shop.model.order.LineItem;
@@ -27,6 +28,7 @@ import java.util.Random;
 @WebServlet(urlPatterns = {"/paymentConfirmation"}, loadOnStartup = 5)
 public class PaymentConfirmationController extends HttpServlet {
     private final OrderDao orderDao = DatabaseManager.getInstance().orderDao;
+    private final LogfileDao logfileDao = DatabaseManager.getInstance().logfileDao;
     private final Util util = new Util();
     private final Gson gson = new Gson();
 
@@ -46,7 +48,7 @@ public class PaymentConfirmationController extends HttpServlet {
             finalizeSuccessfulPayment(resp, context, order);
             engine.process("product/paymentConfirmation.html", context, resp.getWriter());
         } else {
-//            sendLog(false);
+            sendLog(false, req);
             engine.process("product/paymentFail.html", context, resp.getWriter());
         }
     }
@@ -59,14 +61,18 @@ public class PaymentConfirmationController extends HttpServlet {
     private void finalizeSuccessfulPayment(HttpServletResponse resp, WebContext context, Order order) throws IOException {
         String htmlMessage = createEmailHtmlMessage(order).toString();
         SendEmail.sendEmail(order.getUser().getEmail(), htmlMessage);
-//        sendLog(true);
-
+        sendLog(true, context.getRequest());
         context.setVariable("order", order);
         util.removeCookie(resp);
     }
 
-    private void sendLog(boolean isSuccessful) throws IOException {
+    private void sendLog(boolean isSuccessful, HttpServletRequest req) throws IOException {
         Log log = new Log(new Date(), LogType.PAYMENT, isSuccessful);
+
+        Order order = orderDao.getActual(Integer.parseInt(util.getCookieValueBy("sessionId", req)));
+        String filename = logfileDao.getBy(order.getId()).getFilename();
+        AdminLogger.setFile(util.prepareFile("/admin", filename, req.getServletContext()));
+
         AdminLogger.appendLogToLogFile((JsonObject) gson.toJsonTree(log));
     }
 
